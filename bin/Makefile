@@ -1,7 +1,9 @@
-all: avg
+programs = avg calc_mult calc_sum
+
+all: ${programs}
 
 clean:
-	rm -f avg
+	rm -f ${programs} *.o
 
 
 
