@@ -6,6 +6,12 @@ context default
 	keyword linestart %} brightcyan black
 	keyword linestart %% brightcyan black
 	keyword linestart %option\s*\n brightcyan black
+	keyword linestart <<EOF>> white
+	keyword linestart \\\{nrt\} white
+
+	keyword "" yellow
+	keyword "\s" yellow
+
 
     keyword whole auto yellow
     keyword whole break yellow
