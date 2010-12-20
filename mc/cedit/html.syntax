@@ -1,0 +1,351 @@
+context default
+
+# what symbols can not preceed line comment
+	keyword linestart //+\n blue
+	wholechars left (
+	keyword wholeleft //+\n blue
+
+
+
+####################################################################
+## CLOSING &gt; (TAG ENDING)
+#	wholechars \s~!@#$%^&\*()_\+=-[]{}\\;:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+#	keyword wholeleft > brightcyan
+####################################################################
+
+	keyword n't
+
+#	keyword ,\[\s\r\n\t\]} black red
+#	keyword ,\[\s\]) black red
+
+	keyword "" brown black
+
+	keyword /> white
+	wholechars ~!@#$%^&()_=-[]{}\\;:,._$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+	keyword whole <\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:\] white
+	keyword </\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:\]> white
+	keyword > white
+
+
+	keyword ( green
+	keyword ) green
+	keyword [ green
+	keyword ] green
+	
+	keyword >= white
+	keyword <= white
+
+	keyword whole $_GET     brightgreen
+	keyword whole $_POST    brightgreen
+	keyword whole $_REQUEST brightgreen
+	keyword whole $_SERVER  brightgreen
+	keyword whole $_SESSION brightgreen
+	keyword whole $_COOKIE  brightgreen
+
+#	keyword <script white
+#	keyword </script> white
+
+	keyword whole <<<EOT   white black
+	keyword whole <<<EOF   white black
+	keyword whole linestart EOT white black
+	keyword whole linestart EOF white black
+
+	keyword <!doctype white red
+	keyword <!DOCTYPE white red
+
+
+#########
+
+#	wholechars right =\s\n()_.;,[]\r\n\t\*\+-
+	keyword wholeleft \{-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\]\[\s\]: yellow
+
+
+
+
+	wholechars $_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+	keyword linestart #*\n brown
+
+	keyword <?php white black
+	keyword <?=   white black
+	keyword <?    white black
+	keyword ?>    white black
+	keyword <!-- brown
+
+#	keyword </\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]> white
+#	keyword <\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]> white
+#	keyword whole <\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] white
+
+	keyword whole this white
+	keyword whole $this brightred
+	keyword whole \{ABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_\] brightgreen
+
+	wholechars $_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+	
+	keyword $\{_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] lightgray
+
+	keyword whole TRUE white
+	keyword whole FALSE white
+	keyword whole NULL white
+	keyword whole true white
+	keyword whole false white
+	keyword whole null white
+	keyword whole undefined white
+	keyword whole prototype green
+	keyword whole toString magenta
+	keyword whole valueOf magenta
+	keyword whole endif white
+	keyword whole elseif white
+	keyword whole echo white
+	keyword whole print white
+	keyword whole exit white
+	keyword whole global white
+	keyword whole or white
+	keyword whole and white
+	keyword whole die white
+	keyword whole static white
+	keyword whole public white
+	keyword whole private white
+	keyword whole protected white
+	keyword whole include white
+	keyword whole include_once white
+	keyword whole require white
+	keyword whole require_once white
+	keyword whole isset white
+	keyword whole foreach white
+	keyword whole eval white
+	keyword whole function white
+	keyword whole var white
+	keyword whole if white
+	keyword whole else white
+	keyword whole for white
+	keyword whole do white
+	keyword whole while white
+	keyword whole instanceof white
+	keyword whole typeof white
+	keyword whole new white
+	keyword whole delete white
+	keyword whole throw white
+	keyword whole try white
+	keyword whole catch white
+	keyword whole continue white
+	keyword whole break white
+	keyword whole return white
+	keyword whole with white
+	keyword whole switch white
+	keyword whole case white
+	keyword whole default white
+	keyword whole in white
+	keyword whole use white
+
+	keyword @@*@@ red
+
+	keyword , brightred
+	keyword ; magenta
+	keyword !== magenta
+	keyword === magenta
+	keyword !=  magenta
+	keyword ==  magenta
+	keyword =>  brightgreen
+	keyword =   green
+	
+	keyword "/" green black
+	keyword '/' cyan
+
+	keyword <![CDATA[ white
+	keyword ]]> white
+	keyword <!-- brown
+	keyword --> brown
+	keyword {% white black
+	keyword %} white black
+	keyword && cyan
+	keyword || cyan
+	keyword => cyan
+	keyword -> cyan
+	keyword ? white
+	keyword : white
+	keyword \{()\} lightgray
+	keyword \{%!{}=;\} cyan
+	keyword . white
+	keyword \* white
+	keyword : cyan
+	keyword , cyan
+
+
+
+#	wholechars ~!@#$%^&\*()_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+#	wholechars left (
+#	keyword wholeleft />
+
+#XXX	wholechars $_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+#	wholechars []\s$_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+#################################################################
+# highlight 'array' keyword in php, but do not hightlight in js
+	wholechars \s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+	wholechars left _$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+	keyword whole arra\[y\]+ white
+#	
+#################################################################
+
+
+###########################################################################
+# The most important section for colorizing javascript inline regexps
+# This should be placed at the bottom of default context section.
+# '\s' in wholechars needed for processing expressions like this: (! /re/)
+	wholechars \t\s
+	keyword wholeright linestart \{\t\s\}\[\t\s\]+
+	wholechars left ,(=;\s\t"!\n&|:{[}
+	wholechars right \*>
+	keyword whole \[\s\t\]/ brightcyan
+#
+###########################################################################
+
+
+
+#XXX
+#context <\{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\}\[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz:\] > yellow
+#wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+#context <+ > yellow
+#	keyword whole * green
+
+
+#context exclusive ( { white red
+
+
+
+wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context /\*\* \*/ cyan
+	keyword whole $\{abcdefghijklmnopqrstuvwxyz0123456789_\}+ red
+	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+() brightcyan
+	
+
+
+context /\* \*/ blue
+#	keyword \*/"
+
+#XXX
+context // \n blue
+
+wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOF EOF yellow
+	keyword \\\["'\\/rntsbw\] white
+	keyword {\$+} brightgreen black
+	keyword \{=:\} green
+
+
+wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOT EOT cyan
+	keyword {\$+} brightcyan black
+
+
+
+
+wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context exclusive return\[\s\]/ /\[igm.\] red black
+	keyword [^*[*\\]*\\]*] magenta
+	keyword [^*[*\\]*]     magenta
+	keyword [^*]           magenta
+	keyword [*[*\\]*\\]*]  cyan
+	keyword [*[*\\]*]      cyan
+	keyword [*]            cyan
+	wholechars \\
+	keyword \\/
+	keyword wholeleft \\\{rnt\} green
+	keyword wholeleft \\\{sfwdWD\} brightmagenta
+	keyword wholeleft \{|[]()\+\*?$^\} brightred
+
+wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context / /\[igm\] red black
+	keyword ?\{!:=\} white
+	
+	wholechars ?()|[^\[\s~!@#$%^&\*_\+=-{}/'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]]
+	keyword wholeleft \{[](){}\} yellow
+
+	
+	wholechars \\
+	keyword \\/ magenta
+	keyword \\\\ magenta
+	keyword \\\{rnt.$^\} brightgreen
+	keyword wholeleft \\\{sSfFwWdD\} brightcyan
+	keyword \{\+\*?} white
+	keyword \{|.\} brightred
+	keyword \{()\} brightmagenta
+	keyword \{$\\\}\{0123456789&\} brightgreen
+
+#	keyword \\[
+
+	keyword [^\[\s~!@#$%^&\*_\+=-{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]] brown red
+	keyword [\[\s~!@#$%^&\*_\+=-{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]] cyan
+
+	
+	keyword [^*\\]*]       brown red
+	keyword [^*\\]]        brown red
+	keyword [^*[*\\]*\\]*] brown red
+	keyword [^*[*\\]*]     brown red
+	keyword [^*]           brown red
+	keyword [*\\]]         cyan
+	keyword [*\\]*\\]*]    cyan
+	keyword [*\\]*]        cyan
+	keyword [*]            cyan
+
+
+wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context ' ' brightmagenta
+	keyword \\\n white brightred
+	keyword %\{%disf\} brightred
+	keyword : brown
+	keyword ; brightcyan
+	keyword @@*@@ red
+	keyword <?*?> white red
+	keyword \\\\ cyan
+	keyword \\\{'"nrts?} cyan
+	keyword \\\{0123456789\}\[0123456789\] green
+	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
+
+
+#wholechars /"-_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+#context "/ /" red black
+#	keyword [^*[*\\]*\\]*] magenta
+#	keyword [^*[*\\]*]     magenta
+#	keyword [^*]           magenta
+#	keyword [*[*\\]*\\]*]  cyan
+#	keyword [*[*\\]*]      cyan
+#	keyword [*]            cyan
+#	wholechars \\
+#	keyword \\/
+#	keyword wholeleft \\\{rnt\} green
+#	keyword wholeleft \\\{sfwdWD\} brightmagenta
+#	keyword wholeleft \{|[]()\+\*?$^\} brightred
+
+wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context " " brown black
+	keyword \\\n white brightred
+	keyword {\$*} brightred
+	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
+	keyword %% green
+	keyword %\[-0123456789.\]\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} magenta
+	keyword %\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} magenta
+	keyword \{;:\} brown
+#	keyword %s brightgreen black
+	keyword &\[abcdefghijklmnopqrstuvwxyz0123456789_\]; black green
+	keyword $\[abcdefghijklmnopqrstuvwxyz0123456789_\] brightred
+	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
+	keyword \\ green
+	keyword <?*?> yellow red
+
+
+
+
+context exclusive <!-- -->  brown
+	keyword <textarea
+
+context exclusive <textarea*> </textarea> cyan
+
+context exclusive <!DOCTYPE > white red
+
+
+
+
+
+
+

@@ -1,0 +1,946 @@
+# SQL syntax highlighting for CoolEdit
+# by Walery Studennikov <despair@sama.ru>
+
+context default 
+
+	keyword whole \{0123456789\}\[0123456789\] green
+
+	keyword ` brown
+
+
+
+	keyword whole VIEW brown
+	keyword whole view brown
+
+	keyword whole DATA brown
+	keyword whole data brown
+
+
+	keyword whole CLOSE brown
+	keyword whole close brown
+
+	keyword whole DEALLOCATE brown
+	keyword whole deallocate brown
+
+	keyword whole EXECUTE brown
+	keyword whole execute brown
+
+	keyword whole NOT\sFOUND brown
+	keyword whole not\sfound brown
+
+	keyword whole CONTINUE\sHANDLER brown
+	keyword whole continue\shandler brown
+
+	keyword whole OPEN brown
+	keyword whole open brown
+
+	keyword whole PREPARE brown
+	keyword whole prepare brown
+
+
+
+
+
+
+
+	keyword whole BEGIN brightred
+	keyword whole begin brightred
+	keyword whole END brightred
+	keyword whole end brightred
+
+
+	keyword whole ENGINE brightred
+	keyword whole engine brightred
+	
+	keyword whole MEMORY red
+	keyword whole memory red
+
+	keyword whole MYISAM red
+	keyword whole MyISAM red
+	keyword whole myisam red
+
+	keyword whole INNODB red
+	keyword whole InnoDB red
+	keyword whole innodb red
+
+	keyword whole LATIN1 red
+	keyword whole latin1 red
+	keyword whole UTF8 red
+	keyword whole utf8 red
+
+	keyword whole COUNT brightmagenta
+	keyword whole count brightmagenta
+
+	keyword whole CONCAT brightmagenta
+	keyword whole concat brightmagenta
+
+	keyword wholeright @\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_\}+ brightgreen
+
+	keyword whole CHARSET yellow
+	keyword whole charset yellow
+
+
+	keyword whole FUNCTION yellow
+	keyword whole function yellow
+
+	keyword whole DELIMITER yellow
+	keyword whole delimiter yellow
+
+	keyword whole RETURNS yellow
+	keyword whole returns yellow
+
+	keyword whole RETURN yellow
+	keyword whole return yellow
+
+	keyword whole REPEAT yellow
+	keyword whole repeat yellow
+
+	keyword whole UNTIL yellow
+	keyword whole until yellow
+
+#	keyword whole HANDLER yellow
+#	keyword whole handler yellow
+
+	keyword whole CALL yellow
+	keyword whole call yellow
+
+	keyword whole RLIKE yellow
+	keyword whole rlike yellow
+
+	keyword whole REGEXP yellow
+	keyword whole regexp yellow
+	
+	keyword whole utf8_unicode_ci brightred
+	
+
+
+	keyword whole ACCESSIBLE yellow
+	keyword whole accessible yellow
+
+	keyword whole ADD yellow
+	keyword whole add yellow
+
+	keyword whole ALL yellow
+	keyword whole all yellow
+
+	keyword whole ALTER yellow
+	keyword whole alter yellow
+
+	keyword whole ANALYZE yellow
+	keyword whole analyze yellow
+
+	keyword whole AND yellow
+	keyword whole and yellow
+
+	keyword whole AS yellow
+	keyword whole as yellow
+
+	keyword whole ASC yellow
+	keyword whole asc yellow
+
+	keyword whole ASENSITIVE yellow
+	keyword whole asensitive yellow
+
+	keyword whole BEFORE yellow
+	keyword whole before yellow
+
+	keyword whole BETWEEN yellow
+	keyword whole between yellow
+
+	keyword whole BIGINT yellow
+	keyword whole bigint yellow
+
+	keyword whole BINARY yellow
+	keyword whole binary yellow
+
+	keyword whole BLOB yellow
+	keyword whole blob yellow
+
+	keyword whole BOTH yellow
+	keyword whole both yellow
+
+	keyword whole BY yellow
+	keyword whole by yellow
+
+	keyword whole CALL yellow
+	keyword whole call yellow
+
+	keyword whole CASCADE yellow
+	keyword whole cascade yellow
+
+	keyword whole CASE yellow
+	keyword whole case yellow
+
+	keyword whole CHANGE yellow
+	keyword whole change yellow
+
+	keyword whole CHAR yellow
+	keyword whole char yellow
+
+	keyword whole CHARACTER yellow
+	keyword whole character yellow
+
+	keyword whole CHECK yellow
+	keyword whole check yellow
+
+	keyword whole COLLATE yellow
+	keyword whole collate yellow
+
+	keyword whole COLUMN yellow
+	keyword whole column yellow
+
+	keyword whole CONDITION yellow
+	keyword whole condition yellow
+
+	keyword whole CONSTRAINT yellow
+	keyword whole constraint yellow
+
+	keyword whole CONTINUE yellow
+	keyword whole continue yellow
+
+	keyword whole CONVERT yellow
+	keyword whole convert yellow
+
+	keyword whole CREATE yellow
+	keyword whole create yellow
+
+	keyword whole CROSS yellow
+	keyword whole cross yellow
+
+	keyword whole CURRENT_DATE yellow
+	keyword whole current_date yellow
+
+	keyword whole CURRENT_TIME yellow
+	keyword whole current_time yellow
+
+	keyword whole CURRENT_TIMESTAMP yellow
+	keyword whole current_timestamp yellow
+
+	keyword whole CURRENT_USER yellow
+	keyword whole current_user yellow
+
+	keyword whole CURSOR yellow
+	keyword whole cursor yellow
+
+	keyword whole DATABASE yellow
+	keyword whole database yellow
+
+	keyword whole DATABASES yellow
+	keyword whole databases yellow
+
+	keyword whole DAY_HOUR yellow
+	keyword whole day_hour yellow
+
+	keyword whole DAY_MICROSECOND yellow
+	keyword whole day_microsecond yellow
+
+	keyword whole DAY_MINUTE yellow
+	keyword whole day_minute yellow
+
+	keyword whole DAY_SECOND yellow
+	keyword whole day_second yellow
+
+	keyword whole DEC yellow
+	keyword whole dec yellow
+
+	keyword whole DECIMAL yellow
+	keyword whole decimal yellow
+
+	keyword whole DECLARE yellow
+	keyword whole declare yellow
+
+	keyword whole DEFAULT yellow
+	keyword whole default yellow
+
+	keyword whole DELAYED yellow
+	keyword whole delayed yellow
+
+	keyword whole DELETE yellow
+	keyword whole delete yellow
+
+	keyword whole DESC yellow
+	keyword whole desc yellow
+
+	keyword whole DESCRIBE yellow
+	keyword whole describe yellow
+
+	keyword whole DETERMINISTIC yellow
+	keyword whole deterministic yellow
+
+	keyword whole DISTINCT yellow
+	keyword whole distinct yellow
+
+	keyword whole DISTINCTROW yellow
+	keyword whole distinctrow yellow
+
+	keyword whole DIV yellow
+	keyword whole div yellow
+
+	keyword whole DOUBLE yellow
+	keyword whole double yellow
+
+	keyword whole DROP yellow
+	keyword whole drop yellow
+
+	keyword whole DUAL yellow
+	keyword whole dual yellow
+
+	keyword whole EACH yellow
+	keyword whole each yellow
+
+	keyword whole ELSE yellow
+	keyword whole else yellow
+
+	keyword whole ELSEIF yellow
+	keyword whole elseif yellow
+
+	keyword whole ENCLOSED yellow
+	keyword whole enclosed yellow
+
+	keyword whole ESCAPED yellow
+	keyword whole escaped yellow
+
+	keyword whole EXISTS yellow
+	keyword whole exists yellow
+
+	keyword whole EXIT yellow
+	keyword whole exit yellow
+
+	keyword whole EXPLAIN yellow
+	keyword whole explain yellow
+
+	keyword whole FALSE yellow
+	keyword whole false yellow
+
+	keyword whole FETCH yellow
+	keyword whole fetch yellow
+
+	keyword whole FLOAT yellow
+	keyword whole float yellow
+
+	keyword whole FLOAT4 yellow
+	keyword whole float4 yellow
+
+	keyword whole FLOAT8 yellow
+	keyword whole float8 yellow
+
+	keyword whole FOR yellow
+	keyword whole for yellow
+
+	keyword whole FORCE yellow
+	keyword whole force yellow
+
+	keyword whole FOREIGN yellow
+	keyword whole foreign yellow
+
+	keyword whole FROM yellow
+	keyword whole from yellow
+
+	keyword whole FULLTEXT yellow
+	keyword whole fulltext yellow
+
+	keyword whole GRANT yellow
+	keyword whole grant yellow
+
+	keyword whole GROUP yellow
+	keyword whole group yellow
+
+	keyword whole HAVING yellow
+	keyword whole having yellow
+
+	keyword whole HIGH_PRIORITY yellow
+	keyword whole high_priority yellow
+
+	keyword whole HOUR_MICROSECOND yellow
+	keyword whole hour_microsecond yellow
+
+	keyword whole HOUR_MINUTE yellow
+	keyword whole hour_minute yellow
+
+	keyword whole HOUR_SECOND yellow
+	keyword whole hour_second yellow
+
+	keyword whole IF yellow
+	keyword whole if yellow
+
+	keyword whole IGNORE yellow
+	keyword whole ignore yellow
+
+	keyword whole IN yellow
+	keyword whole in yellow
+
+	keyword whole INDEX yellow
+	keyword whole index yellow
+
+	keyword whole INFILE yellow
+	keyword whole infile yellow
+
+	keyword whole INNER yellow
+	keyword whole inner yellow
+
+	keyword whole INOUT yellow
+	keyword whole inout yellow
+
+	keyword whole INSENSITIVE yellow
+	keyword whole insensitive yellow
+
+	keyword whole INSERT yellow
+	keyword whole insert yellow
+
+	keyword whole INT yellow
+	keyword whole int yellow
+
+	keyword whole INT1 yellow
+	keyword whole int1 yellow
+
+	keyword whole INT2 yellow
+	keyword whole int2 yellow
+
+	keyword whole INT3 yellow
+	keyword whole int3 yellow
+
+	keyword whole INT4 yellow
+	keyword whole int4 yellow
+
+	keyword whole INT8 yellow
+	keyword whole int8 yellow
+
+	keyword whole INTEGER yellow
+	keyword whole integer yellow
+
+	keyword whole INTERVAL yellow
+	keyword whole interval yellow
+
+	keyword whole INTO yellow
+	keyword whole into yellow
+
+	keyword whole IS yellow
+	keyword whole is yellow
+
+	keyword whole ITERATE yellow
+	keyword whole iterate yellow
+
+	keyword whole JOIN yellow
+	keyword whole join yellow
+
+	keyword whole KEY yellow
+	keyword whole key yellow
+
+	keyword whole KEYS yellow
+	keyword whole keys yellow
+
+	keyword whole KILL yellow
+	keyword whole kill yellow
+
+	keyword whole LEADING yellow
+	keyword whole leading yellow
+
+	keyword whole LEAVE yellow
+	keyword whole leave yellow
+
+	keyword whole LEFT yellow
+	keyword whole left yellow
+
+	keyword whole LIKE yellow
+	keyword whole like yellow
+
+	keyword whole LIMIT yellow
+	keyword whole limit yellow
+
+	keyword whole LINEAR yellow
+	keyword whole linear yellow
+
+	keyword whole LINES yellow
+	keyword whole lines yellow
+
+	keyword whole LOAD yellow
+	keyword whole load yellow
+
+	keyword whole LOCALTIME yellow
+	keyword whole localtime yellow
+
+	keyword whole LOCALTIMESTAMP yellow
+	keyword whole localtimestamp yellow
+
+	keyword wholeright \sLOCK yellow
+	keyword whole lock yellow
+
+	keyword whole LONG yellow
+	keyword whole long yellow
+
+	keyword whole LONGBLOB yellow
+	keyword whole longblob yellow
+
+	keyword whole LONGTEXT yellow
+	keyword whole longtext yellow
+
+	keyword whole LOOP yellow
+	keyword whole loop yellow
+
+	keyword whole LOW_PRIORITY yellow
+	keyword whole low_priority yellow
+
+	keyword whole MASTER_SSL_VERIFY_SERVER_CERT yellow
+	keyword whole master_ssl_verify_server_cert yellow
+
+	keyword whole MATCH yellow
+	keyword whole match yellow
+
+	keyword whole MEDIUMBLOB yellow
+	keyword whole mediumblob yellow
+
+	keyword whole MEDIUMINT yellow
+	keyword whole mediumint yellow
+
+	keyword whole MEDIUMTEXT yellow
+	keyword whole mediumtext yellow
+
+	keyword whole MIDDLEINT yellow
+	keyword whole middleint yellow
+
+	keyword whole MINUTE_MICROSECOND yellow
+	keyword whole minute_microsecond yellow
+
+	keyword whole MINUTE_SECOND yellow
+	keyword whole minute_second yellow
+
+	keyword whole MOD yellow
+	keyword whole mod yellow
+
+	keyword whole MODIFIES yellow
+	keyword whole modifies yellow
+
+	keyword whole NATURAL yellow
+	keyword whole natural yellow
+
+	keyword whole NOT yellow
+	keyword whole not yellow
+
+	keyword whole NO_WRITE_TO_BINLOG yellow
+	keyword whole no_write_to_binlog yellow
+
+	keyword whole NULL yellow
+	keyword whole null yellow
+
+	keyword whole NUMERIC yellow
+	keyword whole numeric yellow
+
+	keyword whole ON yellow
+	keyword whole on yellow
+
+	keyword whole OPTIMIZE yellow
+	keyword whole optimize yellow
+
+	keyword whole OPTION yellow
+	keyword whole option yellow
+
+	keyword whole OPTIONALLY yellow
+	keyword whole optionally yellow
+
+	keyword whole OR yellow
+	keyword whole or yellow
+
+	keyword whole ORDER yellow
+	keyword whole order yellow
+
+	keyword whole OUT yellow
+	keyword whole out yellow
+
+	keyword whole OUTER yellow
+	keyword whole outer yellow
+
+	keyword whole OUTFILE yellow
+	keyword whole outfile yellow
+
+	keyword whole PRECISION yellow
+	keyword whole precision yellow
+
+	keyword whole PRIMARY yellow
+	keyword whole primary yellow
+
+	keyword whole PROCEDURE yellow
+	keyword whole procedure yellow
+
+	keyword whole PURGE yellow
+	keyword whole purge yellow
+
+	keyword whole RANGE yellow
+	keyword whole range yellow
+
+	keyword whole READ yellow
+	keyword whole read yellow
+
+	keyword whole READS yellow
+	keyword whole reads yellow
+
+	keyword whole READ_ONLY yellow
+	keyword whole read_only yellow
+
+	keyword whole READ_WRITE yellow
+	keyword whole read_write yellow
+
+	keyword whole REAL yellow
+	keyword whole real yellow
+
+	keyword whole REFERENCES yellow
+	keyword whole references yellow
+
+	keyword whole REGEXP yellow
+	keyword whole regexp yellow
+
+	keyword whole RELEASE yellow
+	keyword whole release yellow
+
+	keyword whole RENAME yellow
+	keyword whole rename yellow
+
+	keyword whole REPEAT yellow
+	keyword whole repeat yellow
+
+	keyword whole REPLACE yellow
+	keyword whole replace yellow
+
+	keyword whole REQUIRE yellow
+	keyword whole require yellow
+
+	keyword whole RESTRICT yellow
+	keyword whole restrict yellow
+
+	keyword whole RETURN yellow
+	keyword whole return yellow
+
+	keyword whole REVOKE yellow
+	keyword whole revoke yellow
+
+	keyword whole RIGHT yellow
+	keyword whole right yellow
+
+	keyword whole RLIKE yellow
+	keyword whole rlike yellow
+
+	keyword whole SCHEMA yellow
+	keyword whole schema yellow
+
+	keyword whole SCHEMAS yellow
+	keyword whole schemas yellow
+
+	keyword whole SECOND_MICROSECOND yellow
+	keyword whole second_microsecond yellow
+
+	keyword whole SELECT yellow
+	keyword whole select yellow
+
+	keyword whole SENSITIVE yellow
+	keyword whole sensitive yellow
+
+	keyword whole SEPARATOR yellow
+	keyword whole separator yellow
+
+	keyword whole SET yellow
+	keyword whole set yellow
+
+	keyword whole SHOW yellow
+	keyword whole show yellow
+
+	keyword whole SMALLINT yellow
+	keyword whole smallint yellow
+
+	keyword whole SPATIAL yellow
+	keyword whole spatial yellow
+
+	keyword whole SPECIFIC yellow
+	keyword whole specific yellow
+
+	keyword whole SQL yellow
+	keyword whole sql yellow
+
+	keyword whole SQLEXCEPTION yellow
+	keyword whole sqlexception yellow
+
+	keyword whole SQLSTATE yellow
+	keyword whole sqlstate yellow
+
+	keyword whole SQLWARNING yellow
+	keyword whole sqlwarning yellow
+
+	keyword whole SQL_BIG_RESULT yellow
+	keyword whole sql_big_result yellow
+
+	keyword whole SQL_CALC_FOUND_ROWS yellow
+	keyword whole sql_calc_found_rows yellow
+
+	keyword whole SQL_SMALL_RESULT yellow
+	keyword whole sql_small_result yellow
+
+	keyword whole SSL yellow
+	keyword whole ssl yellow
+
+	keyword whole STARTING yellow
+	keyword whole starting yellow
+
+	keyword whole STRAIGHT_JOIN yellow
+	keyword whole straight_join yellow
+
+	keyword whole TABLE yellow
+	keyword whole table yellow
+
+	keyword whole TERMINATED yellow
+	keyword whole terminated yellow
+
+	keyword whole THEN yellow
+	keyword whole then yellow
+
+	keyword whole TINYBLOB yellow
+	keyword whole tinyblob yellow
+
+	keyword whole TINYINT yellow
+	keyword whole tinyint yellow
+
+	keyword whole TINYTEXT yellow
+	keyword whole tinytext yellow
+
+	keyword whole TO yellow
+	keyword whole to yellow
+
+	keyword whole TRAILING yellow
+	keyword whole trailing yellow
+
+	keyword whole TRIGGER yellow
+	keyword whole trigger yellow
+
+	keyword whole TRUE yellow
+	keyword whole true yellow
+
+	keyword whole UNDO yellow
+	keyword whole undo yellow
+
+	keyword whole UNION yellow
+	keyword whole union yellow
+
+	keyword whole UNIQUE yellow
+	keyword whole unique yellow
+
+	keyword whole UNLOCK yellow
+	keyword whole unlock yellow
+
+	keyword whole UNSIGNED yellow
+	keyword whole unsigned yellow
+
+	keyword whole UPDATE yellow
+	keyword whole update yellow
+
+	keyword whole USAGE yellow
+	keyword whole usage yellow
+
+	keyword whole USE yellow
+	keyword whole use yellow
+
+	keyword whole USING yellow
+	keyword whole using yellow
+
+	keyword whole UTC_DATE yellow
+	keyword whole utc_date yellow
+
+	keyword whole UTC_TIME yellow
+	keyword whole utc_time yellow
+
+	keyword whole UTC_TIMESTAMP yellow
+	keyword whole utc_timestamp yellow
+
+	keyword whole VALUES yellow
+	keyword whole values yellow
+
+	keyword whole VARBINARY yellow
+	keyword whole varbinary yellow
+
+	keyword whole VARCHAR yellow
+	keyword whole varchar yellow
+
+	keyword whole VARCHARACTER yellow
+	keyword whole varcharacter yellow
+
+	keyword whole VARYING yellow
+	keyword whole varying yellow
+
+	keyword whole WHEN yellow
+	keyword whole when yellow
+
+	keyword whole WHERE yellow
+	keyword whole where yellow
+
+	keyword whole WHILE yellow
+	keyword whole while yellow
+
+	keyword whole WITH yellow
+	keyword whole with yellow
+
+	keyword whole WRITE yellow
+	keyword whole write yellow
+
+	keyword whole XOR yellow
+	keyword whole xor yellow
+
+	keyword whole YEAR_MONTH yellow
+	keyword whole year_month yellow
+
+	keyword whole ZEROFILL yellow
+	keyword whole zerofill yellow
+
+
+#########################################################
+# not keywords
+#
+
+	keyword whole ADDDATE brightmagenta
+	keyword whole adddate brightmagenta
+
+	keyword whole BIT_AND brightmagenta
+	keyword whole bit_and brightmagenta
+
+	keyword whole BIT_OR brightmagenta
+	keyword whole bit_or brightmagenta
+
+	keyword whole BIT_XOR brightmagenta
+	keyword whole bit_xor brightmagenta
+
+	keyword whole CAST brightmagenta
+	keyword whole cast brightmagenta
+
+	keyword whole COUNT brightmagenta
+	keyword whole count brightmagenta
+
+	keyword whole CURDATE brightmagenta
+	keyword whole curdate brightmagenta
+
+	keyword whole CURTIME brightmagenta
+	keyword whole curtime brightmagenta
+
+	keyword whole DATE_ADD brightmagenta
+	keyword whole date_add brightmagenta
+
+	keyword whole DATE_SUB brightmagenta
+	keyword whole date_sub brightmagenta
+
+	keyword whole EXTRACT brightmagenta
+	keyword whole extract brightmagenta
+
+	keyword whole GROUP_CONCAT brightmagenta
+	keyword whole group_concat brightmagenta
+
+	keyword whole MAX brightmagenta
+	keyword whole max brightmagenta
+
+	keyword whole MID brightmagenta
+	keyword whole mid brightmagenta
+
+	keyword whole MIN brightmagenta
+	keyword whole min brightmagenta
+
+	keyword whole NOW brightmagenta
+	keyword whole now brightmagenta
+
+	keyword whole POSITION brightmagenta
+	keyword whole position brightmagenta
+
+	keyword whole SESSION_USER brightmagenta
+	keyword whole session_user brightmagenta
+
+	keyword whole STD brightmagenta
+	keyword whole std brightmagenta
+
+	keyword whole STDDEV brightmagenta
+	keyword whole stddev brightmagenta
+
+	keyword whole STDDEV_POP brightmagenta
+	keyword whole stddev_pop brightmagenta
+
+	keyword whole STDDEV_SAMP brightmagenta
+	keyword whole stddev_samp brightmagenta
+
+	keyword whole SUBDATE brightmagenta
+	keyword whole subdate brightmagenta
+
+	keyword whole SUBSTR brightmagenta
+	keyword whole substr brightmagenta
+
+	keyword whole SUBSTRING brightmagenta
+	keyword whole substring brightmagenta
+
+	keyword whole SUM brightmagenta
+	keyword whole sum brightmagenta
+
+	keyword whole SYSDATE brightmagenta
+	keyword whole sysdate brightmagenta
+
+	keyword whole SYSTEM_USER brightmagenta
+	keyword whole system_user brightmagenta
+
+	keyword whole TRIM brightmagenta
+	keyword whole trim brightmagenta
+
+	keyword whole VARIANCE brightmagenta
+	keyword whole variance brightmagenta
+
+	keyword whole VAR_POP brightmagenta
+	keyword whole var_pop brightmagenta
+
+	keyword whole VAR_SAMP brightmagenta
+	keyword whole var_samp brightmagenta
+
+
+
+
+
+
+
+
+
+
+
+    keyword /\* brown
+    keyword \*/ brown
+    keyword -- brown
+
+#    keyword //\n  brown black
+    keyword \+ white
+    keyword \* white
+    keyword >  white
+    keyword <  white
+    keyword -  white
+    keyword %  white
+    keyword =  cyan
+    keyword (  cyan
+    keyword )  cyan
+    keyword ,  brightred
+    keyword ;  white
+    keyword .  brown
+
+	wholechars /
+    keyword whole /  white
+
+#context linestart \/\*!40000\s*DISABLE\sKEYS\s\*/ linestart /\*!40000*ENABLE\sKEYS\s\*/ brightred black
+
+context exclusive VALUES ; white
+
+context linestart LOCK\sTABLES\s`*`\sWRITE;\n/\*!40000 linestart UNLOCK\sTABLES white
+
+# MySQL comment
+context linestart # \n brown
+    spellcheck
+
+# ANSI SQL comment
+context exclusive -- \n brown
+    spellcheck
+
+context exclusive /\* \*/ brown
+    spellcheck
+
+context ' ' green
+    keyword \\' green
+
+context " " green
+    keyword \\" green
+
+## Beckticks are used to escape reserved words in MySQL
+#context ` ` cyan
+#    keyword . yellow
