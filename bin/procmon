@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+this=`basename $0`
+
+if [ -z "$1" ]; then
+	echo Usage: $this filter
+	exit 1
+fi
+
+filter=grep\ -E\ "\b$1\b"\ --color=always
+
+head=`ps aux | head -n 1`
+echo -e "\n$head"
+
+re=`pgrep -d'|' "$1"`
+while true; do
+	s=`ps aux | tr '\n' '|'`
+	echo "$s" | tr '|' '\n' | grep -v "$0" | grep "$1" --color=always || { sleep 0.1; continue; }
+	read -N1 -t1 key
+	case "$key" in
+		q | Q | й | Й) exit
+	esac
+	echo -e "\n$head"
+done
+
+

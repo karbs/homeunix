@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+#export GREP_COLORS='ms=01;04;47:mc=01;45:sl=00;31:cx=36:fn=:ln=33:bn=45:se=35:ne'
+#export GREP_COLORS='ms=01;04;47:mc=01;45:sl=00;31:cx=36:fn=:ln=33:bn=45:se=35'
+export GREP_COLORS='ms=01;04;47:mc=01;45:sl=00;31:cx=36:fn=:ln=:bn=:se='
+
+args="$*"
+
+add_option(){ options="$options $*"; }
+
+x=${0}_
+x=${x#*_}
+x=${x%_}
+x=${x##*_}
+
+case "$x" in
+	php)   add_option --include=\*.{php,inc,module,install};;
+	js)    add_option --include=\*.{js,html}\ --exclude=\*{pack,min}\*;;
+	txt)  add_option --include=\*.{txt,me,faq}\ --include=\*{README}\*;;
+	??*)   add_option --include=\*.{$x};;
+	*)     add_option --include=\*;;
+esac
+
+n0=0
+
+g(){
+	clear
+	cat \
+	| grep -v -E '^.{500}' \
+	| grep -v -E '^--$' \
+	| grep -v -E '\.(svn|bak|[0-9]|tmp)\b' \
+	| sed -n -r 's/^\.\/([^:]*?)[:-]([0-9]+)[:-]/\nFILE\n\1\n\2\n/gp' \
+	| while read a; do
+		if [ "$a" = "" ]; then
+			continue
+		fi
+		if [ "$a" = "FILE" ]; then
+			read f
+			if [[ ! "$f0" = "$f" ]]; then
+				echo -e "\n\033[1m$f:\033[0m"
+				f0="$f"
+				n0=0
+				n=0
+			fi
+			read n
+			read a
+		fi
+		(( n0 > 0 & n0 + 1 != n )) && echo '   ...'
+		n0="$n"
+		printf '\x1B[47m\x1B[2K %5d \x1B[0m\x1B[0K%s\r\n' "$n" "$a"
+	done
+	
+}
+
+
+echo "$*" | sed -r 's/^[a-zA-Z0-9а-яА-Я]/\\b\0/' | sed -r 's/[\$\*\+]/\\\\\0/g' | {
+	read x
+	opts=`echo " $x" | grep -o -E ' -[^ ]*' | tr '\n' ' '`
+	x=`echo " $x" | sed -r 's/ -[^ ]*//g' | sed -r 's/^ +//'`
+	echo "x='$x', opts=$opts"
+	#exit;
+	
+	grep -n -R -E $opts "$x" . -B2 -A2 --color=always $options 2>/dev/null \
+	| g \
+	| sed -r 's/^([^< ]*)<([0-9]{1})>/\1     \2 /' \
+	| sed -r 's/^([^< ]*)<([0-9]{2})>/\1    \2 /' \
+	| sed -r 's/^([^< ]*)<([0-9]{3})>/\1   \2 /' \
+	| sed -r 's/^([^< ]*)<([0-9]{4})>/\1  \2 /' \
+	| less -IRgXS -x4
+
+#	| less -IrgXS -x4
+}
+
+echo -e '\033[?7h'
+
+
+
+
+
+
+

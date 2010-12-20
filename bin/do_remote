@@ -1,0 +1,306 @@
+#!/usr/bin/env bash
+
+cd `dirname $0`
+
+set -o pipefail
+export LANG=ru_RU.UTF-8
+export LC_MESSAGES=C
+export LC_TIME=C
+unset SSH_AUTH_SOCK
+
+#profiles_dir=$HOME/mnt1
+
+#mount_options=cache_timeout=60,direct_io,kernel_cache,auto_cache,intr,compression=no
+mount_options=compression=no
+#ssh_options=-C
+mysql_host=localhost
+verbose=0
+
+if which gsed >/dev/null; then
+sed(){
+	exec gsed "$@"
+}
+fi
+
+
+
+self="$0"
+
+trace(){ [ "$verbose" = "1" ] && echo "*** $*"; }
+fail(){ echo -n "$@ "; echo FAIL; exit 1; }
+lock(){ chmod 500 .; }
+unlock(){ chmod 755 .; }
+
+
+get_profile_dialog(){
+	cd $profiles_dir
+	x=`ls */conf.txt | sed -r 's/\/.*//' | zenity --list --column "session" --width=400 --height=500` || exit
+}
+
+get_profiles_dialog(){
+	cd $profiles_dir
+	x=`ls */conf.txt | sed -r 's/^([^\/\r\n]+).*$/FALSE\n\1/' | zenity --title "$1" --list --column "" --column "session" --width=400 --height=500 --checklist` || exit
+	x=`echo $x | sed -r 's/([^\|]+)\|?/\1\n/g'`
+}
+
+
+read_conf(){
+#	[ -z "$profile" ] && profile=$1
+#	[ -z "$profile" ] && { trace "No profile given"; return 1; }
+#	conf=$profiles_dir/$profile/conf.txt
+	conf=conf.txt
+	if [ -f $conf ]; then
+		trace "Using configuration file $conf"
+		eval `cat $conf | sed -n -r 's/^([A-Z0-9_]+)[ \t]*(=|:\/\/|:)[ \t]*(.+)[ \t]*$/\1="\3"; /ip'`
+		eval `cat $conf | sed -n -r 's/^([A-Z0-9_]+)[ \t]*=[ \t]*(.+)[ \t]*$/export \1="\2"; /p'`
+	fi
+	
+	if [ -z "$ssh_host" ]; then
+		if [ -z "$ssh" ]; then
+			if [ -z "$1" ]; then
+				ssh=$(basename `pwd`)
+			else
+				ssh=$USER@$1
+			fi
+		fi
+		if [ ! -z "$ssh" ]; then
+			eval `echo $ssh | sed -n -r 's/^(([a-z0-9_\-]+)(:([^@]+))?@)?([^:\/]+)(:([0-9]+))?:?(\/.*)?$/ssh_user=\2; ssh_pass=\4; ssh_host=\5; ssh_port=\7; ssh_home=\8/p'`		
+		fi
+	fi
+
+	eval 'mysql=$mysql'$postfix
+	eval `echo $xterm_colors | sed -n -r 's/^([^ \t]+)[ \t]+([^ \t]+)[ \t]+([^ \t]+)/xterm_options="\$xterm_options -xrm *.background:\1 -xrm *.foreground:\2 -xrm *.color4:\3"/p'`
+	eval `echo $mysql | sed -n -r 's/^(.*):(.*)@(.*):?([^:]*)\/([^\/]+)$/mysql_user=\1; mysql_pass=\2; mysql_host=\3; mysql_port_or_sock=\4; mysql_db=\5/ip'`
+
+	if [ -f $conf ]; then
+		eval `cat $conf | sed -n -r 's/^([A-Z0-9_]+)[ \t]*(=|:\/\/|:)[ \t]*(.+)[ \t]*$/\1="\3"; /ip'`
+	fi
+
+	[ -z "$ssh_host" ] && ssh_host=$1
+	[ -z "$ssh_user" -a ! -z "$ssh_host" ] && ssh_user=$USER
+	[ -z "$ssh_home" ] && ssh_home=/home/$ssh_user
+	[ -z "$ssh_port" ] && ssh_port=22
+
+	if [ -z "$mysql_port_or_sock" -a -z "$mysql_host" ]; then
+		mysql_socket=$mysql_port_or_sock
+	else
+		mysql_port=$mysql_port_or_sock
+	fi
+
+
+
+#	 echo "ssh=$ssh"
+#	 echo "ssh_home=$ssh_home"
+#	 echo "ssh_user=$ssh_user"
+#	 echo "ssh_host=$ssh_host"
+#	 echo "ssh_port=$ssh_port"
+#	 exit
+}
+
+
+_do_umount(){
+	dir=`pwd`
+	trace "_do_umount()"
+	for i in $dir/a.*; do
+		mount | grep sshfs | grep "$i" && { 
+			trace "trying to umount $i ..."
+			which fusermount >/dev/null 2>&1 && fusermount -u "$i" || umount -f "$i"
+		} || {
+			trace "`basename $i` is not mounted"
+		}
+	done 
+}
+
+
+_do_mount(){
+	which sshfs >/dev/null || exit 1
+	[ ! -d $HOME/mnt ] && mkdir $HOME/mnt
+	m=a.`basename $(pwd)`
+	trace "Mounting $i on $m"
+#	a1=""
+#	a2="$ssh_user@$ssh_host:"
+	[ ! -d $m ] && mkdir $m
+	mount | grep $m && return
+	sshfs $ssh_user@$ssh_host:$ssh_home $m -p $ssh_port -o $mount_options
+	sleep 1
+	echo "DONE"
+}
+
+_do_ssh(){
+	if [ -z "$arg" ] && [ ! -z "$DISPLAY" ] && which xterm; then
+		xterm $xterm_options $xrm -e ssh $ssh_options $inline_options $ssh_user@$ssh_host -p $ssh_port &
+	else
+		ssh $ssh_options $inline_options $ssh_user@$ssh_host -p $ssh_port "$arg"
+	fi
+}
+
+_do_sql(){
+	conv1="cat" conv2="cat" stdin="" f="" q=""
+	[ "$TERM" = "xterm" ] || mysql_options="$mysql_options -N"
+	mysql_options="$mysql_options $inline_options"
+	[ -f "$1" ] && f=$1 || q="$@"
+	case ${f##*.} in
+		gz) conv1=gunzip;;
+		bz2) conv1=bunzip2;;
+	esac
+
+	if [ -z "$mysql_charset" ]; then case $LANG in
+		*UTF-8)  mysql_charset=utf8;;
+		*KOI8-R) mysql_charset=koi8r;;
+	esac; fi
+
+	if [ -n "$mysql_socket" ]; then
+		cmd="/usr/bin/mysql --socket $mysql_socket -D $mysql_db -u $mysql_user -p$mysql_pass --protocol=SOCKET --default-character-set=$mysql_charset $mysql_options"
+	else
+		cmd="/usr/bin/mysql -h $mysql_host -P ${mysql_port:-3306} -D $mysql_db -u $mysql_user -p$mysql_pass --protocol=TCP --default-character-set=$mysql_charset $mysql_options"
+	fi
+	mysql_cmd="$cmd"
+
+#	trace "cmd=$cmd"
+	trace "mysql_cmd=$mysql_cmd"
+#	exit
+
+	cmd="ssh $ssh_options $ssh_user@$ssh_host -p $ssh_port $mysql_cmd"
+
+	if [ ! -z "$f" ]; then
+		cat "$f" | $conv1 | sed -r 's/^(#|--).*$//g' | $cmd | tr -d '\r'
+	elif [ "$q" = "-" ]; then
+		cat | $conv1 | $cmd | tr -d '\r'
+	elif [ -z "$q" ]; then
+		#cat | $conv1 | 
+		ssh $ssh_options $ssh_user@$ssh_host -p $ssh_port echo 'mysql remote shell ready.' \; $mysql_cmd -B -n -f
+		#| tr -d '\r'
+	else
+		echo "$q" | $conv1 | $cmd | tr -d '\r'
+	fi
+}
+
+
+
+
+#if [ $(dirname `pwd`) = "$profiles_dir" ]; then
+#	echo "In profiles dir: $(basename `pwd`)"
+#	read_conf $(basename `pwd`)
+#fi
+
+#command=`echo $0 | sed -r 's/^.*do_([a-z_]+)$/\1/'`
+
+#echo $0 | sed -r 's/^.*do_([a-z]+)(_([a-z_]+)([0-9]*))?$/command=\1; profile=\3; postfix=\4/'
+#exit
+
+eval `echo $0 | sed -r 's/^.*do_([a-z]+)(_([a-z_]+)([0-9]*))?$/command=\1; profile=\3; postfix=\4/'`
+
+
+
+#if [ -f conf.txt ] ; then
+# read_conf conf.txt
+# [ "$(basename `pwd`)"  = "$1" ] && shift
+
+
+#trace "mysql=$mysql"
+
+init(){
+	trace "command line: $*"
+	arg=""
+	inline_options=""
+	while [ ! -z "$1" ]; do
+		case $1 in
+			--) shift; inline_options="$@";;
+			*) arg="$arg $1";;
+		esac
+		shift
+	done
+}
+
+
+while [ ! -z "$1" ]; do
+	case $1 in
+		-h)
+			echo -e -n "Available commands:\n\t"
+			cat "$self" | tr -d '\n' | sed -r 's/.*init//' | sed -r 's/([a-z]+)\)/\n#\1\n/g' | sed -n -r 's/^#([a-z]+)$/\1 /p' | tr -d '\n'
+			echo
+			exit 1
+			;;
+		-v) verbose=1;;
+		*) break 2;;
+	esac
+	shift
+done
+
+
+
+[ -z "$profile" ] && [ -f $profiles_dir/$1/conf.txt ] && {
+	profile=$1
+	shift
+}
+
+[ -z "$command" -o "$command" = "remote" ] && {
+	command=$1
+	shift
+}
+
+init "$@"
+
+
+trace "command: $command"
+#trace "profile: $profile"
+#trace "postfix: $postfix"
+
+
+read_conf
+
+
+case $command in
+	reset)
+		_do_umount
+		;;
+
+	umount|unmount) _do_umount;;
+
+	sql)
+		_do_sql "$arg"
+		;;
+
+	install)
+		#read_conf $1
+		if [ ! -e $HOME/.ssh/id_?sa.pub ]; then
+			echo "You have not ssh key. Please run ssh-keygen."
+			exit 1
+		fi
+		d=`date +%Y%m%d_%k%M`
+		key=`cat $HOME/.ssh/id_?sa.pub`
+		host=${ssh_host%%.*}
+		echo "
+			mkdir -p .ssh && chmod 700 .ssh
+			cd .ssh
+			cat authorized_keys 2>/dev/null| grep -q '$key' || echo -e '\n$key\n' >> authorized_keys
+			chmod 600 authorized_keys
+			cd \$HOME
+			echo export PS1=\\\"[\`id -un\`:\`id -gn\`@$host \\\\W]\$ \\\" >> .bash_profile
+		" | ssh $ssh_options $inline_options $ssh_user@$ssh_host -p $ssh_port "cat | bash"
+		;;
+
+
+	ssh)
+		if [ ! -z "$ssh" ]; then
+			_do_ssh
+		else
+			cd $profiles_dir
+			read_conf `{ ls */conf.txt; ls */do_ssh; } | sed -r 's/\/.*//' | sort | uniq | zenity --width=400 --height=500 --list --text='Choose SSH session' --title='SSH' --column='session'` || exit
+		_do_ssh
+		fi
+		;;
+
+
+	backup_db)
+		read_conf $1
+		d=`date +%Y%m%d_%k%M`
+		ssh $ssh_options $ssh_user@$ssh_host -p $ssh_port "mysqldump $mysql_db -u $mysql_user -p$mysql_pass | gzip" > ${mysql_db}_${d}_full.sql.gz
+		;;
+
+
+	mount) _do_mount;;
+
+	*) echo "Unknown command: $command"; exit 1 ;;
+esac
+
