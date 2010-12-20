@@ -1,6 +1,7 @@
 programs = avg calc_mult calc_sum
 
-all: ${programs}
+all:
+	gmake ${programs}
 
 clean:
 	rm -f ${programs} *.o
