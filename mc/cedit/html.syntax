@@ -216,9 +216,12 @@ context default
 
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context /\*\* \*/ lightgray black
+context /\*\* \*/ cyan black
+#	keyword linestart \s\*\s brown
+#	keyword linestart \s\*\n brown
 	keyword whole $\{abcdefghijklmnopqrstuvwxyz0123456789_\}+ red
-	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+() brightcyan
+	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+(*) brightcyan
+	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+: brightcyan
 	keyword {*} red
 #	keyword whole @class\s\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
 #	keyword whole @extends\s\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
@@ -228,7 +231,6 @@ context /\*\* \*/ lightgray black
 	keyword , red
 	keyword . brightred
 	keyword --\[-\] white
-	keyword linestart \s\*\s white
 	
 
 
