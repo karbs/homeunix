@@ -1,29 +1,23 @@
 context default
 
-# what symbols can not preceed line comment
-	keyword linestart //+\n blue
-	wholechars left (
-	keyword wholeleft //+\n blue
-
-
-
 ####################################################################
 ## CLOSING &gt; (TAG ENDING)
 #	wholechars \s~!@#$%^&\*()_\+=-[]{}\\;:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 #	keyword wholeleft > brightcyan
 ####################################################################
 
+
 	keyword n't
 
 #	keyword ,\[\s\r\n\t\]} black red
 #	keyword ,\[\s\]) black red
 
-	keyword "" brown black
+	keyword "" brightgreen
 
-	keyword /> white
+#	keyword /> white
 	wholechars ~!@#$%^&()_=-[]{}\\;:,._$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-	keyword whole <\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:\] white
-	keyword </\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:\]> white
+	keyword whole <\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] white
+	keyword </\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]> white
 	keyword > white
 
 
@@ -54,10 +48,13 @@ context default
 	keyword <!DOCTYPE white red
 
 
+# what symbols can not preceed line comment
+	wholechars left (
+	keyword wholeleft //*\n brown
 #########
 
 #	wholechars right =\s\n()_.;,[]\r\n\t\*\+-
-	keyword wholeleft \{-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\]\[\s\]: yellow
+	keyword whole \{-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\]\[\s\]: yellow
 
 
 
@@ -65,10 +62,10 @@ context default
 	wholechars $_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 	keyword linestart #*\n brown
 
-	keyword <?php white black
-	keyword <?=   white black
-	keyword <?    white black
-	keyword ?>    white black
+	keyword <?php gray black
+	keyword <?=   gray black
+	keyword <?    gray black
+	keyword ?>    gray black
 	keyword <!-- brown
 
 #	keyword </\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]> white
@@ -77,7 +74,7 @@ context default
 
 	keyword whole this white
 	keyword whole $this brightred
-	keyword whole \{ABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_\] brightgreen
+	keyword whole \{ABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\{0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_\] brightgreen
 
 	wholechars $_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 	
@@ -171,6 +168,7 @@ context default
 	keyword , cyan
 
 
+	keyword whole array white
 
 #	wholechars ~!@#$%^&\*()_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 #	wholechars left (
@@ -179,12 +177,12 @@ context default
 #XXX	wholechars $_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 #	wholechars []\s$_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 
-#################################################################
-# highlight 'array' keyword in php, but do not hightlight in js
-	wholechars \s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-	wholechars left _$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-	keyword whole arra\[y\]+ white
-#	
+##################################################################
+## highlight 'array' keyword in php, but do not hightlight in js
+#	wholechars \s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+#	wholechars left _$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+#	keyword whole arra\[y\]+ white
+##	
 #################################################################
 
 
@@ -196,7 +194,9 @@ context default
 	keyword wholeright linestart \{\t\s\}\[\t\s\]+
 	wholechars left ,(=;\s\t"!\n&|:{[}
 	wholechars right \*>
+	keyword whole \[\s\t\]/> white
 	keyword whole \[\s\t\]/ brightcyan
+
 #
 ###########################################################################
 
@@ -211,20 +211,31 @@ context default
 
 #context exclusive ( { white red
 
+#	keyword /\* brown
+#	keyword \*/ brown
 
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context /\*\* \*/ cyan
+context /\*\* \*/ lightgray black
 	keyword whole $\{abcdefghijklmnopqrstuvwxyz0123456789_\}+ red
 	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+() brightcyan
+	keyword {*} red
+#	keyword whole @class\s\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
+#	keyword whole @extends\s\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
+	keyword whole @\{abcdefghijklmnopqrstuvwxyz\}\[abcdefghijklmnopqrstuvwxyz\] brightred
+	keyword <\/\{abcdefghijklmnopqrstuvwxyz\}\[-abcdefghijklmnopqrstuvwxyz\]> blue black
+	keyword <\{abcdefghijklmnopqrstuvwxyz\}*> blue black
+	keyword , red
+	keyword . brightred
+	keyword --\[-\] white
+	keyword linestart \s\*\s white
 	
 
 
-context /\* \*/ blue
-#	keyword \*/"
+context /\* \*/ brown
 
 #XXX
-context // \n blue
+#context exclusive // \n brown
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOF EOF yellow
@@ -291,14 +302,13 @@ context / /\[igm\] red black
 
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context ' ' brightmagenta
-	keyword \\\n white brightred
 	keyword %\{%disf\} brightred
 	keyword : brown
 	keyword ; brightcyan
 	keyword @@*@@ red
 	keyword <?*?> white red
-	keyword \\\\ cyan
-	keyword \\\{'"nrts?} cyan
+	keyword \\\\ brightmagenta
+	keyword \\\{'"nrts?} brightmagenta
 	keyword \\\{0123456789\}\[0123456789\] green
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 
@@ -319,7 +329,6 @@ context ' ' brightmagenta
 
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context " " brown black
-	keyword \\\n white brightred
 	keyword {\$*} brightred
 	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
 	keyword %% green
@@ -337,9 +346,28 @@ context " " brown black
 
 
 context exclusive <!-- -->  brown
-	keyword <textarea
+	keyword <
+	keyword >
+
 
 context exclusive <textarea*> </textarea> cyan
+	keyword <?*?> white black
+
+
+context exclusive <style*> </style> green
+	keyword <?*?> white black
+	keyword /\**\*/ brown
+	keyword wholeleft z*; brown
+	keyword ; cyan
+	keyword { cyan
+	keyword } cyan
+
+
+#context exclusive <textarea*> <? cyan
+#	keyword </textarea> white
+	
+
+
 
 context exclusive <!DOCTYPE > white red
 
