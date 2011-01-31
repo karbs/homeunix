@@ -1,0 +1,55 @@
+
+!xterm.vt100.font: -gnu-unifont-*-*-*-*-*-*-*-*-*-*-*-*
+
+
+XTerm*allowSendEvents: True
+XTerm*sessionMgt: True
+XTerm*VT100*geometry: 110x30
+XTerm*saveLines: 1000
+*visualBell: False
+XTerm*VT100*underLine: on
+XTerm.VT100*dynamicColors: On
+! Colour for underline attribute
+XTerm*VT100*colorULMode: on
+XTerm*VT100*colorUL: red
+
+! enables Alt+I (sync panels) in mc
+XTerm*metaSendsEscape: True
+
+*VT100*scrollBar: False
+
+*VT100*color0:  #000000
+*VT100*color1:  #A60004
+*VT100*color2:  #01C500
+*VT100*color3:  #8D8756
+*VT100*color4:  #002773
+*VT100*color5:  #CB44E1
+*VT100*color6:  #2ECADD
+*VT100*color7:  #E0E3D4
+
+*VT100*color8:  #7A7A7A
+*VT100*color9:  #EF2929
+*VT100*color10: #1EFF19
+*VT100*color11: #F6EC42
+*VT100*color12: #668CB4
+*VT100*color13: #FF16E6
+*VT100*color14: #06E1DF
+*VT100*color15: #ffffff
+
+*form.background:       white
+*SimpleMenu*borderWidth:   1
+*SimpleMenu*background: rgb:f0/f0/f0
+
+
+
+!*VT100*faceName: -*-dzejavu sans mono-book-r-normal-*-10-*-*-*-*-*-iso10646-*; size=8
+!*VT100*faceSize: 10
+! *VT100*faceSize: 10
+!*VT100*faceName: -*-*-*-*-*-*-*-*-*-*-*-*-iso10646-*
+!XTerm*sessionMgt: False
+! XTerm*highlightSelection:  True
+! *VT100*selectToClipboard: True
+!XTerm*VT100*alwaysBoldMode: Off
+!*VT100*boldMode: Off
+!XTerm*VT100*colorBDMode: Off
+!XTerm*VT100*colorBD: #ff0000
