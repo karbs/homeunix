@@ -280,7 +280,7 @@ context / /\[igm\] red black
 	keyword \\\\ magenta
 	keyword \\\{rnt.$^\} brightgreen
 	keyword wholeleft \\\{sSfFwWdD\} brightcyan
-	keyword \{\+\*?} white
+	keyword \{\+\*?\} white
 	keyword \{|.\} brightred
 	keyword \{()\} brightmagenta
 	keyword \{$\\\}\{0123456789&\} brightgreen
