@@ -104,7 +104,7 @@ _do_umount(){
 	for i in $dir/a.*; do
 		mount | grep sshfs | grep "$i" && { 
 			trace "trying to umount $i ..."
-			which fusermount >/dev/null 2>&1 && fusermount -u "$i" || umount -f "$i"
+			which fusermount >/dev/null 2>&1 && fusermount -u "$i" || umount -l "$i"
 		} || {
 			trace "`basename $i` is not mounted"
 		}
