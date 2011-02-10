@@ -111,7 +111,8 @@ context linestart # \n brightred
     keyword "+" red
     keyword <+> red
 
-context exclusive " " yellow
+#context exclusive " " yellow
+context " " yellow
 #    spellcheck
     keyword \\" brightgreen
     keyword %% brightgreen
