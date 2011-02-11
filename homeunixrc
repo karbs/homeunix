@@ -32,7 +32,7 @@ alias wget='wget --no-check-certificate'
 alias lo='clear; logout'
 alias remake='make config clean all deinstall reinstall'
 alias grep='grep --color'
-alias top='top -C'
+#alias top='top -C'
 
 homeunix_create_dirs
 homeunix_mc_colors black lightgray
