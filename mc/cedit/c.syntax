@@ -2,6 +2,8 @@
 
 context default
 	
+	keyword //*\n brown
+	
 	keyword linestart %{ brightcyan black
 	keyword linestart %} brightcyan black
 	keyword linestart %% brightcyan black
@@ -52,9 +54,9 @@ context default
     keyword whole \[\s\t\]default yellow
     keyword whole linestart \[\s\t\]\{ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz\}\[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz\]: cyan
 
-    keyword /\* brown
-    keyword \*/ brown
-    keyword // brown
+#    keyword /\* brown
+#    keyword \*/ brown
+#    keyword // brown
 
 	keyword \\" green
 	keyword [^*]\+ brightmagenta
@@ -82,7 +84,7 @@ context default
     keyword \+ yellow
     keyword , brightcyan
     keyword - yellow
-    keyword / yellow
+#    keyword / yellow
     keyword : brightcyan
     keyword ; brightmagenta
     keyword < yellow
@@ -98,11 +100,10 @@ context default
     keyword } brightcyan
     keyword ~ brightmagenta
 
-context exclusive /\* \*/ brown
-    spellcheck
+#context exclusive /\* \*/ brown
+context /\* \*/ brown
 
-context exclusive // \n brown
-    spellcheck
+context // \n brown
 
 context linestart # \n brightred
     keyword \\\n yellow
