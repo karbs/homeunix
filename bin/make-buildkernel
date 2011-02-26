@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+##
+## make-buildkernel. Utility to build the freebsd kernel.
+##
+## This utility will be useful if you have multiple kernel configurations
+## or you like to experiment with configuration.
+## In that case it will build and install new kernel with the most actual config file.
+## Goal of this tool is to provide one command for do everything.
+## 
+## Your custom config file should be placed in /sys/$HOSTTYPE/conf directory
+## and it's name should have my or MY prefix and numeric version identifier.
+## For example, if you have this config files: MYKERNEL1, my2, my25, my4, MY5.
+## This tool will choose 'my25' because it is prefixed with 'my' and 25 is
+## the highest number among numbers 1, 2, 25, 4 and 5.
+##
+
+DIR="/sys/$HOSTTYPE/conf"
+
+[ "x$UID" = "x0" ] || { echo "You must be root"; exit 1; }
+
+cd "$DIR" || { echo "Cannot cd to $DIR"; exit 1; }
+
+KERNCONF=`ls | sed -nr 's/^my[^0-9]*([0-9]+)/\1 !&/Ip' | sort -gr | sed '2,$d;s/.* !//'`
+
+[ ! -z "$KERNCONF" ] || { echo "No kernel config found in $DIR. Config name must be like MYKERNEL1."; exit 1; }
+
+echo -e "\e[2J\e[3;10H\e[1;31mBUILDING KERNEL\e[0m\e[5;10HKERNCONF=$KERNCONF:\n"
+
+cat $KERNCONF | sed -r '/^$/d;s/[ '$'\t'']+/ /g' | head -n 10
+
+echo -e ' ... '
+
+for (( t = 5; t >= 0; --t )); do echo -e "\e[20;10HPress Ctrl+C if something wrong... $t"; sleep 1; done
+
+echo -e "\e[2A\e[3M"
+
+cd /usr/src
+
+make -j5 buildkernel KERNCONF=$KERNCONF && \
+
+make -j1 installkernel KERNCONF=$KERNCONF && \
+
+echo -e "\n\n***\n*** KERNEL $KERNCONF BUILT AND INSTALLED SUCCESSFULLY\n***"
+
