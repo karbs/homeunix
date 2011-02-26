@@ -34,6 +34,8 @@ alias remake='make config clean all deinstall reinstall'
 alias grep='grep --color'
 #alias top='top -C'
 
+alias urxvt='urxvt -fn -*-fixed-medium-r-*-*-*-120-*-*-*-60-iso10646-* +sb -geometry 100x40'
+
 homeunix_create_dirs
 homeunix_mc_colors black lightgray
 
