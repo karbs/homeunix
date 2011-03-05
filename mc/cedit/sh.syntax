@@ -7,6 +7,8 @@ context default
 
 #keyword ${\{abcdefghijklmno} brightred
 
+#	keyword #*\n brown
+
 	keyword " green
 
     keyword $(( brightcyan
@@ -34,7 +36,6 @@ wholechars abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_
 	keyword whole <<EOF yellow
 	keyword whole EOF yellow
 
-	keyword #*\n brown
 
     keyword ;; brightred
     keyword \\@ brightred
@@ -148,7 +149,7 @@ wholechars abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_
 
 
 
-#context # \n brown
+context # \n brown
 #    spellcheck
 
 context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]EOF EOF green
@@ -159,6 +160,7 @@ context ' ' green
 #	keyword \\ red
 
 context exclusive " " brightgreen
+#context " " brightgreen
 	keyword `*` lightgray black
 	keyword \\\{\\$\'"} green black
 	
