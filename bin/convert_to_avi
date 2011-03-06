@@ -1,0 +1,52 @@
+#!/bin/sh
+
+export LANG=C
+
+if [ -f /usr/local/bin/mencoder ]; then
+	mencoder=/usr/local/bin/mencoder
+elif [ -f /usr/bin/mencoder ]; then
+	mencoder=/usr/bin/mencoder
+else
+	echo "No mencoder found in /usr/local/bin:/usr/bin"
+	exit 1
+fi
+
+
+
+#exec $mencoder -forceidx -oac mp3lame -lameopts aq=2:vbr=4 -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=10000:threads=3 -o out.avi -vf pp=li,denoise3d=5:10,scale=600:-2  "$@" 
+
+
+f1="ladspa=declip_1195:declip"
+f2="ladspa=tap_dynamics_st:tap_dynamics_st:20:200:0:10:0:8"
+f3="ladspa=tap_dynamics_st:tap_dynamics_st:20:200:20:-15:0:0"
+f4="ladspa=tap_limiter:tap_limiter:0:10"
+
+af="-af resample=48000:1:0,$f1,$f2,$f3,$f4,resample=44100:0:0"
+
+#af="-af ladspa=declip_1195:declip,ladspa=tap_dynamics_st:tap_dynamics_st:5:50:20:-5:0:0,ladspa=tap_limiter:tap_limiter:0:15"
+
+#vf="-vf pp=lb,denoise3d=5:5,scale=576:-2,crop=576:432"
+vf="-vf pp=lb,scale=640:-2,crop=640:480"
+#vf="-vf pp=lb,denoise3d=5:5"
+
+encopts="-lavcopts vcodec=mpeg4:vbitrate=5000:keyint=1"
+
+#opts="-sws 10 -aspect 1.33 -forceidx"
+opts="-forceidx"
+
+oac="-channels 2 -oac mp3lame -lameopts br=256 $af"
+#oac="-oac copy"
+
+
+cmd="$mencoder -vfm ffmpeg $opts $vf $oac -ovc lavc $encopts"
+
+if [ -f "$1" -a -z "$2" ]; then
+	out="out_${1%.*}.avi"
+	cmd="$cmd -o $out"
+fi
+
+$cmd "$@"
+
+
+#exec /usr/bin/mencoder -af ladspa=tap_dynamics_st:tap_dynamics_st:10:10:15:15:0:1  -forceidx -oac mp3lame -lameopts aq=2:vbr=4 -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=10000 -o out.avi -vf pp=li,denoise3d=2:2:2,scale=600:-2  "$@" 
+
