@@ -9,7 +9,7 @@ context default
 
 #	keyword #*\n brown
 
-	keyword " green
+#	keyword " green
 
     keyword $(( brightcyan
     keyword (( brightcyan
@@ -58,7 +58,8 @@ wholechars abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_
 #    keyword } cyan
 #    keyword / cyan
 
-    keyword whole linestart #!\[\s\]*\n brightcyan black
+#    keyword whole linestart #!\[\s\]*\n brightcyan black
+    keyword linestart #!\[\s\]*\n brightcyan black
 
 #    keyword $\* brightred
     keyword $@ brightred
@@ -159,8 +160,8 @@ context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]END END green
 context ' ' green
 #	keyword \\ red
 
-context exclusive " " brightgreen
-#context " " brightgreen
+#context exclusive " " brightgreen
+context " " brightgreen
 	keyword `*` lightgray black
 	keyword \\\{\\$\'"} green black
 	

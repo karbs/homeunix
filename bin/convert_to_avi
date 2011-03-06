@@ -21,7 +21,9 @@ f2="ladspa=tap_dynamics_st:tap_dynamics_st:20:200:0:10:0:8"
 f3="ladspa=tap_dynamics_st:tap_dynamics_st:20:200:20:-15:0:0"
 f4="ladspa=tap_limiter:tap_limiter:0:10"
 
-af="-af resample=48000:1:0,$f1,$f2,$f3,$f4,resample=44100:0:0"
+f5="ladspa=tap_dynamics_st:tap_dynamics_st:5:50:0:-5:0:0:10:10,ladspa=tap_dynamics_st:tap_dynamics_st:5:50:20:-5:0:0:10:10"
+
+af="-af resample=48000:1:0,$f5,resample=44100:0:0"
 
 #af="-af ladspa=declip_1195:declip,ladspa=tap_dynamics_st:tap_dynamics_st:5:50:20:-5:0:0,ladspa=tap_limiter:tap_limiter:0:15"
 
@@ -34,8 +36,8 @@ encopts="-lavcopts vcodec=mpeg4:vbitrate=5000:keyint=1"
 #opts="-sws 10 -aspect 1.33 -forceidx"
 opts="-forceidx"
 
-oac="-channels 2 -oac mp3lame -lameopts br=256 $af"
-#oac="-oac copy"
+#oac="-channels 2 -oac mp3lame -lameopts br=256 $af"
+oac="-oac copy"
 
 
 cmd="$mencoder -vfm ffmpeg $opts $vf $oac -ovc lavc $encopts"
