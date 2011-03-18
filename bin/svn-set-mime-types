@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+find . -type f -name '?*.??*' -not -path '*/.svn/*' | while read i; do
+	#type=`svn propget svn:mime-type "$i"`
+	#if [ ! -z "$type" ]; then
+	#	echo file $i has mime-type $type
+	#fi
+	
+	type=
+	
+	case "${i##*.}" in
+		html) type='text/html'      ;;
+		php)  type='text/html'      ;;
+		js)   type='text/javascript';;
+		css)  type='text/css'       ;;
+		txt)  type='text/plain'     ;;
+		png)  type='image/png'      ;;
+		jpg)  type='image/jpeg'     ;;
+		jpeg) type='image/jpeg'     ;;
+	esac
+
+	case "$type" in
+		*charset*) ;;
+		text/*) type="$type; charset=UTF-8" ;;
+		*/*) ;;
+		*) echo "Unknown extension on file $i"; continue;;
+	esac
+	
+	
+	svn propset svn:mime-type "$type" "$i"
+	
+done
