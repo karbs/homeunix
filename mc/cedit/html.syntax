@@ -304,7 +304,7 @@ context / /\[igm\] red black
 
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context ' ' brightmagenta
-	keyword %\{%disf\} brightred
+	keyword %\[-\]\[0123456789\]\{%disf\} brightred
 	keyword : brown
 	keyword ; brightcyan
 	keyword @@*@@ red

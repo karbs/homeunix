@@ -1,4 +1,10 @@
-{ pushd `dirname "${BASH_SOURCE:-$0}"`; pwd; . ./functions.sh; popd; } >/dev/null
+{
+	pushd `dirname "${BASH_SOURCE:-$0}"`
+	#pwd
+	PATH=$PWD/bin:$PATH
+	. ./functions.sh
+	popd
+} >/dev/null
 
 trace "BEGIN homeunix"
 
@@ -6,7 +12,6 @@ if [ "${0#-}" = "sh" ]; then
 	export PS1="sh# "
 	set -o emacs
 fi
-
 
 export LC_TIME=en_US.UTF-8
 export LC_NUMERIC=en_US.UTF-8
@@ -33,6 +38,8 @@ alias lo='clear; logout'
 alias remake='make config clean all deinstall reinstall'
 alias grep='grep --color'
 #alias top='top -C'
+
+
 
 alias urxvt='urxvt -fn -*-fixed-medium-r-*-*-*-120-*-*-*-60-iso10646-* +sb -geometry 100x40 -cr "#00ff00"'
 
