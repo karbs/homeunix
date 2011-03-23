@@ -306,6 +306,8 @@ wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context ' ' brightmagenta
 	keyword %\[-\]\[0123456789\]\{%disfqQ\} brightred
 	keyword %\[-\]\[0123456789\].\[0123456789\]\{%disfqQ\} brightred
+	keyword \\\{0123456789\}\[0123456789\] green
+	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
 	keyword : brown
 	keyword ; brightcyan
@@ -313,8 +315,6 @@ context ' ' brightmagenta
 	keyword <?*?> white red
 	keyword \\\\ brightmagenta
 	keyword \\\{'"nrts?} brightmagenta
-	keyword \\\{0123456789\}\[0123456789\] green
-	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 
 
 #wholechars /"-_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
