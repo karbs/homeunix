@@ -192,7 +192,7 @@ context default
 # '\s' in wholechars needed for processing expressions like this: (! /re/)
 	wholechars \t\s
 	keyword wholeright linestart \{\t\s\}\[\t\s\]+
-	wholechars left ,(=;\s\t"!\n&|:{[}
+	wholechars left ,(=;\s\t!\n&|:{[}
 	wholechars right \*>
 	keyword whole \[\s\t\]/> white
 	keyword whole \[\s\t\]/ brightcyan

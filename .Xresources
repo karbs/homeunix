@@ -40,6 +40,7 @@ XTerm*metaSendsEscape: True
 *SimpleMenu*borderWidth:   1
 *SimpleMenu*background: rgb:f0/f0/f0
 
+*VT100*selectToClipboard: True
 
 
 !*VT100*faceName: -*-dzejavu sans mono-book-r-normal-*-10-*-*-*-*-*-iso10646-*; size=8
@@ -48,7 +49,7 @@ XTerm*metaSendsEscape: True
 !*VT100*faceName: -*-*-*-*-*-*-*-*-*-*-*-*-iso10646-*
 !XTerm*sessionMgt: False
 ! XTerm*highlightSelection:  True
-! *VT100*selectToClipboard: True
+
 !XTerm*VT100*alwaysBoldMode: Off
 !*VT100*boldMode: Off
 !XTerm*VT100*colorBDMode: Off
