@@ -220,8 +220,10 @@ context /\*\* \*/ cyan black
 #	keyword linestart \s\*\s brown
 #	keyword linestart \s\*\n brown
 	keyword whole $\{abcdefghijklmnopqrstuvwxyz0123456789_\}+ red
-	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+(*) brightcyan
+#	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+(*) brightcyan
 	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+: brightcyan
+	keyword "*" brown
+	keyword '*' brown
 	keyword {*} red
 #	keyword whole @class\s\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
 #	keyword whole @extends\s\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
@@ -304,8 +306,9 @@ context / /\[igm\] red black
 
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context ' ' brightmagenta
-	keyword %\[-\]\[0123456789\]\{%disfqQ\} brightred
-	keyword %\[-\]\[0123456789\].\[0123456789\]\{%disfqQ\} brightred
+	keyword %% green
+	keyword %\[-\]\[0123456789\]\{disfqQ\} brightred
+	keyword %\[-\]\[0123456789\].\[0123456789\]\{disfqQ\} brightred
 	keyword \\\{0123456789\}\[0123456789\] green
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
