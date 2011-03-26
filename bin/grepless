@@ -57,6 +57,11 @@ g(){
 
 echo "$*" | $sed -r 's/^[a-zA-Z0-9а-яА-Я]/\\b\0/' | $sed -r 's/[\$\*\+]/\\\\\0/g' | {
 	read x
+
+	if [[ $x =~ \($ ]]; then
+		x="${x%(}\\("
+	fi
+
 	opts=`echo " $x" | grep -o -E ' -[^ ]*' | tr '\n' ' '`
 	x=`echo " $x" | $sed -r 's/ -[^ ]*//g' | $sed -r 's/^ +//'`
 	echo "x='$x', opts=$opts"
