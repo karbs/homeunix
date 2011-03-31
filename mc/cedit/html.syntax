@@ -49,8 +49,8 @@ context default
 
 
 # what symbols can not preceed line comment
-	wholechars left (
-	keyword wholeleft //*\n brown
+#	wholechars left (
+#	keyword wholeleft //*\n brown
 #########
 
 #	wholechars right =\s\n()_.;,[]\r\n\t\*\+-
@@ -239,7 +239,7 @@ context /\*\* \*/ cyan black
 context /\* \*/ brown
 
 #XXX
-#context exclusive // \n brown
+context // \n brown
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOF EOF yellow
