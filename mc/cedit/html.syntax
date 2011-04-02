@@ -271,7 +271,7 @@ context exclusive return\[\s\]/ /\[igm.\] red black
 
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context / /\[igm\] red black
-	keyword ?\{!:=\} white
+	keyword (?\{!:=\} white
 	
 	wholechars ?()|[^\[\s~!@#$%^&\*_\+=-{}/'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]]
 	keyword wholeleft \{[](){}\} yellow
