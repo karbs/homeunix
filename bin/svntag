@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+	echo Usage: $0 tagname
+	exit 1
+fi
+
+cmd=`svn info | sed -nr 's|URL: ((https?://.*?)/trunk/).*|svn copy \1 \2/tags/'"$1"'|p'`
+
+if [ -z "$cmd" ]; then
+	echo "Not in working copy?"
+	exit 1
+fi
+
+echo "COMMAND: $cmd -m 'newtag $1'"
+$cmd -m "newtag $1"
+
+
+
