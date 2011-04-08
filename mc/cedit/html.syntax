@@ -136,14 +136,16 @@ context default
 
 	keyword @@*@@ red
 
+
+	keyword =>  brightgreen
 	keyword , brightred
 	keyword ; magenta
-	keyword !== magenta
-	keyword === magenta
-	keyword !=  magenta
-	keyword ==  magenta
-	keyword =>  brightgreen
+	keyword !== green
+	keyword === green
+	keyword !=  green
+	keyword ==  green
 	keyword =   green
+	keyword \+ green
 	
 	keyword "/" green black
 	keyword '/' cyan
@@ -216,27 +218,34 @@ context default
 
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context /\*\* \*/ cyan black
+context /\*\* \*/ cyan
+	keyword &lt; white brown
+	keyword &gt; white brown
 #	keyword linestart \s\*\s brown
 #	keyword linestart \s\*\n brown
 	keyword whole $\{abcdefghijklmnopqrstuvwxyz0123456789_\}+ red
 #	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+(*) brightcyan
-	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+: brightcyan
-	keyword "*" brown
-	keyword '*' brown
+#	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+: brightcyan
+	keyword //*\n brown
+
+#	keyword "*" brown
+#	keyword '*' brown
 	keyword {*} red
 #	keyword whole @class\s\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
 #	keyword whole @extends\s\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
 	keyword whole @\{abcdefghijklmnopqrstuvwxyz\}\[abcdefghijklmnopqrstuvwxyz\] brightred
-	keyword <\/\{abcdefghijklmnopqrstuvwxyz\}\[-abcdefghijklmnopqrstuvwxyz\]> blue black
-	keyword <\{abcdefghijklmnopqrstuvwxyz\}*> blue black
-	keyword , red
+	keyword <\/\{abcdefghijklmnopqrstuvwxyz\}\[-abcdefghijklmnopqrstuvwxyz\]> green
+	keyword <\{abcdefghijklmnopqrstuvwxyz\}*> green
+	keyword \{(){}[]?\} lightgray
+	keyword \{,:\} red
 	keyword . brightred
 	keyword --\[-\] white
 	
 
 
 context /\* \*/ brown
+wholechars #=&?/._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+	keyword whole http://+ yellow
 
 #XXX
 context // \n brown
@@ -313,7 +322,7 @@ context ' ' brightmagenta
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
 	keyword : brown
-	keyword ; brightcyan
+#	keyword ; brightcyan
 	keyword @@*@@ red
 	keyword <?*?> white red
 	keyword \\\\ brightmagenta
