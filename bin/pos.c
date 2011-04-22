@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-void usage() { printf("Usage: pos [-p precision] {value | - } ...\n", stderr); exit(1); }
+void usage() { printf("Usage: pos [-p precision] [--pretty] {value | - } ...\n", stderr); exit(1); }
 
 int compar(const void *x, const void *y) { return (*(float *)x - *(float *)y); }
 
