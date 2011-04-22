@@ -1,5 +1,7 @@
 programs = avg calc_mult calc_sum pos
 
+LDFLAGS = -lm
+
 all:
 	gmake ${programs}
 
