@@ -1,4 +1,4 @@
-programs = avg calc_mult calc_sum
+programs = avg calc_mult calc_sum pos
 
 all:
 	gmake ${programs}
