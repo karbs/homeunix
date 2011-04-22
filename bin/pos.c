@@ -13,7 +13,7 @@ main(int argc, char *argv[]) {
 	float prec = 20;
 	int nx = 0, ny = 0;
 	int i, j;
-	int bSearch = 0, bDelta = 0;
+	int bSearch = 0, bDelta = 0, bPretty = 0;
 
 	if (argc <= 1)
 		usage();
@@ -30,6 +30,8 @@ main(int argc, char *argv[]) {
 				yy[ny++] = floorf(x * 10) / 10;
 		else if (strcmp(argv[1], "-d") == 0)
 			bDelta = 1; // show search result as delta
+		else if (strcmp(argv[1], "--pretty") == 0)
+			bPretty = 1; // 
 		else if (argv + 1 < last_argv) {
 			if (strcmp(argv[1], "-p") == 0)
 				prec = atof((++argv)[1]); // sets precision
@@ -62,11 +64,23 @@ main(int argc, char *argv[]) {
 	qsort(yy, ny, sizeof(float), compar);
 	
 	if (bSearch < 0) {
-		for (i = ny - 1; i > 0; --i) if (yy[i] < b - prec) break;
-		printf("%g", bDelta ? yy[i] - b : yy[i]);
+		for (i = ny - 1; i > 0; --i) if (yy[i] <= b - 2) break;
+		if (!bPretty)
+			printf("%g", bDelta ? yy[i] - b : yy[i]);
+		else {
+			if (i - 1 >= 0) printf("%g ", yy[i - 1]);
+			printf("<%g>", yy[i]);
+			if (i + 1 < ny) printf(" %g ", yy[i + 1]);
+		}
 	} else if (bSearch > 0) {
 		for (i = 0; i < ny - 1; ++i) if (yy[i] > f) break;
-		printf("%g", bDelta ? yy[i] - f : yy[i]);
+		if (!bPretty)
+			printf("%g", bDelta ? yy[i] - f : yy[i]);
+		else {
+			if (i - 1 >= 0) printf("%g ", yy[i - 1]);
+			printf("<%g>", yy[i]);
+			if (i + 1 < ny) printf(" %g ", yy[i + 1]);
+		}
 	} else {
 		// Output the result.
 		for (i = 0; i < ny; ++i) {
