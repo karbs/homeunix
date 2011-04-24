@@ -148,7 +148,7 @@ context default
 	keyword \+ green
 	
 	keyword "/" green black
-	keyword '/' cyan
+	keyword '/' brightmagenta
 
 	keyword <![CDATA[ white
 	keyword ]]> white

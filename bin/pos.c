@@ -64,22 +64,26 @@ main(int argc, char *argv[]) {
 	qsort(yy, ny, sizeof(float), compar);
 	
 	if (bSearch < 0) {
-		for (i = ny - 1; i > 0; --i) if (yy[i] <= b - 2) break;
+		for (i = ny - 1; i > 0; --i) if (yy[i] <= b - prec) break;
 		if (!bPretty)
 			printf("%g", bDelta ? yy[i] - b : yy[i]);
 		else {
+			if ((i + 1 >= ny) && (i - 2 >= 0)) printf(" %g ", yy[i - 2]);
 			if (i - 1 >= 0) printf("%g ", yy[i - 1]);
 			printf("<%g>", yy[i]);
 			if (i + 1 < ny) printf(" %g ", yy[i + 1]);
+			if ((i - 1 <= 0) && (i + 2 < ny)) printf(" %g ", yy[i + 2]);
 		}
 	} else if (bSearch > 0) {
 		for (i = 0; i < ny - 1; ++i) if (yy[i] > f) break;
 		if (!bPretty)
 			printf("%g", bDelta ? yy[i] - f : yy[i]);
 		else {
+			if ((i + 1 >= ny) && (i - 2 >= 0)) printf(" %g ", yy[i - 2]);
 			if (i - 1 >= 0) printf("%g ", yy[i - 1]);
 			printf("<%g>", yy[i]);
 			if (i + 1 < ny) printf(" %g ", yy[i + 1]);
+			if ((i - 1 <= 0) && (i + 2 < ny)) printf(" %g ", yy[i + 2]);
 		}
 	} else {
 		// Output the result.
