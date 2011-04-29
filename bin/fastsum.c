@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
 	++arg;
 	filename = *arg;
 	//printf("Filename: %s\n", filename);
-	fd = open(filename, O_RDONLY | O_NONBLOCK | O_DIRECT);
+	fd = open(filename, O_RDONLY | O_NONBLOCK /* | O_DIRECT */);
 	if (fd == -1) {
 		fprintf(stderr, "Error opening file %s\n", filename);
 		fprintf(stderr, "   last errno=%i (%s)\n", errno, strerror(errno));

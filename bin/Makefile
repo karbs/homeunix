@@ -1,4 +1,4 @@
-programs = avg calc_mult calc_sum pos
+programs = avg calc_mult calc_sum pos fastsum
 
 LDFLAGS = -lm
 
