@@ -197,6 +197,7 @@ context default
 	wholechars left ,(=;\s\t!\n&|:{[}
 	wholechars right \*>
 	keyword whole \[\s\t\]/> white
+	keyword whole \[\s\t\]//*\n brown	
 	keyword whole \[\s\t\]/ brightcyan
 
 #
