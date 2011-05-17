@@ -134,6 +134,10 @@ context default
 	keyword whole in white
 	keyword whole use white
 
+	keyword whole class white
+	keyword whole extends white
+	keyword whole as white
+
 	keyword @@*@@ red
 
 
