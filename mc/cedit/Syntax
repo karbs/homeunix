@@ -1,4 +1,4 @@
-file ..\*\\.(xul|html|js|php|tpl\.php|xhtml|module|install|class|inc)$ 000\sMY! ^#!.\*php
+file ..\*\\.(xul|html|js|php|tpl\.php|xhtml|module|install|class|inc)$ 000\sMY! ^.\*(php|html)
 include html.syntax
 
 file ..\*\\.(extml)$ SQL\sProgram
