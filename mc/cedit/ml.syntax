@@ -29,7 +29,7 @@ context default
     keyword whole to yellow
     keyword whole try yellow
     keyword whole type yellow
-    keyword whole value yellow
+#    keyword whole value yellow
     keyword whole where yellow
     keyword whole while yellow
     keyword whole mod yellow
