@@ -6,7 +6,7 @@
 	popd
 } >/dev/null
 
-trace "BEGIN homeunix"
+trace "BEGIN homeunix (revision $Rev$)"
 
 if [ "${0#-}" = "sh" ]; then
 	export PS1="sh# "
