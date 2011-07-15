@@ -10,7 +10,7 @@ int compar(const void *x, const void *y) { return (*(float *)x - *(float *)y); }
 
 main(int argc, char *argv[]) {
 	float xx[100], yy[100], x, f = -1, b = -1;
-	float prec = 8;
+	float prec = 10;
 	int nx = 0, ny = 0;
 	int i, j;
 	int bSearch = 0, bDelta = 0, bPretty = 0;

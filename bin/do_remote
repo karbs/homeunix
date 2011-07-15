@@ -26,7 +26,7 @@ fi
 
 self="$0"
 
-trace(){ [ "$verbose" = "1" ] && echo "*** $*"; }
+trace(){ [ "$verbose" = "1" ] && echo -e "*** $*\e[0m"; }
 fail(){ echo -n "$@ "; echo FAIL; exit 1; }
 lock(){ chmod 500 .; }
 unlock(){ chmod 755 .; }
@@ -104,11 +104,19 @@ _do_umount(){
 	for i in $dir/a.*; do
 		mount | grep sshfs | grep "$i" && { 
 			trace "trying to umount $i ..."
-			which fusermount >/dev/null 2>&1 && fusermount -u "$i" || umount -l "$i"
+			which fusermount >/dev/null 2>&1 && fusermount -u "$i" || umount -l "$i" || umount -f "$i"
 		} || {
 			trace "`basename $i` is not mounted"
 		}
 	done 
+}
+
+
+command(){
+	trace "Executing command: \e[1m$*"
+	cmd="$1"
+	shift
+	$cmd "$@"
 }
 
 
@@ -121,7 +129,7 @@ _do_mount(){
 #	a2="$ssh_user@$ssh_host:"
 	[ ! -d $m ] && mkdir $m
 	mount | grep $m && return
-	sshfs $ssh_user@$ssh_host:$ssh_home $m -p $ssh_port -o $mount_options
+	command sshfs $ssh_user@$ssh_host:$ssh_home $m -p $ssh_port -o $mount_options
 	sleep 1
 	echo "DONE"
 }

@@ -6,13 +6,15 @@ context default
 #	keyword wholeleft > brightcyan
 ####################################################################
 
+	keyword /\*!lex2php white red
+	keyword \*/\n white red
 
 	keyword n't
 
 #	keyword ,\[\s\r\n\t\]} black red
 #	keyword ,\[\s\]) black red
 
-	keyword "" brightgreen
+	keyword "" yellow
 
 #	keyword /> white
 	wholechars ~!@#$%^&()_=-[]{}\\;:,._$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
@@ -221,8 +223,31 @@ context default
 #	keyword /\* brown
 #	keyword \*/ brown
 
-
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+
+context exclusive /\*!lex2php \*/
+	keyword //*\n brown
+	keyword whole linestart %+ brightcyan
+	keyword $this brightred
+	keyword -> cyan
+	keyword Z((*Z\n brightred
+	keyword /*/ brightred
+	keyword = green
+	keyword "*" yellow
+	keyword '*' brightmagenta
+	keyword . white
+	keyword { cyan
+	keyword } cyan
+	keyword ( green
+	keyword ) green
+	keyword ; magenta
+	keyword :: white
+	keyword echo white
+	keyword self white
+
+
+
 context /\*\* \*/ cyan
 	keyword &lt; white brown
 	keyword &gt; white brown
@@ -248,9 +273,12 @@ context /\*\* \*/ cyan
 	
 
 
+
+
 context /\* \*/ brown
 wholechars #=&?/._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 	keyword whole http://+ yellow
+	keyword whole +@+ brightred
 
 #XXX
 context // \n brown
@@ -349,8 +377,9 @@ context ' ' brightmagenta
 #	keyword wholeleft \{|[]()\+\*?$^\} brightred
 
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context " " brown black
+context " " yellow black
 	keyword {\$*} brightred
+	keyword \\\{0123456789\}\[0123456789\] green
 	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
 	keyword %% green
 	keyword %\[-0123456789.\]\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} magenta
@@ -358,7 +387,7 @@ context " " brown black
 	keyword \{;:\} brown
 #	keyword %s brightgreen black
 	keyword &\[abcdefghijklmnopqrstuvwxyz0123456789_\]; black green
-	keyword $\[abcdefghijklmnopqrstuvwxyz0123456789_\] brightred
+	keyword $\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] brightred
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 	keyword \\ green
 	keyword <?*?> yellow red
@@ -391,7 +420,6 @@ context exclusive <style*> </style> green
 
 
 context exclusive <!DOCTYPE > white red
-
 
 
 
