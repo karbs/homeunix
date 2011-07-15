@@ -1,8 +1,4 @@
 # $Id$
-# $Rev$
-# $Author$
-# $Date$
-
 
 {
 	pushd `dirname "${BASH_SOURCE:-$0}"`
@@ -12,7 +8,7 @@
 	popd
 } >/dev/null
 
-trace "BEGIN homeunix (revision $Rev$)"
+trace 'BEGIN homeunix ($Id$)'
 
 
 if [ "${0#-}" = "sh" ]; then
