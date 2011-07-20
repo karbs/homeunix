@@ -1,4 +1,6 @@
 # $Id$
+# $Date$
+
 
 {
 	pushd `dirname "${BASH_SOURCE:-$0}"`
