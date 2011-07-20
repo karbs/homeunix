@@ -1,0 +1,184 @@
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Whiz Kid Technomagic Fast CRC-32 Routines</title>
+</head>
+<body bgcolor="#ffffff">
+<h1><font face="augie">Whiz Kid Technomagic Fast CRC-32 Routines</font></h1>
+<p>
+   This is a Unix port of fast assembly language routines for CRC-32 calculation
+   I originally wrote in 1997 as a Windows 95 DLL.
+</p>
+<p>
+   The routines in the original DLL calculated only one type of CRC-32, namely
+   the traditional CRC used by Zmodem, Opus, Ethernet, etc.
+</p>
+<p>
+   This Unix port also contains POSIX 1003.2 CRC routines.
+</p>
+<p>To distinguish between the two, the traditional routine names start with
+   <b>ecrc</b> (“Ethernet CRC”). The POSIX routine names start with <b>pcrc</b>.
+</p>
+<h2>Calculating traditional CRC-32</h2>
+<p>
+   To calculate CRC-32, we must first initialize CRC to 0xFFFFFFFF. The
+   <i>ecrcinit</i> function does that. Then we need to calculate an
+   intermediate CRC-32 for each byte in the stream of bytes we are working with,
+   using the <i>ecrc</i> function. After that, we need to convert the result
+   to the final CRC-32. The <i>ecrcfinish</i> function performs this operation.
+</p>
+<h2>Calculating POSIX CRC</h2>
+<p>
+   We start by initializing CRC to 0. The <i>pcrcinit</i> function does just that.
+   We then calculate intermediate CRC for each byte of the stream using the
+   <i>pcrc</i> function. Finally, we add significant bytes of the stream length
+   to our CRC calculation, and reverse the bits of the result. We can use the
+   <i>pcrcfinish</i> function for this purpose.
+</p>
+<h2>The fast CRC-32 routines</h2>
+<p>
+   These routines are written in Intel assembly language and work on anything
+   from i386 on. Here is a quick reference:
+</p>
+<b><pre>
+crc_t ecrcinit(void);
+crc_t pcrcinit(void);
+</pre></b>
+<p>
+   These two functions are implemented as macros, unless you define
+   <b>NOCRCMACROS</b> before including <i>fastcrc.h</i>. They simply return
+   0xFFFFFFFF or 0, respectively.
+</p>
+<b><pre>
+crc_t ecrcfinish(crc_t const crc);
+crc_t pcrcfinish(crc_t const crc, unsigned int numbytes);
+</pre></b>
+<p>
+   The first one is also a macro (under the same conditions). It converts the
+   result of all intermediate calculations into final CRC-32 by simply
+   reverting all of its bits.
+</p>
+<p>
+   The second one is a function. It adds the significant bytes of the size of
+   the stream (passed to it in <i>numbytes</i>) to the CRC, then reverts the
+   bits of the result.
+</p>
+<b><pre>
+crc_t ecrc(crc_t const oldcrc, unsigned char const abyte);
+crc_t pcrc(crc_t const oldcrc, unsigned char const abyte);
+</pre></b>
+   These functions are the work horse that calculates intermediate CRC on
+   individual bytes of a stream. Before processesing the first byte,
+   <i>ecrcinit</i> or <i>pcrcinit</i> must be called. At the end,
+   <i>ecrcfinish</i> or <i>pcrcfinish</i> are called for final wrapup.
+</p>
+<p>
+   Example:
+</p>
+<font color=blue><b><pre>
+#include &lt;fastcrc.h&gt;
+
+crc_t checkstream(unsigned char *stream, unsigned int streamsize) {
+	unsigned int i;
+	crc_t crc;
+
+	crc = ecrcinit();
+
+	for (i = 0; i < streamsize; i++)
+		crc = ecrc(crc, stream[i]);
+
+	return crcfinish(crc);
+}
+</pre></b></font>
+<b><pre>
+crc_t ecrcpartial(crc_t const oldcrc, unsigned char const * const stream,
+   unsigned int const streamsize);
+crc_t pcrcpartial(crc_t const oldcrc, unsigned char const * const stream,
+   unsigned int const streamsize);
+</pre></b>
+<p>
+   These functions calculate intermediate CRC on a partial stream of bytes.
+   It is necessary to call the appropriate <i>init</i> and <i>finish</i>
+   functions before they are used for the first time and after the last use.
+</p>
+<p>
+   Example:
+</p>
+<font color=blue><b><pre>
+#include &lt;fastcrc.h&gt;
+
+crc_t checkstreams(unsigned char *stream1, unsigned int streamsize1,
+	unsigned char *stream2, unsigned int streamsize2) {
+
+	crc_t crc = pcrcinit();
+
+	crc = pcrcpartial(crc, stream1, streamsize1);
+	crc = pcrcpartial(crc, stream2, streamsize2);
+
+	return pcrcfinish(crc);
+}
+</pre></b></font>
+<p>
+   If you like terse but hard-to-read code, you could change that example to:
+</p>
+<font color=blue><b><pre>
+#include &lt;fastcrc.h&gt;
+
+crc_t checkstreams2(unsigned char *stream1, unsigned int streamsize1,
+	unsigned char *stream2, unsigned int streamsize2) {
+
+	return pcrcfinish(pcrcpartial(pcrcpartial(pcrcinit(),
+		stream1, streamsize1), stream2, streamsize2));
+}
+</pre></b></font>
+<b><pre>
+crc_t ecrcarray(unsigned char const * const stream, unsigned int const
+   streamsize);
+crc_t pcrcarray(unsigned char const * const stream, unsigned int const
+   streamsize);
+</pre></b>
+<p>
+   These functions are used on a complete stream of bytes. They do all
+   necessary initialization and finalization internally. Their functionally
+   is identical to the <i>checkstream()</i> example above.
+</p>
+<p>
+   Example:
+</p>
+<font color=blue><b><pre>
+#include &lt;fastcrc.h&gt;
+
+crc_t checkstream2(unsigned char *stream, unsigned int streamsize) {
+
+	return ecrcarray(stream, streamsize);
+}
+</pre></b></font>
+<h2>Sample program</h2>
+<p>
+   A sample program, <b>fc.c</b>, is included with the routines. This program
+   calculates both types of CRC of a file passed to it through the command line.
+   If no file is specified, it reads <i>stdin</i> and calculates the CRC of
+   whatever is entered. It also reports the number of bytes in the file.
+</p>
+<h2>Multilingual interface</h2>
+<p>
+   All routines are callable by programs using the C calling convention of
+   passing parameters on the stack, pushing them from right to left, and
+   having the caller clean up the stack. It does not matter whether the C
+   compiler prepends function names with an underscore (some do, some do not).
+</p>
+<p>
+   The routines can also be called by programs using the Pascal convention of
+   converting the function name to capital letters, passing parameters on the
+   stack, pushing them from left to right, and having the routines themselves
+   clean up the stack.
+</p>
+<p>
+   Finally, assembly language programs may pass parameters in registers. See
+   the source code for details.
+</p>
+<center><p><b>[ <a href="http://www.whizkidtech.net/">Home</a> ] [ <a href="mailto:adam@whizkidtech.net">Contact</a> ]</b></p></center>
+</font>
+</body>
+</html>
+
