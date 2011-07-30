@@ -48,7 +48,8 @@ wholechars abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_
 #    keyword ; green
 
 
-    keyword $(*) brightgreen
+#    keyword "$(*)" brightgreen
+#    keyword $(*) brightgreen
 
     
     
@@ -156,6 +157,14 @@ context # \n brown
 context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]EOF EOF green
 context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]EOT EOT green
 context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]END END green
+
+
+#context exclusive "$( )" brightgreen
+
+context exclusive $( ) brightgreen
+	keyword $(*) brightmagenta
+
+
 
 context ' ' green
 #	keyword \\ red
