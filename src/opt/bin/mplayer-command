@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo get_time_pos > .command-pipe
+
+{
+	sleep 0.1
+	echo "COMMAND=$*"
+	echo
+}
+
+
+
+

@@ -1,0 +1,40 @@
+#!/bin/sh
+
+#exec /usr/local/bin/mplayer -frames 0 -vc null -vo null -ao null -msglevel all=0:identify=9 "$@"
+
+{
+	{
+		if [ -z "$@" ]; then
+			find . -mindepth 1 -maxdepth 1 -type f -name '?*.?*' 
+		else
+			for i in "$@"; do echo "$i"; done
+		fi
+	} \
+	| /usr/local/bin/mplayer -msglevel all=0:identify=4  -nocache -frames 0 -nosound -vo null -playlist - \
+	| gsed -nr '/FILE|VIDEO_(BITRATE|WIDTH|HEIGHT)|LENGTH|AUDIO_CODEC/p' \
+	| gsed -r 's/^ID_FILE/###\n&/' \
+	| gsed -r 's/^ID_[^=]+=//g' \
+	| tr '\n' '\t' \
+	| gsed -r 's/###\t?/\n/g' \
+	| gsed -r 's/^([^\t]+)\t(.*)$/\2\t### \1/' \
+	| gsed -r 's/;$//' \
+	| gsed 1d \
+
+	echo
+
+} > .id0
+
+cat .id0 | awk '{ printf "%5d sec.   %8d  %5d  %5d  %s \n", $4, $1, $2, $3, $6; }' | sort > .id
+
+rm -f .id0
+
+
+
+
+
+#| sed -nr 's/^ID_(FILE|VIDEO_(BITRATE|WIDTH|HEIGHT)|DEMUXER|LENGTH|AUDIO_CODEC)[^=]*=//p' \
+
+
+
+
+

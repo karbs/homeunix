@@ -1,0 +1,12 @@
+a[href$=mpg] {display:inline-block; background-color:green !important; }
+a[href$=mpg] img { opacity:0.5; }
+a[href$=mpeg] {display:inline-block; background-color:green !important; }
+a[href$=mpeg] img { opacity:0.5; }
+a[href$=avi] {display:inline-block; background-color:green !important; }
+a[href$=avi] img { opacity:0.5; }
+a:visited img { opacity:0.3 !important; }
+a[href$=wmv]:visited,
+a[href$=avi]:visited,
+a[href$=flv]:visited,
+a[href$=mp4]:visited { color: #ddd !important  }
+

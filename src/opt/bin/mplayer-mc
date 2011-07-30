@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ "${1##*.}" = "avi" ]; then
+	options="$options -input conf=input.conf"
+fi
+
+exec mplayer -vf pp=fd "$@" $options  && sleep 1

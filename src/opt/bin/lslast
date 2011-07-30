@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ls | gsed -r 's/[0-9]+/`printf %03d \0`/g' | gsed -r 's/^/echo /' | sh | sort -r | grep -i ian | head -n 1 | gsed -r 's/[0-9]+/{\0,\0-1}/g'

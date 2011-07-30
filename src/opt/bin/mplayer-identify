@@ -1,0 +1,15 @@
+#!/bin/sh
+
+{
+	if [ -z "$@" ]; then
+		find . -mindepth 1 -maxdepth 1 -type f -name '?*.?*' 
+	else
+		for i in "$@"; do echo "$i"; done
+	fi
+} \
+| /usr/local/bin/mplayer -msglevel all=0:identify=4  -nocache -frames 0 -nosound -vo null -playlist - 
+
+
+
+
+

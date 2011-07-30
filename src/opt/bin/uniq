@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+#rm -rf /var/tmp/uniq
+
+set -o pipefail
+
+dir="/var/tmp/uniq"
+
+if [ ! -d $dir ]; then mkdir -p $dir; chmod 777 $dir; fi
+if [ ! -d ~/db ]; then mkdir ~/db; fi
+
+startdir="`pwd`"
+
+_d=`date "+%Y%m%d_%H%M"`
+
+find . -d -type d -not -name 'DUPLES' \
+| while read d; do
+	cd "$startdir"
+	cd "$d"
+	(( ++weight ))
+	_w=`printf "%04d" $weight`
+	dirhash=`find . -maxdepth 1 -mindepth 1 -type f -name '?*.???' -ls | grep -iE '[^\.]\.[a-z][^\.]{2}$' | { read x || exit 1; echo "$x"; cat; } | md5` || continue
+	if [ -z "$dirhash" ]; then
+		echo "Dirhash is empty. Exiting."
+		exit 1
+	fi		
+	list="$dir/$dirhash"
+	_pwd=`pwd | sed -r 's/\//\\\\\//g'`
+	if [ ! -f "$list" ]; then
+		count=`ls -d ?*.??? | grep -iE '[^\.]\.[a-z][^\.]{2}$' | wc -l`
+		echo -n -e "Processing directory \e[31m$PWD\e[0m "
+		printf "(%d files) " "$count"
+		ls -d ?*.??? | grep -iE '[^\.]\.[a-z][^\.]{2}$' | fastsum - | sed -r "s/^([^ ]+) +(.*)/\1 :$_pwd\\/\2/"  | tee "$list" | while read x; do
+			if (( ++n % 20 == 0 )); then echo -n "$n"; elif (( n % 2 == 0 )); then echo -n '.'; fi
+		done		
+		cat "$list" | sed -r "s/[0-9]*:/$_d:/"  >> ~/db/uniq.db
+		echo "DONE"
+	fi 1>&2		
+	cat "$list" | sed -r "s/[0-9]*:/$_w:/"
+done \
+| sort | while read x; do
+	hash="${x%% *}"
+	file="${x#*:}"
+	if [ "$hash" = "$last_hash" ]; then
+		echo "Duplicate: $file" >&2
+		if [ ! -d "$startdir/DUPLES" ]; then mkdir "$startdir/DUPLES"; fi
+		newname="${file##*/}"
+		if [ -f "$startdir/DUPLES/$newname" ]; then newname="$((RANDOM + 10000))$newname"; fi
+		if [ -f "$startdir/DUPLES/$newname" ]; then newname="$((RANDOM + 10000))$newname"; fi
+		mv "$file" "$startdir/DUPLES/$newname"
+	else
+		last_hash="$hash"
+		last_file="$file"		
+	fi
+done
+
+
+
+
+
+
+
+
+
+
+
+

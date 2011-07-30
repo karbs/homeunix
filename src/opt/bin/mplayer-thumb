@@ -1,0 +1,7 @@
+#!/bin/sh
+
+rm -rf jpg
+
+ls | grep \.wmv$ > .list
+
+/usr/local/bin/mplayer -quiet -msglevel all=0:identify=5 -ss 5 -frames 1 -vo jpeg:outdir=jpg -nosound -playlist .list | sed -nr 's/^ID_FILENAME=//'

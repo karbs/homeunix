@@ -7,35 +7,26 @@
 #include <sys/types.h>
 
 
-
-int main(int argc, char **argv) {
-	if (argc < 2) {
-		fprintf(stderr, "Usage: fastsum file ...\n");
-		return 1;
-	}
-	char **arg;
-	char *filename;
+fastsum(const char *filename) {
 	int fd;
 	struct stat sb;
 	int result;
 	off_t size;
 	unsigned char *buf = (char *)malloc(1000);
 	off_t offset;
-	//char *out = (char *)malloc(10000);
-	//char *out_ptr;
-	
-	
-	arg = argv;
-	
-	++arg;
-	filename = *arg;
-	//printf("Filename: %s\n", filename);
-	fd = open(filename, O_RDONLY | O_NONBLOCK /* | O_DIRECT */);
+
+#ifdef O_DIRECT
+	fd = open(filename, O_RDONLY | O_NONBLOCK | O_DIRECT);
+#else
+	fd = open(filename, O_RDONLY | O_NONBLOCK);
+#endif
+		
 	if (fd == -1) {
-		fprintf(stderr, "Error opening file %s\n", filename);
+		fprintf(stderr, "Error opening file [%s]\n", filename);
 		fprintf(stderr, "   last errno=%i (%s)\n", errno, strerror(errno));
 		return 1;
 	}
+	
 	fstat(fd, &sb);
 	size = sb.st_size;
 	printf("%011u.", size);
@@ -91,11 +82,29 @@ int main(int argc, char **argv) {
 	}
 
 
-	
 	printf(" %s\n", filename);
 	
 	close(fd);
 
+	fflush(stdout);
+}
+
+
+int main(int argc, char **argv) {
+	char filename[4000];
+	int len;
+
+	if (argc < 2) {
+		fprintf(stderr, "Usage: fastsum { file | - }\n");
+		return 1;
+	}
+
+	if (strcmp(argv[1], "-") != 0)
+		fastsum(argv[1]);
+	else
+		while (!feof(stdin) && scanf("%s\n", filename))
+			fastsum(filename);
+	
 	return 0;
 }
 

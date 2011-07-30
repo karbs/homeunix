@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+for i in *\(*\).wmv; do mv "$i" "${i%\(*}(e${i#*\(}" ; done

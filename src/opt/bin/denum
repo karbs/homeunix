@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+find . -maxdepth 1 -type f -name "*.*" | while read f; do
+	if [[ "$f" =~ \/([0-9]{2,6}\.)+(.*) ]]; then
+		g="${BASH_REMATCH[2]}"
+		if [ ! -f "$g" ]; then
+			echo mv "$f" "$g"
+			mv -n "$f" "$g"
+		fi
+	fi
+done
+

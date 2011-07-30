@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec /usr/local/bin/mplayer -input conf=input-short.conf "$@"

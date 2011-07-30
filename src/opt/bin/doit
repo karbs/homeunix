@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+DT=240
+
+menc(){
+	/usr/local/bin/mencoder -idx -ovc copy -oac copy -really-quiet -msglevel all=0:statusline=5 -of lavf "$@"	
+}
+
+ff=`ls | grep -E "\.(avi|wmv|mpg|mpeg|mkv)$" | gsed -r 's/^.*$/\"\0\"/'`
+
+for file in *.*; do
+	if [[ ! "$file" =~ avi|wmv|mpg|mpeg|mkv|mp4 ]]; then continue; fi
+	
+	echo 
+	echo "*****************************************************"
+	echo -e "*** Converting file \e[1m$file\e[0m"
+	echo "*****************************************************"
+	f="`echo "$file" | sed -r 's/:ss[0-9]+(:[0-9]+)*//'`"
+	out="out-${f%.*}"
+	
+	if [ -d "$out" ]; then continue; fi
+	
+	id=`/usr/local/bin/mplayer -vfm ffmpeg -nocache -frames 0 -ao null -vo null -really-quiet -identify -frames 0 -msglevel all=0:identify=4 "$file" 2>/dev/null| gsed -r 's/^([^=]+)=(.*)$/\1="\2"/'`
+	#echo "*** id = $id"				
+	#exit
+	
+	eval "$id"
+	x=$(( ${ID_LENGTH%.*} / DT ))
+	#echo "*** x = $x"
+
+	menc_options=
+
+	if [[ "$ID_AUDIO_CODEC" =~ aac ]]; then
+		menc_options="$menc_options -fafmttag 0x706D"
+	fi
+
+	if [ -d out.tmp ]; then
+		rm -rf out.tmp
+	fi
+	
+	mkdir out.tmp
+	
+	for (( i=0; i<x; ++i )); do
+		o=`printf "out.tmp/${f%.*}_%0.4d" $i`.${f##*.}
+		ss=$(( i*DT ))
+		menc -o "$o" -ss $((ss + 7)) -endpos $((DT + 10)) "$file" $menc_options "$@" || {
+			echo "Mencoder returned error. Exiting."
+			exit 1
+		}
+		sleep 3
+	done
+	mv out.tmp "$out"
+	[ -f .p ] && cp .p "$out"
+done
+
+echo "DONE                                                                               "
+
+
+

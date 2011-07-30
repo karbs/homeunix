@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+#mkdir -p .out
+
+if [ -f "$1" ]; then
+	file="$1"
+	ss="$2"
+else
+	ss="$1"
+	file="$2"
+fi
+
+if (( ss == 0 )); then
+	echo "Usage: ${0##*/} file time,"
+	echo "       where time is number of seconds from beggining."
+	exit 1
+fi
+
+shift 2
+
+ext="${file##*.}"
+base="${file%.*}"
+base="${base##*/}"
+part1="${base}_part1.$ext"
+part2="${base}_part2.$ext"
+
+menc(){
+	/usr/local/bin/mencoder -idx -ovc copy -oac copy -really-quiet -msglevel all=0:statusline=5 -of lavf "$@"
+}
+
+
+menc -o "$part1" -endpos "$ss" "$file" -audio-demuxer aac -fafmttag 0x706D "$@"
+menc -o "$part2" -ss "$ss" "$file" -audio-demuxer aac -fafmttag 0x706D "$@"
+
+
+
+
+
+
+
+
