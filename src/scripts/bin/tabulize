@@ -1,0 +1,14 @@
+#!/bin/sh
+
+tmp=".tabulize.tmp"
+
+for i in "$@"; do
+	echo "Tabulizing file $i"
+	if [ -f "$tmp" ]; then
+		echo "Panic"
+		exit 1
+	fi
+	sed -r 's/  /\t/g' "$i" > "$tmp"
+	mv "$tmp" "$i"
+done
+
