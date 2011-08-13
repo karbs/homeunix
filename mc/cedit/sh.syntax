@@ -48,6 +48,7 @@ wholechars abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_
 #    keyword ; green
 
 
+
 #    keyword "$(*)" brightgreen
 #    keyword $(*) brightgreen
 

@@ -4,7 +4,6 @@ include html.syntax
 file ..\*\\.(extml)$ SQL\sProgram
 include xml.syntax
 
-
 file ..\*\\.(sql|SQL)$ SQL\sProgram
 include mysql.syntax
 
@@ -16,6 +15,11 @@ include makefile.syntax
 
 file ..\*\\.(l|lex)$ Lex\ssource!
 include c.syntax
+
+
+file ..\*\\.(diff|rej|patch)$ Diff\sOutput ^(diff|Index:|---)\s
+include diff.syntax
+
 
 
 # This file describes which highlighting scheme is applied to a particular
@@ -51,8 +55,8 @@ include filehighlight.syntax
 file ..\*\\.(e)$ Eiffel\sSource\sFile
 include eiffel.syntax
 
-file ..\*\\.(diff|rej|patch)$ Diff\sOutput ^(diff|Index:)\s
-include diff.syntax
+#file ..\*\\.(diff|rej|patch)$ Diff\sOutput ^(diff|Index:)\s
+#include diff.syntax
 
 file ..\*\\.lsm$ LSM\sFile
 include lsm.syntax
