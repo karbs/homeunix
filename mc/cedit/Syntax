@@ -1,11 +1,15 @@
 file ..\*\\.(xul|html|js|php|tpl\.php|xhtml|module|install|class|inc)$ 000\sMY! ^.\*(php|html)
 include html.syntax
 
-file ..\*\\.(extml)$ SQL\sProgram
+file ..\*\\.(extml)$ Extml\sProgram
 include xml.syntax
 
 file ..\*\\.(sql|SQL)$ SQL\sProgram
 include mysql.syntax
+
+file ..\*\\.(pls|PLS)$ PL\/SQL\sProgram
+include sql.syntax
+
 
 file ..\*(profile|rc|\\.(env|sh))$ Shell\sScript  ^#!.\*sh$
 include sh.syntax
