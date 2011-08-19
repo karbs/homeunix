@@ -46,6 +46,13 @@ fi
 
 
 [ ! -z "$ss" ] && (( ss > 10 )) && add_option "-ss $ss"
+
+if [[ $x =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
+	ss="${BASH_REMATCH[1]}"
+	add_option "-ss $ss"
+fi
+
+
 	
 
 command_aspect() {
@@ -250,10 +257,14 @@ cat .mplayer-out | while read x ; do
 		exit
 		;;
 
-	ID_START_TIME=*)
-		c=${x#*.}
+	ID_START_TIME=*)		
+		echo -e "\e[1m****** START_TIME = $x\e[0m" 1>&2	
+				
+		c=${x#*.}				
 		if (( c > 0 )); then
-			echo seek 1 > .command-pipe
+			:
+			#echo seek 0 > .command-pipe
+			#echo seek 2 2 > .command-pipe
 		fi
 		;;
 	
@@ -265,6 +276,25 @@ cat .mplayer-out | while read x ; do
 		echo -e "\e[1m******************************* $y\e[0m" 1>&2
 		
 		FILE="${FILE#file://}"
+		
+		
+		#if [[ "${FILE##*/}/${FILE%/*}/$PWD" =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
+		
+		if [[ "${FILE##*/}/${FILE%/*}" =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
+			ss="${BASH_REMATCH[1]}"
+			echo "seek ${ss} 2" > .command-pipe
+			last_goto_position="$ss"				
+			{
+				sleep 0.1
+				echo osd_show_text \"ss ${ss}\" 600 > .command-pipe
+				sleep 0.2
+				echo osd_show_text \"ss ${ss}\" 600 > .command-pipe
+			} &
+		else
+			:
+			#echo "seek -10"
+		fi		
+		
 		DIR=`dirname "$FILE"`
 
 		if [ ! -z "$FILE" ]; then
@@ -306,19 +336,6 @@ cat .mplayer-out | while read x ; do
 				echo "set_property volume $vol"
 			fi			
 
-			if [[ "${FILE##*/}/${FILE%/*}/$PWD" =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
-				ss="${BASH_REMATCH[1]}"
-				echo "seek ${ss} 2"
-				last_goto_position="$ss"
-				
-				#sleep 0.2
-				{
-					sleep 0.1
-					echo osd_show_text \"ss ${ss}\" 600 > .command-pipe
-					sleep 0.2
-					echo osd_show_text \"ss ${ss}\" 600 > .command-pipe
-				} &
-			fi
 		} > .command-pipe
 		;;
 
