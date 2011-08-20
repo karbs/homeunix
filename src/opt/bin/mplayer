@@ -119,6 +119,20 @@ command_goto() {
 }
 
 
+command_shift() {
+	if [ ! -z "$command_lock" ]; then return; fi
+	command_lock=1
+	(
+		echo "speed_set 20" > .command-pipe &
+		sleep 1
+		echo "speed_set 1" > .command-pipe
+	) &
+#	echo "pause"
+#	sleep 0.3
+#	echo "pause"
+	command_lock=
+}
+
 
 command_ss() {
 	ANS_TIME_POSITION=${ANS_TIME_POSITION%.*}

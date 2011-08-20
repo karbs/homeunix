@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+names=(X `echo {a..z}`)
+
+(( M = 60, n = 0, m = 0 ))
+
+find . -maxdepth 1 -type f -name '?*.?*' | sort | while read f; do
+	if (( --m <= 0 )); then
+		(( ++n, m = M ))
+		d="${names[$n]}"
+		mkdir -p "$d"
+		if [ -f .p -a ! -f "$d/.p" ]; then
+			cp .p "$d"
+		fi
+	fi
+	mv "$f" "$d"
+done
+
+
+
+exit
+
+
+
+x=(`echo {a..z}`)
+
+ls \
+| sed -r "s/'/\\\\'/g"  \
+| sed -r "s/^(.+)\.[a-z]+/'\0' |/" \
+| tr -d '\n' \
+| sed -r 's/([^\|]+\|){60}/\n\0/g' \
+| sed 1d \
+| cat -n \
+| sed -r 's/^ +([0-9]+)[ \t]+(.*)/d=${x[\1]}\nmkdir $d\ncp \2 "$d"\n/' \
+| tr -d '|'
+
+
+#| head -n 10 | sed -r "s/.*/'\0' /" | tr '\n' '|' | sed -r 's/([^\|]+\|){3}/\n\0/g' | sed 1d | cat -n
