@@ -1,3 +1,6 @@
+file ..\*\\.(diff|rej|patch)$ Diff\sOutput ^(diff|Index:|---)\s
+include diff.syntax
+
 file ..\*\\.(xul|html|js|php|tpl\.php|xhtml|module|install|class|inc)$ 000\sMY! ^.\*(php|html)
 include html.syntax
 
@@ -7,9 +10,8 @@ include xml.syntax
 file ..\*\\.(sql|SQL)$ SQL\sProgram
 include mysql.syntax
 
-file ..\*\\.(pls|PLS)$ PL\/SQL\sProgram
+file ..\*\\.(pls|PLS|plb|PLB)$ PL\/SQL\sProgram
 include sql.syntax
-
 
 file ..\*(profile|rc|\\.(env|sh))$ Shell\sScript  ^#!.\*sh$
 include sh.syntax
@@ -20,9 +22,6 @@ include makefile.syntax
 file ..\*\\.(l|lex)$ Lex\ssource!
 include c.syntax
 
-
-file ..\*\\.(diff|rej|patch)$ Diff\sOutput ^(diff|Index:|---)\s
-include diff.syntax
 
 
 

@@ -1,5 +1,6 @@
 context default
-	keyword linestart #*\n brown
+#	keyword linestart #*\n brown
+	keyword linestart \[\s\t\]#*\n brown
 	keyword whole \{0123456789\}\[0123456789\] cyan
 	keyword ( green
 	keyword ) green
