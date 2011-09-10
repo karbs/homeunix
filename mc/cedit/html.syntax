@@ -294,29 +294,32 @@ context // \n brown
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]EOF\n \nEOF\[;\]\n yellow
-	keyword \\\["'\\/rntsbw\] white
-	keyword {\$+} brightgreen black
-	keyword \{=:\} green
+	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
+	keyword $\{_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightred
+	keyword {\$*} brightred black
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]EOT\n \nEOT\[;\]\n cyan
-	keyword {\$+} brightcyan black
+context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]EOT\n \nEOT\[;\]\n yellow
+	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
+	keyword $\{_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightred
+	keyword {\$*} brightred black
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]EOD\n \nEOD\[;\]\n cyan
-	keyword {\$+} brightcyan black
+context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]EOD\n \nEOD\[;\]\n yellow
+	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
+	keyword $\{_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightred
+	keyword {\$*} brightred black
+
+
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]'EOD'\n \nEOD\[;\]\n magenta
-	keyword {\$+} brightcyan black
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context exclusive  <<<\[\s\]\[-\]\[\s\]\[\\\]'EOT'\n \nEOT\[;\]\n magenta
-	keyword {\$+} brightcyan black
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]'EOF'\n \nEOF\[;\]\n magenta
-	keyword {\$+} brightcyan black
 
 
 
@@ -381,7 +384,6 @@ context ' ' brightmagenta
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
 	keyword : brown
-#	keyword ; brightcyan
 	keyword @@*@@ red
 	keyword <?*?> white red
 	keyword \\\\ brightmagenta
