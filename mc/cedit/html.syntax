@@ -291,31 +291,31 @@ context // \n brown
 
 
 
+
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOF\n \nEOF\[;\]\n yellow
+context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]EOF\n \nEOF\[;\]\n yellow
 	keyword \\\["'\\/rntsbw\] white
 	keyword {\$+} brightgreen black
 	keyword \{=:\} green
 
-
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOT\n \nEOT\[;\]\n cyan
+context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]EOT\n \nEOT\[;\]\n cyan
 	keyword {\$+} brightcyan black
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOD\n \nEOD\[;\]\n cyan
+context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]EOD\n \nEOD\[;\]\n cyan
 	keyword {\$+} brightcyan black
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]'EOD'\n \nEOD\[;\]\n magenta
+context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]'EOD'\n \nEOD\[;\]\n magenta
 	keyword {\$+} brightcyan black
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]'EOT'\n \nEOT\[;\]\n magenta
+context exclusive  <<<\[\s\]\[-\]\[\s\]\[\\\]'EOT'\n \nEOT\[;\]\n magenta
 	keyword {\$+} brightcyan black
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]'EOF'\n \nEOF\[;\]\n magenta
+context exclusive <<<\[\s\]\[-\]\[\s\]\[\\\]'EOF'\n \nEOF\[;\]\n magenta
 	keyword {\$+} brightcyan black
 
 
