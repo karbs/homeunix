@@ -45,10 +45,11 @@ context default
 #	keyword <script white
 #	keyword </script> white
 
-	keyword whole <<<EOT   white black
-	keyword whole <<<EOF   white black
-	keyword whole linestart EOT white black
-	keyword whole linestart EOF white black
+#Heredocs and nowdocs
+	keyword <<<EO\{TDF\}\n   white black
+	keyword <<<'EO\{TDF\}'\n   white black
+	keyword linestart EO\{TDF\}\[;\]\n white black
+
 
 	keyword <!doctype white red
 	keyword <!DOCTYPE white red
@@ -287,16 +288,37 @@ wholechars #=&?/._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 #XXX
 context // \n brown
 
+
+
+
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOF EOF yellow
+context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOF\n \nEOF\[;\]\n yellow
 	keyword \\\["'\\/rntsbw\] white
 	keyword {\$+} brightgreen black
 	keyword \{=:\} green
 
 
 wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOT EOT cyan
+context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOT\n \nEOT\[;\]\n cyan
 	keyword {\$+} brightcyan black
+
+wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]EOD\n \nEOD\[;\]\n cyan
+	keyword {\$+} brightcyan black
+
+wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]'EOD'\n \nEOD\[;\]\n magenta
+	keyword {\$+} brightcyan black
+
+wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]'EOT'\n \nEOT\[;\]\n magenta
+	keyword {\$+} brightcyan black
+
+wholechars _0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+context exclusive whole <<<\[\s\]\[-\]\[\s\]\[\\\]'EOF'\n \nEOF\[;\]\n magenta
+	keyword {\$+} brightcyan black
+
+
 
 
 
