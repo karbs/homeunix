@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <string.h>
+
 
 fastsum(const char *filename) {
 	int fd;
@@ -102,10 +104,10 @@ int main(int argc, char **argv) {
 	if (strcmp(argv[1], "-") != 0)
 		fastsum(argv[1]);
 	else {
-		//while (!feof(stdin) && scanf("%s\n", filename))
-		//	fastsum(filename);
-		while (!feof(stdin) && fgets(filename, 3900, stdin))
-			printf("FILENAME: %s\n");
+		while (!feof(stdin) && fgets(filename, 3900, stdin)) {
+			filename[strlen(filename) - 1] = 0;
+			fastsum(filename);
+		}
 	}
 	
 	return 0;
