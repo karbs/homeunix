@@ -8,7 +8,7 @@ for i in "$@"; do
 		echo "Panic"
 		exit 1
 	fi
-	sed -r 's/  /\t/g' "$i" > "$tmp"
+	sed -r 's/  /\t/g' "$i" | sed -r 's/[ \t\r]+$//' > "$tmp"
 	mv "$tmp" "$i"
 done
 
