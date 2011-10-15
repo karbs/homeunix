@@ -1,6 +1,9 @@
 
 !xterm.vt100.font: -gnu-unifont-*-*-*-*-*-*-*-*-*-*-*-*
 
+XTerm.vt100.allowTitleOps: True
+XTerm.vt100.allowWindowOps: True
+XTerm.AllowTitleOps:    true
 
 XTerm*allowSendEvents: True
 XTerm*sessionMgt: True

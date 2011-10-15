@@ -358,17 +358,16 @@ context / /\[igm\] red black
 	keyword \{()\} brightmagenta
 	keyword \{$\\\}\{0123456789&\} brightgreen
 
-#	keyword \\[
-
-	keyword [^\[\s~!@#$%^&\*_\+=-{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]] brown red
+#	keyword [^\[\s~!@#$%^&\*_\+=-{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]] brown red
 	keyword [\[\s~!@#$%^&\*_\+=-{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]] cyan
 
 	
-	keyword [^*\\]*]       brown red
-	keyword [^*\\]]        brown red
-	keyword [^*[*\\]*\\]*] brown red
-	keyword [^*[*\\]*]     brown red
-	keyword [^*]           brown red
+#	keyword [^*\\]*]       brown red
+#	keyword [^*\\]]        brown red
+#	keyword [^*[*\\]*\\]*] brown red
+#	keyword [^*[*\\]*]     brown red
+#	keyword [^*]           brown red
+
 	keyword [*\\]]         cyan
 	keyword [*\\]*\\]*]    cyan
 	keyword [*\\]*]        cyan
@@ -378,11 +377,11 @@ context / /\[igm\] red black
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context ' ' brightmagenta
 	keyword %% green
-	keyword %\[-\]\[0123456789\]\{disfqQ\} brightred
-	keyword %\[-\]\[0123456789\].\[0123456789\]\{disfqQ\} brightred
+	keyword %\[-0123456789.\]\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} brightred
+	keyword %\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} brightred
 	keyword \\\{0123456789\}\[0123456789\] green
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
-	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
+	keyword \\\{\s~!@#$%^&\*_\+=-()[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
 	keyword : brown
 	keyword @@*@@ red
 	keyword <?*?> white red
@@ -390,26 +389,12 @@ context ' ' brightmagenta
 	keyword \\\{'"nrts?} brightmagenta
 
 
-#wholechars /"-_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-#context "/ /" red black
-#	keyword [^*[*\\]*\\]*] magenta
-#	keyword [^*[*\\]*]     magenta
-#	keyword [^*]           magenta
-#	keyword [*[*\\]*\\]*]  cyan
-#	keyword [*[*\\]*]      cyan
-#	keyword [*]            cyan
-#	wholechars \\
-#	keyword \\/
-#	keyword wholeleft \\\{rnt\} green
-#	keyword wholeleft \\\{sfwdWD\} brightmagenta
-#	keyword wholeleft \{|[]()\+\*?$^\} brightred
-
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context " " yellow black
 	keyword {\$*} brightred
 	keyword whole @\[-_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightred
 	keyword \\\{0123456789\}\[0123456789\] green
-	keyword \\\{\s~!@#$%^&\*_\+=-[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
+	keyword \\\{\s~!@#$%^&\*_\+=-()[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
 	keyword %% green
 	keyword %\[-0123456789.\]\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} magenta
 	keyword %\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} magenta
