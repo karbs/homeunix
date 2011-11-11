@@ -81,6 +81,8 @@ context default
 
 	keyword whole this white
 	keyword whole $this brightred
+	keyword wholeleft self:: white
+	
 	keyword whole \{ABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\{0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_\] brightgreen
 
 	wholechars $_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
@@ -127,6 +129,7 @@ context default
 	keyword whole instanceof white
 	keyword whole typeof white
 	keyword whole new white
+	keyword whole clone white
 	keyword whole delete white
 	keyword whole throw white
 	keyword whole try white
@@ -261,7 +264,7 @@ context /\*\* \*/ cyan
 	keyword whole $\{abcdefghijklmnopqrstuvwxyz0123456789_\}+ red
 #	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+(*) brightcyan
 #	keyword whole \{abcdefghijklmnopqrstuvwxyz0123456789_\}+: brightcyan
-	keyword //*\n brown
+
 
 #	keyword "*" brown
 #	keyword '*' brown
@@ -276,12 +279,15 @@ context /\*\* \*/ cyan
 	keyword . brightred
 	keyword --\[-\] white
 	
+	wholechars -#=&?/._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+	keyword whole http://+ brightred
+	keyword //*\n brown
 
 
 
 
 context /\* \*/ brown
-wholechars #=&?/._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+wholechars -#=&?/._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 	keyword whole http://+ yellow
 	keyword whole +@+ brightred
 
