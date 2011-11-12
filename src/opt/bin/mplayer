@@ -119,6 +119,11 @@ command_goto() {
 }
 
 
+command_c() {
+	echo "seek 1000 2"
+}
+
+
 command_shift() {
 	if [ ! -z "$command_lock" ]; then return; fi
 	command_lock=1

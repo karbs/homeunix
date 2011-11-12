@@ -6,4 +6,12 @@ fi
 
 #exec mplayer -vf pp=fd "$@" $options  && sleep 1
 
-exec mplayer "$@" $options  && sleep 1
+file="$1"
+shift
+short="${file##*/}"
+
+if [ -f "$short" ]; then
+	file="$short"
+fi
+
+exec mplayer "$file" "$@" $options  && sleep 1

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+
+#find . -type f -name "*.*" | shuffle -f - | /usr/local/bin/mplayer -playlist -
+
+{
+	if [ -f .mplayer-history ]; then
+		sed -n '$p' .mplayer-history
+	fi
+	find . -maxdepth 10 -type f -name "?*.??*" | sort
+} > .playlist
+
+mplayer -input conf=input-short.conf -nocache "$@" -playlist .playlist
+
+rm -f .playlist
+
+
+
