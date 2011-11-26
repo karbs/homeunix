@@ -386,6 +386,7 @@ context ' ' brightmagenta
 	keyword %\[-0123456789.\]\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} brightred
 	keyword %\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} brightred
 	keyword \\\{0123456789\}\[0123456789\] green
+	keyword \\u\{0123456789ABCDEF\}\{0123456789ABCDEF\}\{0123456789ABCDEF\}\{0123456789ABCDEF\} brightgreen
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 	keyword \\\{\s~!@#$%^&\*_\+=-()[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
 	keyword : brown
@@ -408,6 +409,7 @@ context " " yellow black
 #	keyword %s brightgreen black
 	keyword &\[abcdefghijklmnopqrstuvwxyz0123456789_\]; black green
 	keyword $\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] brightred
+	keyword \\u\{0123456789ABCDEF\}\{0123456789ABCDEF\}\{0123456789ABCDEF\}\{0123456789ABCDEF\} brightgreen
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 	keyword \\ green
 	keyword <?*?> yellow red
