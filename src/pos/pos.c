@@ -3,17 +3,39 @@
 #include <string.h>
 #include <math.h>
 
-void usage() { printf("Usage: pos [-p precision] [--pretty] {value | - } ...\n", stderr); exit(1); }
 
+// prints usage info
+void usage() {
+	fprintf(stderr, "Usage: pos [-p precision] [--pretty] {value | - } ...\n");
+	exit(1);
+}
+
+
+// compatision function for using in qsort
 int compar(const void *x, const void *y) { return (*(float *)x - *(float *)y); }
 
+// returns minimum of two numbers
+float _min(float a, float b) { return a < b ? a : b; }
+
+// returns maximum of two numbers
+float _max(float a, float b) { return a > b ? a : b; }
+
+// returns absolute value of number, always not negative
+float _abs(float x) {
+	return x < 0 ? -x : x;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////
 
 main(int argc, char *argv[]) {
-	float xx[1000], yy[1000], x, f = -1, b = -1;
+	float xx[1000], yy[1000], x, f = -1, b = -1, k, l, delta;
 	float prec = 10;
 	int nx = 0, ny = 0;
-	int i, j;
+	int i, j, jmin, jmax;
 	int bSearch = 0, bDelta = 0, bPretty = 0;
+	float delta_range_width = 300;
+	int pretty_count = 10;
 
 	if (argc <= 1)
 		usage();
@@ -35,6 +57,10 @@ main(int argc, char *argv[]) {
 		else if (argv + 1 < last_argv) {
 			if (strcmp(argv[1], "-p") == 0)
 				prec = atof((++argv)[1]); // sets precision
+			if (strcmp(argv[1], "-w") == 0)
+				delta_range_width = atof((++argv)[1]);
+			if (strcmp(argv[1], "-n") == 0)
+				pretty_count = atoi((++argv)[1]);
 			else if (strcmp(argv[1], "-f") == 0)
 				f = floorf(atof((++argv)[1]) * 10) / 10, bSearch = 1; // sets forward
 			else if (strcmp(argv[1], "-b") == 0)
@@ -48,7 +74,7 @@ main(int argc, char *argv[]) {
 		x = yy[j];
 		// delete nearest
 		for (i = 0; i < nx; ++i)
-			if ((xx[i] > 0) && (abs(xx[i] - abs(x)) < prec))
+			if ((xx[i] > 0) && (_abs(xx[i] - _abs(x)) < prec))
 				xx[i] = -1;
 		// add one
 		if (x > 0)
@@ -62,37 +88,137 @@ main(int argc, char *argv[]) {
 
 	// Sort the result.
 	qsort(yy, ny, sizeof(float), compar);
-	
-	if (bSearch < 0) {
-		for (i = ny - 1; i > 0; --i) if (yy[i] <= b - prec) break;
-		if (!bPretty)
-			printf("%g", bDelta ? yy[i] - b : yy[i]);
-		else {
-			if ((i + 1 >= ny) && (i - 2 >= 0)) printf(" %g ", yy[i - 2]);
-			if (i - 1 >= 0) printf("%g ", yy[i - 1]);
-			printf("<%g>", yy[i]);
-			if (i + 1 < ny) printf(" %g ", yy[i + 1]);
-			if ((i - 1 <= 0) && (i + 2 < ny)) printf(" %g ", yy[i + 2]);
-		}
-	} else if (bSearch > 0) {
-		for (i = 0; i < ny - 1; ++i) if (yy[i] > f) break;
-		if (!bPretty)
-			printf("%g", bDelta ? yy[i] - f : yy[i]);
-		else {
-			if ((i + 1 >= ny) && (i - 2 >= 0)) printf(" %g ", yy[i - 2]);
-			if (i - 1 >= 0) printf("%g ", yy[i - 1]);
-			printf("<%g>", yy[i]);
-			if (i + 1 < ny) printf(" %g ", yy[i + 1]);
-			if ((i - 1 <= 0) && (i + 2 < ny)) printf(" %g ", yy[i + 2]);
-		}
-	} else {
-		// Output the result.
+
+
+	// If not searching then just output the result.
+	if (!bSearch) {
 		for (i = 0; i < ny; ++i) {
 			if (i > 0)
 				putchar(' ');
 			printf("%g", yy[i]);
 		}
+		return 0;
 	}
+
+
+	/*
+	printf("*** DUMP OF YY BEGIN ***\n");
+	for (j = 0; j < ny - 1; ++j)
+		printf("yy[%2d] = %g\n", j, yy[j]);
+	printf("*** DUMP OF YY END ***\n");
+	*/
+
+
+	if (bSearch < 0) {
+		// search backward
+		for (i = ny - 1; i >= 0; --i)
+			if (yy[i] < b)
+				break;		
+	} else {
+		// search forward
+		for (i = 0; i < ny - 1; ++i)
+			if (yy[i] > f)
+				break;
+	}
+
+	//printf("bSearch=%d, f=%g, b=%g, ny=%d, i=%d\n", bSearch, f, b, ny, i);
+
+	
+	// If not pretty output then just output found position.
+	if (!bPretty) {
+		printf("%g\n",  bDelta ? (bSearch < 0 ? yy[i] - b : yy[i] - f) : yy[i]);
+		return 0;
+	}
+
+
+	char out_left[100][10], out_right[100][10];
+	int out_left_len = 0, out_right_len = 0;
+
+	// place current value in right buffer
+	sprintf(out_right[out_right_len++], "<%g>", yy[i]);
+	
+
+	// fill right buffer
+	k = yy[i];
+	jmin = i + 1;
+	jmax = jmin + pretty_count;
+	for (j = _max(0, jmin); (j >= 0) && (j < ny) && (j <= jmax); ++j) {
+		l = yy[j];
+		delta = _abs(k - l);
+		//fprintf(stderr, "delta: %g\n", delta);
+		//k = l;
+		if (delta < delta_range_width)
+			sprintf(out_right[out_right_len++], "+%g", delta);
+		else
+			sprintf(out_right[out_right_len++], " %g", l);
+	}
+
+	//if (j >= ny - 1)
+	//	sprintf(out_right[out_right_len++], "END");
+	
+
+	// fill left buffer
+	k = yy[i];
+	jmax = i - 1;
+	jmin = jmax - pretty_count;
+	for (j = _min(ny - 1, jmax); (j >= 0) && (j < ny) && (j >= jmin); --j) {
+		l = yy[j];
+		delta = _abs(k - l);
+		//k = l;
+		if (delta < delta_range_width)
+			sprintf(out_left[out_left_len++], "+%g", delta);
+		else
+			sprintf(out_left[out_left_len++], " %g", l);
+	}
+
+	//if (j <= 0)
+	//	sprintf(out_left[out_left_len++], "BEG");
+
+
+	// build main buffer
+	char *out[200];
+	int out_len = 0;
+
+	// copy left buffer to main buffer (in reverse order)
+	for (j = out_left_len - 1; j >= 0; --j)
+		out[out_len++] = out_left[j];
+	
+	// store position of current value in main buffer
+	i = out_len;
+	
+	// copy right buffer to main buffer
+	for (j = 0; j < out_right_len; ++j)
+		out[out_len++] = out_right[j];
+	
+	// calculate subset of main buffer to output	
+	if (bSearch < 0) { 
+		// if backward search then show "x[i-10] x[i-9] ... x[i-1]  <x[i]> x[i+1]"
+		jmax = i + _min(pretty_count, 1);
+		jmin = jmax - pretty_count;
+		// if not enoth left elements then add more right elements
+		if (jmin < 0)
+			jmax += -jmin;
+	} else {
+		// if forward search then show "x[i-1] <x[i]> x[i+1] ... x[i+10]"
+		jmin = i - _min(pretty_count, 1);
+		jmax = jmin + pretty_count;
+		// if not enoth right elements then add more left elements
+		if (jmax > out_len - 1)
+			jmin -= jmax - (out_len - 1);
+	}
+	
+	jmin = _max(0, jmin);
+	jmax = _min(out_len - 1, jmax);
+	
+	if (jmin > 0)
+		printf("...  ");
+	
+	// output subset of main buffer separated by double space
+	for (j = jmin; j <= jmax; ++j)
+		printf("%s  ", out[j]);
+		
+	if (jmax < out_len - 1)
+		printf("...  ");
 
 	putchar('\n');
 }
