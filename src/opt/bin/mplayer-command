@@ -3,7 +3,7 @@
 echo get_time_pos > .command-pipe
 
 {
-	sleep 0.1
+	sleep 0.05
 	echo "COMMAND=$*"
 	echo
 }

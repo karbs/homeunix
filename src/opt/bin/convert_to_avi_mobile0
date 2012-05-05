@@ -1,0 +1,49 @@
+#!/bin/sh
+
+export LANG=C
+
+mencoder=/usr/bin/mencoder
+
+
+#vf="-vf pp=lb,denoise3d=5:5,scale=576:-2,crop=576:432"
+vf="-vf pp=lb,scale=720:-2,crop=800:480,denoise3d=2:1:5"
+#vf="-vf pp=lb,denoise3d=2:1:5"
+
+#vf="-vf pp=lb,scale=640:-2,crop=640:480"
+#vf="-vf pp=lb,denoise3d=5:5"
+
+#vf="-vf scale=720:-2"
+
+
+#encopts="-lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=2000:keyint=10:threads=3"
+
+#encopts="-lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=1000:keyint=30:threads=3"
+
+encopts="-lavcopts vcodec=mpeg4:vbitrate=3000:keyint=30 -fps 30"
+
+#encopts="-lavcopts vcodec=wmv2:vbitrate=3000:keyint=30"
+
+
+#opts="-sws 10 -aspect 1.33 -forceidx"
+opts="-idx -forceidx"
+
+oac="-channels 2 -oac mp3lame -lameopts br=192 $af"
+#oac="-oac copy"
+
+
+cmd="$mencoder -vfm ffmpeg $opts $vf $oac -ovc lavc $encopts"
+#cmd="$mencoder $opts $vf $oac -ovc lavc $encopts"
+
+if [ -f "$1" -a -z "$2" ]; then
+	out="out_${1%.*}.avi"
+	if [ -d out ]; then
+		out="out/$out"
+	fi
+	#cmd="$cmd -o $out"
+fi
+
+$cmd -o "$out" "$@"
+
+
+#exec /usr/bin/mencoder -af ladspa=tap_dynamics_st:tap_dynamics_st:10:10:15:15:0:1  -forceidx -oac mp3lame -lameopts aq=2:vbr=4 -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=10000 -o out.avi -vf pp=li,denoise3d=2:2:2,scale=600:-2  "$@" 
+

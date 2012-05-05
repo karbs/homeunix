@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+if [ ! -d out ]; then
+	mkdir out
+fi
+
+
+process() {
+	for i in "$@"; do
+		if [ ! -f "$i" ]; then
+			echo "!!! file does not exists: $i"
+			continue
+		fi
+		out=out/`echo "${i%.*}"  | sed -r 's/:.*//' | sed -r 's/[^a-z0-9]*([a-z0-9])[a-z]*[^a-z0-9]*/\1/ig'`.mp4
+		echo "[$id] BEGIN $i --> $out"
+		if [ -f "$out" ]; then
+			echo "[$id] File $out exists ($i). Continuing."
+			#rm "$out"
+			continue
+		fi
+		#ffmpeg -loglevel quiet -i "$i" -strict experimental -s qcif -vcodec h263 -an -b 800k -s 352x288 "$out.tmp.3gp" >/dev/null 2>&1 \
+		ffmpeg -loglevel quiet -i "$i" -threads 3 -strict experimental -an -vcodec mpeg4 -b 1200k -mbd 2 -flags +mv4+aic -cmp 2 -subcmp 2 -vf crop=480x360 "$out.tmp.mp4" >/dev/null 2>&1 \
+		&& mv "$out.tmp.mp4" "$out" || {
+			echo "[$id] !!! Failed to encode file $i" 1>&2
+			return 1
+		}
+		echo "[$id] DONE $i"		
+	done
+}
+
+declare -A list1 list2 list3 list4
+m=1
+n=0
+
+for f in "$@"; do
+	if [ ! -f "$f" ]; then continue; fi
+	#echo "$f"
+	case $(( m++ )) in
+		1) list1[$n]="$f";;
+		2) list2[$n]="$f";;
+		3) list3[$n]="$f";;
+		4) list4[$n]="$f";;
+		5) (( m = 1, ++n ));;
+	esac
+done
+
+{
+	{ id=1 process "${list1[@]}"; } &
+	{ sleep 0.1; id=2 process "${list2[@]}"; } &
+	{ sleep 0.2; id=3 process "${list3[@]}"; } &
+	{ sleep 0.3; id=4 process "${list4[@]}"; }
+} | cat
+

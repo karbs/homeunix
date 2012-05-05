@@ -1,18 +1,22 @@
 #!/bin/sh
 
+
 {
 	ls *.* | sort > .a
 
 	if [ ! -f .mplayer-history ]; then
 		echo > .b
 	else
-		sed '$d' .mplayer-history | sort > .b
+		sed '$d' .mplayer-history | sed -r '/\//d' | sort > .b
+		#sed '$d' .mplayer-history | sed -r 's/.*([^\.//'    sort > .b
 		sed -n '$p' .mplayer-history
 	fi	
-	comm -23 .a .b | shuffle -f -
+	comm -23 .a .b | shuf -
 	rm -f .a .b
 } > .playlist
 
 mplayer -input conf=input-short.conf "$@" -playlist .playlist
+
+
 
 

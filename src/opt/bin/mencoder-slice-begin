@@ -29,12 +29,16 @@ part2="${base}_part2.$ext"
 #echo COMMAND: mencoder -idx -oac copy -ovc copy -o "$part2" -ss "$ss" "$file" "$@"
 
 menc(){
-	/usr/local/bin/mencoder -idx -ovc copy -oac copy -really-quiet -msglevel all=0:statusline=5 -of lavf "$@"
+	#/usr/bin/mencoder -idx -ovc copy -oac copy -really-quiet -msglevel all=0:statusline=5 -of lavf "$@"
+	/usr/bin/mencoder -idx -ovc copy -oac copy -msglevel all=1:statusline=5 -of lavf "$@"
 }
 
 
-menc -o "$part1" -endpos "$ss" "$file" "$@"
+menc -o "$part1" -endpos "$ss" "$file" "$@" || exit 1
 
+sum=`fastsum "$file"`
+sum1=`fastsum "$part1"`
+echo -e "${sum1%% *} \t ${sum%% *}"  >> ~/db/slice-history.db
 
 
 

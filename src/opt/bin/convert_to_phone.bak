@@ -1,0 +1,34 @@
+#!/bin/sh
+
+if [ ! -d out ]; then
+	mkdir out
+fi
+
+
+worker() {
+}
+
+
+for i in "$@"; do
+	if [ ! -f "$i" ]; then continue; fi
+	echo "$i"
+fi | {
+	worker & worker & worker
+}
+
+
+
+
+for i in "$@"; do
+	if [ ! -f "$i" ]; then continue; fi
+	out=out/`echo "${i%.*}"  | sed -r 's/:.*//' | sed -r 's/[^a-z0-9]*([a-z0-9])[a-z]*[^a-z0-9]*/\1/ig'`.3gp
+	if [ -f "$out" ]; then
+		echo "File $out exists ($i)"
+		continue
+	fi
+	ffmpeg -i "$i" -strict experimental -s qcif -vcodec h263 -an -b 800k -s 352x288 "$out.tmp.3gp" && mv "$out.tmp.3gp" "$out" || break
+done
+
+
+
+

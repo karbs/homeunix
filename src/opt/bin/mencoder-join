@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+#mkdir -p .out
+
+if [ -f "$1" ]; then
+	ext="${1##*.}"
+else
+	echo "Usage: ${0##*/} files"
+	exit 1
+fi
+
+out="out_${PWD##*/}.$ext"
+out="out.$ext"
+
+menc(){
+	/usr/local/bin/mencoder -idx -ovc copy -oac copy -really-quiet -msglevel all=0:statusline=5 -of lavf "$@"
+}
+
+
+menc "$@" -o "$out"
+
+
+
+
+
+
+
+

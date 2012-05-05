@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#ffmpeg -i ../0032.avi -strict experimental -threads 5 -an -b 500k -s 480x320 -y out.mpg || err
+#ffmpeg -i ../0032.avi -strict experimental -s qcif -vcodec h263 -an -b 800k -s 352x288  -y out.3gp || err
+#ffmpeg -i ../02_151.wmv -ss 2 -vf scale=352:288 -strict experimental -an -s qcif -vcodec h263 -an -b 1200k  -s 352x288 out.3gp || err
+
+#ffmpeg -i ../02_151.wmv -ss 2 -threads 5 -strict experimental -an -vcodec mpeg4 -b 2000k -mbd 2 -flags +mv4+aic -cmp 2 -subcmp 2 -vf scale=800:480 out.mp4 || err
+
+if [ ! -f "$1" ]; then echo "first parameter should be file"; exit 1; fi
+
+
+out="${1%:@*}"
+
+out="out_${out%.*}.avi"
+
+if [ -d out ]; then out="out/$out"; fi
+
+
+ffmpeg -i "$1" -threads 5 -strict experimental \
+	-acodec aac -ac 1 -ar 22050 -ab 64k \
+	-vcodec mpeg4 -b 4000k \
+	-mbd 2 -flags +mv4+aic -cmp 2 -subcmp 2 \
+	-vf scale=600:360 \
+	"$out"
+
+
+
+
+
+
+

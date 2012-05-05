@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+#if pgrep mplayer; then
+#    exit 0
+#fi
+
+SS=0
+
+f=$1
+
+opts=
+
+add_option(){
+	opts+=" $@"
+}
+
+if [[ $f =~ :a\(([^\)]*)\) ]]; then
+	add_option "-aspect ${BASH_REMATCH[1]}"
+fi
+
+
+if [ -e "$f" ]; then
+    eval `stat -L -s "$f"`
+    S=$((st_size/1000000))
+    if [ $S -gt 100 ]; then
+    
+	#SS=$(( S*RANDOM/8200 ))
+	SS=$(( S*RANDOM/10000 ))
+	
+	echo "********** SS=$SS"
+	case `echo $f` in
+	    *wmv|*mkv) SS=$((SS/3));;
+	esac
+	SS=$(( SS+RANDOM/200 ))
+	echo "********** SS=$SS"
+    fi
+fi
+
+add_option "-ss $SS"
+
+#command="/usr/bin/mplayer -ss $SS $opts"
+command="/usr/bin/`basename $0` $opts"
+
+echo "**************************************************************************"
+echo "EXECUTING COMMAND:"
+echo "$command"
+echo "**************************************************************************"
+
+$command "$@"
+
+
+sleep 0.1
+

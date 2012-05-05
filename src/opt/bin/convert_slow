@@ -1,0 +1,24 @@
+#!/bin/sh
+
+export LANG=C
+
+mencoder=/usr/bin/mencoder
+
+encopts="-lavcopts vcodec=mpeg4:vbitrate=5000:keyint=30 -fps 30"
+
+#vf="-vf scale=720:-2"
+vf="-vf scale=1024:-2"
+
+opts="-idx -forceidx"
+oac="-channels 2 -oac mp3lame -lameopts br=192 $af"
+
+if [ -f "$1" ]; then
+	out="${1%:@*}"
+	out="out_${out%.*}.avi"
+	if [ -d out ]; then
+		out="out/$out"
+	fi
+fi
+
+
+$mencoder -vfm ffmpeg $opts $vf $oac -ovc lavc $encopts -o "$out" "$@"

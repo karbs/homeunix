@@ -1,17 +1,32 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+#exec mplayer -vf pp=fd "$@" $options  && sleep 1
+
+file=
+
+
+detect_file(){
+	while [ ! -z "$1" ]; do
+		if [ -f "$1" ]; then
+			file="$1"
+			return
+		fi
+		shift
+	done
+}
+
+detect_file "$@"
+
 
 if [ "${1##*.}" = "avi" ]; then
 	options="$options -input conf=input.conf"
 fi
 
-#exec mplayer -vf pp=fd "$@" $options  && sleep 1
 
-file="$1"
-shift
-short="${file##*/}"
+exec mplayer "$@" $options
 
-if [ -f "$short" ]; then
-	file="$short"
-fi
+#exec vlc -f "$@" && sleep 1
 
-exec mplayer "$file" "$@" $options  && sleep 1
+#exec xine --no-splash "$@" && sleep 1
+
+#exec ffplay -fs "$@" && sleep 1

@@ -1,0 +1,44 @@
+#!/bin/sh
+
+export LANG=C
+mencoder=/usr/bin/mencoder
+encopts="-lavcopts vcodec=mpeg4:vbitrate=2500:keyint=90 -fps 30"
+opts="-idx -forceidx"
+oac="-channels 2 -oac mp3lame -lameopts br=128 $af"
+
+vf="-vf denoise3d=5:5"
+
+
+cmd="$mencoder -vfm ffmpeg $opts $vf $oac -ovc lavc $encopts"
+
+if [ -f "$1" ]; then
+	if [ ! -z "$2" -a -f "$2" ]; then
+		out="out_${PWD##*/}.${1##*.}"
+	else
+		out="out_${1%.*}.avi"
+	fi
+else
+	echo "Usage: ${0##*/} files"
+	exit 1
+fi
+
+if [ -f "$out" ]; then
+	out="${out%.*}.$RANDOM.${out##*.}"
+	[ -f "$out" ] && { echo "FATAL"; exit 1; }
+fi
+
+
+$cmd -o "$out" "$@"
+
+
+
+#vf="-vf pp=lb,denoise3d=5:5,scale=576:-2,crop=576:432"
+#vf="-vf pp=lb,scale=720:-2,crop=720:400,denoise3d=2:1:5"
+#vf="-vf pp=lb,denoise3d=2:1:5"
+#vf="-vf pp=lb,scale=640:-2,crop=640:480"
+#vf="-vf pp=lb,denoise3d=5:5"
+#encopts="-lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=2000:keyint=10:threads=3"
+#encopts="-lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=1000:keyint=30:threads=3"
+#encopts="-lavcopts vcodec=wmv2:vbitrate=3000:keyint=30"
+#opts="-sws 10 -aspect 1.33 -forceidx"
+#oac="-oac copy"

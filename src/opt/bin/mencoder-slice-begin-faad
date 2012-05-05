@@ -29,23 +29,16 @@ part2="${base}_part2.$ext"
 #echo COMMAND: mencoder -idx -oac copy -ovc copy -o "$part2" -ss "$ss" "$file" "$@"
 
 menc(){
-	/usr/bin/mencoder -idx -ovc copy -oac copy -really-quiet -msglevel all=0:statusline=5 -of lavf "$@"
+	#/usr/bin/mencoder -idx -ovc copy -oac copy -really-quiet -msglevel all=0:statusline=5 -of lavf "$@"
+	/usr/bin/mencoder -idx -ovc copy -oac copy -msglevel all=1:statusline=5 -of lavf "$@"
 }
 
 
-if [[ "$part2" =~ (.*):ss([0-9]+(:[0-9]+)*)(.*) ]]; then
-	new_ss=`echo ${BASH_REMATCH[2]} | tr ':' '\n' | while read n; do echo $((n - ss)); done | tr '\n' ':'`
-	part2="${BASH_REMATCH[1]}:ss${new_ss%:}${BASH_REMATCH[4]}"
-fi
-
-
-menc -o "$part2" -ss "$ss" "$file" "$@" || exit 1
+menc -o "$part1" -endpos "$ss" "$file" -fafmttag 0x706D "$@" || exit 1
 
 sum=`fastsum "$file"`
-sum2=`fastsum "$part2"`
-echo -e "${sum2%% *} \t ${sum%% *}"  >> ~/db/slice-history.db
-
-
+sum1=`fastsum "$part1"`
+echo -e "${sum1%% *} \t ${sum%% *}"  >> ~/db/slice-history.db
 
 
 

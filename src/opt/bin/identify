@@ -2,6 +2,11 @@
 
 #exec /usr/local/bin/mplayer -frames 0 -vc null -vo null -ao null -msglevel all=0:identify=9 "$@"
 
+gsed(){
+	exec sed "$@"
+}
+
+
 {
 	{
 		if [ -z "$@" ]; then
@@ -10,7 +15,7 @@
 			for i in "$@"; do echo "$i"; done
 		fi
 	} \
-	| /usr/local/bin/mplayer -msglevel all=0:identify=4  -nocache -frames 0 -nosound -vo null -playlist - \
+	| /usr/bin/mplayer -msglevel all=0:identify=4  -nocache -frames 0 -nosound -vo null -playlist - \
 	| gsed -nr '/FILE|VIDEO_(BITRATE|WIDTH|HEIGHT)|LENGTH|AUDIO_CODEC/p' \
 	| gsed -r 's/^ID_FILE/###\n&/' \
 	| gsed -r 's/^ID_[^=]+=//g' \

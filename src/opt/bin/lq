@@ -2,7 +2,7 @@
 
 echo "Getting video properties"
 
-find . -mindepth 1 -maxdepth 1 -type f -name '?*.?*' | /usr/local/bin/mplayer -msglevel all=0:identify=4  -nocache -frames 0 -nosound -vo null -playlist - \
+find . -mindepth 1 -maxdepth 1 -type f -name '?*.?*' | /usr/bin/mplayer -msglevel all=0:identify=4  -nocache -frames 0 -nosound -vo null -playlist - \
 | sed -nr 's/^ID_(FILE|VIDEO_(BITRATE|WIDTH|HEIGHT))[^=]*=//p' \
 | while read f; do
 	read br

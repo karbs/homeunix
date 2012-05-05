@@ -1,0 +1,186 @@
+#!/usr/bin/env bash
+
+#####################################################################################
+# convert_to_mp4 - video converter for web											#
+# DEPENDS:																			#
+# - ffmpeg ( http://ffmpeg.org/download.html )										#
+# - mplayer/mencoder ( http://www.mplayerhq.hu/design7/dload.html )					#
+# - MP4Box from gpac ( http://sourceforge.net/projects/gpac/files )					#
+# - aacplusenc from mp4tools ( http://teknoraver.net/software/mp4tools, 			#
+#		ftp://ftp2.ru.freebsd.org/pub/FreeBSD/distfiles/aacplusenc-0.15.tar.bz2 )	#
+# - ladspa																			#
+# - ladspa-tap-plugins	                                                            #
+#####################################################################################
+
+
+export LANG=C
+
+if [ -z "$LADSPA_PATH" ]; then
+	if [ -d /usr/lib/ladspa ]; then
+		LADSPA_PATH=/usr/lib/ladspa
+	elif [ -d /usr/lib/ladspa ]; then
+		LADSPA_PATH=/usr/lib/ladspa
+	fi
+fi
+
+export LADSPA_PATH
+
+
+mp4box=`which MP4Box` || mp4box=`which mp4box` || { echo "mp4box not found"; exit 1; }
+
+
+usage(){
+	echo "Usage: $0 [-h|--help] [-br bitrate] [-n|--no-rescale] [-ss time] [-preview]  filename [-o output_filename]"
+	exit 1
+}
+
+preprocess_opts=""
+
+while [ -n "$1" ]; do
+	case $1 in
+		-h|--help)
+			usage
+			;;
+		-n|--no-preprocess)
+			no_preprocess=1
+			;;
+		-o)
+			shift 1
+			fout="$1"
+			;;
+		-br)
+			shift 1
+			br="$1"
+			;;
+#		-ss)
+#			shift 1
+#			ss="$1"
+#			;;
+		-p|-preview)
+			preprocess_opts="-ss 00:00:10 $preprocess_opts -endpos 10"
+			preview=1
+			;;
+		--)
+			shift 1
+			break
+			;;
+#		-*)
+#			preprocess_opts="$@"
+#			break
+#			;;
+		*)
+			if [ -z $fin ]; then
+				fin="$1"
+				fout="${fin%.*}.mp4"
+			else
+				fin="$fin $1"
+				fout="out.mp4"
+			fi
+			;;
+	esac
+	shift 1
+done
+
+[ -z "$fin" ] && usage
+
+fout=${fout:-out.mp4}
+
+br=${br:-4000k}
+
+#echo "option_rescale=$option_rescale"
+
+movie0="movie_temp0.mkv"
+movie1="movie_temp1.mkv"
+
+
+if [ -z $no_preprocess ]; then
+
+f1="ladspa=declip_1195:declip"
+#f2=",ladspa=tap_dynamics_st:tap_dynamics_st:20:200:0:10:0:8"
+#f3=",ladspa=tap_dynamics_st:tap_dynamics_st:20:200:0:-15:0:0"
+#f4=",ladspa=tap_limiter:tap_limiter:0:5"
+
+af="-af resample=48000:1:0,$f1$f2$f3$f4,resample=44100:0:0"
+
+#	af="$af -af-add ladspa=declip_1195:declip"
+#	af="$af -af-add ladspa=tap_dynamics_st:tap_dynamics_st:5:50:20:-5:0:0"
+#	af="$af -af-add ladspa=tap_limiter:tap_limiter:0:15"
+
+	scale="scale=640:-2"
+#	scale="scale=576:-2"
+#	scale="scale=432:-2"
+#	scale="scale=320:-2"
+
+
+#	cmd1="mencoder -of lavf   -channels 2 -sws 10 $af  -forceidx -vf pp=lb/ha:128/va:128,denoise3d=8:4:16,$scale -oac mp3lame -lameopts br=256 -ovc lavc -lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=10000:keyint=2:threads=2 -o $movie0 $preprocess_opts $fin $@"
+
+#	cmd1="mencoder -of lavf  -ofps 24000/1001 -channels 2 -sws 10 $af  -forceidx -vf pp=lb/ha:128/va:128,denoise3d=8:4:16,$scale -oac mp3lame -lameopts br=256 -ovc lavc -lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=10000:keyint=2:threads=3 -o $movie0 $preprocess_opts $fin $@"
+
+#	cmd1="mencoder -vfm ffmpeg -of lavf  -ofps 24000/1001 -channels 2 $af  -forceidx -vf $scale,denoise3d=2:2:2 -oac mp3lame -lameopts br=256 -ovc lavc -lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=100000:keyint=1:threads=3 -o $movie0 $preprocess_opts $fin $@"
+	cmd1="mencoder -vfm ffmpeg -of lavf  -ofps 24000/1001 -channels 2 $af  -forceidx -vf $scale,denoise3d=1:1:1 -oac mp3lame -lameopts br=256 -ovc lavc -lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=100000:keyint=1:threads=3 -o $movie0 $preprocess_opts $fin $@"
+	
+#	cmd1="mencoder -of rawaudio  -ofps 24000/1001 -channels 2 -sws 10 $af  -forceidx -vf pp=lb/ha:128/va:128,denoise3d=8:4:16,$scale -oac mp3lame -lameopts br=256 -ovc lavc -lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=10000:keyint=2:threads=2 -o audio.avi $preprocess_opts $fin $@"
+#	cmd2="mencoder -of rawvideo  -ofps 24000/1001 -channels 2 -sws 10 $af  -forceidx -vf pp=lb/ha:128/va:128,denoise3d=8:4:16,$scale -oac mp3lame -lameopts br=256 -ovc lavc -lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=10000:keyint=2:threads=2 -o video.avi $preprocess_opts $fin $@"
+
+#	cmd1="mencoder -of rawaudio  -ofps 24000/1001 -channels 2 -sws 10 $af  -forceidx -vf pp=lb/ha:128/va:128,denoise3d=8:4:16,$scale -oac mp3lame -lameopts br=256 -ovc frameno -lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=10000:keyint=2:threads=2 -o audio.avi $preprocess_opts $fin $@"
+#	cmd2="mencoder -of rawvideo  -ofps 24000/1001 -channels 2 -sws 10 $af  -forceidx -vf pp=lb/ha:128/va:128,denoise3d=8:4:16,$scale -oac copy -lameopts br=256 -ovc lavc -lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=10000:keyint=2:threads=2 -o video.avi $preprocess_opts $fin $@"
+	
+else
+	cmd1="mencoder -o $movie0 -oac copy -ovc copy $fin $preprocess_opts"
+fi
+
+
+echo ""
+echo "*****************************************************************************************************"
+echo "EXECUTING COMMAND: $cmd"
+echo "*****************************************************************************************************"
+echo ""
+
+cmd="$cmd1; $cmd2; $cmd"
+
+$cmd1 || exit
+$cmd2 || exit
+
+
+#$cmd || exit
+
+#exit
+
+#exit
+
+ss=${ss:-0}
+
+#if [ ! -z $preview ]; then
+#	mv $movie0 preview.mkv
+#fi
+
+mv "$movie0" "$movie1"
+
+#mencoder -oac copy -ovc copy $movie0 -o $movie1 -ss $ss
+#mv video.avi $movie1
+
+#movie1=video.avi
+
+
+ffmpeg  -y -i "$movie1" -ar 44100 -ac 2 movie_temp_audio.wav || exit
+aacplusenc movie_temp_audio.wav movie_temp_audio.aac 24 || exit
+
+#/usr/bin/ffmpeg  -y -i $movie1 -an -pass 1 -vcodec libx264 -b $br -flags +loop -cmp +chroma -partitions +parti4x4+partp8x8+partb8x8 -flags2 +mixed_refs  -subq 5 -trellis 1 -refs 3 -bf 3 -b_strategy 1 -coder 1 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -bt $br -qcomp 0.8 -qmin 10 -qmax 51 -qdiff 4 -threads 2 movie_temp.mp4 || exit
+#/usr/bin/ffmpeg  -y -i $movie1 -an -pass 2 -vcodec libx264 -b $br -flags +loop -cmp +chroma -partitions +parti4x4+partp8x8+partb8x8 -flags2 +mixed_refs  -subq 5 -trellis 1 -refs 3 -bf 3 -b_strategy 1 -coder 1 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -bt $br -qcomp 0.8 -qmin 10 -qmax 51 -qdiff 4 -threads 2 movie_temp.mp4 || exit
+
+
+ffmpeg  -y -i $movie1 -an -pass 1 -vcodec libx264 -b $br -flags +loop -cmp +chroma -partitions +parti4x4+partp8x8+partb8x8 -flags2 +mixed_refs  -subq 5 -trellis 1 -refs 6 -bf 3 -b_strategy 1 -coder 1 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -bt $br -qcomp 0.8 -qmin 20 -qmax 51 -qdiff 4 -threads 2 movie_temp.mp4 || exit
+ffmpeg  -y -i $movie1 -an -pass 2 -vcodec libx264 -b $br -flags +loop -cmp +chroma -partitions +parti4x4+partp8x8+partb8x8 -flags2 +mixed_refs  -subq 5 -trellis 1 -refs 6 -bf 3 -b_strategy 1 -coder 1 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -bt $br -qcomp 0.8 -qmin 20 -qmax 51 -qdiff 4 -threads 2 movie_temp.mp4 || exit
+
+
+
+rm -rf $fout || exit
+$mp4box -add "movie_temp.mp4#video" $fout || exit
+$mp4box  -add "movie_temp_audio.aac" $fout  || exit
+$mp4box  -inter 500 $fout || exit
+
+rm -f movie_temp* *.log *.log.mbtree
+
+echo "DONE!"
+
+
