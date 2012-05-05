@@ -2,9 +2,32 @@
 
 prec=5
 
-mplayer_bin=/usr/bin/mplayer
 
-export LADSPA_PATH=/usr/lib64/ladspa
+which pos || { echo "pos not found."; exit 1; }
+
+
+for i in /usr/bin/mplayer /usr/local/bin/mplayer; do
+	if [ -d "$i" ]; then
+		mplayer_bin="$i"
+		break
+	fi
+done
+
+[ -f "$mplayer_bin" ] || { echo "mplayer not found."; exit 1; }
+
+
+if [ -z "$LADSPA_PATH" ]; then
+	for i in /usr/lib64/ladspa /usr/lib/ladspa /usr/local/lib/ladspa; do
+		if [ -d "$i" ]; then
+			export LADSPA_PATH="$i"
+			break
+		fi
+	done
+fi
+
+[ -d "$LADSPA_PATH" ] || { echo "ladspa not found."; exit 1; }
+
+
 
 add_option(){ opts+=" $@"; }
 
