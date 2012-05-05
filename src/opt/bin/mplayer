@@ -7,7 +7,7 @@ which pos || { echo "pos not found."; exit 1; }
 
 
 for i in /usr/bin/mplayer /usr/local/bin/mplayer; do
-	if [ -d "$i" ]; then
+	if [ -f "$i" ]; then
 		mplayer_bin="$i"
 		break
 	fi
