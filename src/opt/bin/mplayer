@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 
-mplayer_bin=/usr/local/bin/mplayer
+prec=5
 
-export LADSPA_PATH=/usr/local/lib/ladspa
+mplayer_bin=/usr/bin/mplayer
+
+export LADSPA_PATH=/usr/lib64/ladspa
 
 add_option(){ opts+=" $@"; }
 
 if [[ $@ =~ ^file://(.*) ]]; then [ -d "${BASH_REMATCH[1]}" ] && exit; fi
+
+if [ ! -f .mplayer-history ]; then
+	touch .mplayer-history
+fi
 
 ss=0
 f="$1"
@@ -23,10 +29,26 @@ if [[ $x =~ [:,]vf\(([^\)]*)\) ]]; then add_option "-vf-pre ${BASH_REMATCH[1]}";
 if [[ $x =~ [:,]dmo(\(\))? ]]; then add_option "-vfm +dmo"; fi
 if [[ $x =~ [:,]idx ]]; then add_option "-idx"; fi
 
+hd=0
 
 if [[ $arg =~ download2 ]]; then
 	add_option "-input conf=input-short.conf"
 elif [ -f "$f" ]; then
+	eval `stat -L -s "$f"`
+	sz_mb="$((st_size / 1000000))"
+
+	codes=":$f//$PWD:"
+
+	#if [[ "$codes" =~ HDTV2 ]]; then
+	#	add_option "-input conf=input-hd2.conf"
+	#	hd=2
+	#el
+	
+	if [[ "$codes" =~ [^a-z](hd|HD|HDTV|hdtv|720p)[^a-z] ]]; then
+		add_option "-input conf=input-hd.conf"
+		hd=1
+	fi
+		
 	if [[ $x =~ [:,]ss[\(=]?([0-9]*(\.[0-9]+)?)\)? ]];  then
 		:
 	else
@@ -35,9 +57,7 @@ elif [ -f "$f" ]; then
 		   		:
 		   		;;
 		   	*)
-				eval `stat -L -s "$f"`
-				s=$((st_size/1000000))
-				[ $s -gt 300 ] && ss=$(( RANDOM%1500 ))	
+				[ $sz_mb -gt 300 ] && ss="$(( RANDOM % 1500 ))"
 				;;
 		esac
 	fi
@@ -45,12 +65,12 @@ fi
 
 
 
-[ ! -z "$ss" ] && (( ss > 10 )) && add_option "-ss $ss"
+#[ ! -z "$ss" ] && (( ss > 10 )) && add_option "-ss $ss"
 
-if [[ $x =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
-	ss="${BASH_REMATCH[1]}"
-	add_option "-ss $ss"
-fi
+#if [[ $x =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
+#	ss="${BASH_REMATCH[1]}"
+#	add_option "-ss $ss"
+#fi
 
 
 	
@@ -58,23 +78,54 @@ fi
 command_aspect() {
 	echo switch_ratio $1
 	newfilename=`echo "${FILE##*/}" | sed -r 's/:a[\(=]?[0-9]*(\.[0-9]+)?\)?//' | sed -r "s/\\.[^\\.]+\$/:a$1&/"`
-	if [ ! -z "${FILE%/*}" ]; then
-		newfilename="${FILE%/*}/$newfilename"
 	
+	if [[ "$FILE" =~ \/ ]]; then
+		if [ ! -z "${FILE%/*}" ]; then
+			newfilename="${FILE%/*}/$newfilename"
+		fi
 	fi
-#	echo "*** newfilename: $newfilename" 1>&2
+	
+	echo "*** newfilename: $newfilename" 1>&2
 	mv "$FILE" "$newfilename"
-	echo "$newfilename" >> .mplayer-history
-	FILE="$newfilename"
+	
+	if [ -f .mplayer-history ]; then
+		{ sed '$d' .mplayer-history; echo "${newfilename##*/}"; } > .mplayer-history.tmp
+		mv .mplayer-history.tmp .mplayer-history
+	fi
+	
+	FILE="$newfilename"	
 }
+
+
+
 
 
 command_goto() {
 	ANS_TIME_POSITION=${ANS_TIME_POSITION%.*}
 	a=$ANS_TIME_POSITION
-	ss=$ANS_TIME_POSITION	
+	
+	
+	#ss_old="$ss"
+	ss=$ANS_TIME_POSITION
+	
+	if (( last_x > 0 )); then
+		ss="$last_x"
+	fi
+	
+	#if (( ss - ss_old > 100 )); then
+	#	ss=ss_old
+	#fi
+
+	#if [[ "$FILE" =~ .wmv$ ]]; then	
+	#	#(( ss -= 50 ))
+	#	echo "zzzzzzzzzzzzzz wmv! ss=$ss" 1>&2
+	#fi
+	
+	
 	pos_args=`echo $FILE | sed -r 's/.*:ss([0-9]+(:[0-9]+)*).*/\1/;s/:/ /g'`
-	fmt=`pos $pos_args $1 ${ss} --pretty`
+	
+	
+	fmt=`pos -p $prec $pos_args $1 ${ss} --pretty`
 	
 	x="$fmt"
 	x="${x#*<}"
@@ -84,21 +135,37 @@ command_goto() {
 	if [ "$y" = "0" ]; then return; fi
 		
 	case "$1" in
-		-b)		
-			if (( x == last_x )); then
-				(( ++goto_cnt ))
-				if (( goto_cnt <= 3 )); then
-					last_x=$x
-					(( ANS_TIME_POSITION -= 4 ))
-					echo "zzzzzzzzzzzzzz x=$x last_x=$last_x" 1>&2
-					command_goto "$@"
-					return
-				fi
+		-b)
+			if (( x == last_x )); then				
+				#(( x -= 50 ))
+				fmt=`pos -p $prec $pos_args $1 ${x} --pretty`
+				echo "zzzzzzzzzzzzzz fmt=$fmt" 1>&2
+				x0="$x"
+				x="$fmt"
+				x="${x#*<}"
+				x="${x%>*}"
+				y="${x%.*}"	
+				if [ "$y" = "0" ]; then return; fi
+				
+				
+				echo "zzzzzzzzzzzzzz x0=$x0 last_x=$last_x x=$x y=$y" 1>&2
+			
+				#(( ++goto_cnt ))
+				#if (( goto_cnt <= 3 )); then
+				#	last_x=$x
+				#	(( ANS_TIME_POSITION -= 4 ))
+				#	echo "zzzzzzzzzzzzzz x=$x last_x=$last_x" 1>&2
+				#	if (( x == last_x )); then
+				#	fi
+				#	command_goto "$@"
+				#	return
+				#fi
 			fi
 			;;
 		-f)
-			if (( x <= ANS_TIME_POSITION + 1 )); then
-				echo "*** goto: x (=$x) < ANS_TIME_POSITION (=$ANS_TIME_POSITION)" 1>&2
+			last_x=0
+			if (( x <= ss + 1 )); then
+				echo "*** goto: x (=$x) < ANS_TIME_POSITION (=$ss)" 1>&2
 				echo "seek +60"
 				return
 			fi
@@ -113,7 +180,11 @@ command_goto() {
 	#fmt=`echo $fmt | tr ' ' '_'`
 	fmt=`echo $fmt | sed -r 's/ /\\ /g'`
 	echo osd_show_text \"${fmt}\" 800
+	
+	echo "zzzzzzzzzzzzzz SEEKING TO $x" 1>&2
 	echo "seek $x 2"
+	
+	ANS_TIME_POSITION="$x"
 
 	last_goto_position="$x"
 }
@@ -138,6 +209,15 @@ command_shift() {
 	command_lock=
 }
 
+hdt=0
+
+
+
+if [ ! -d $HOME/db/mplayer ]; then
+	mkdir -p $HOME/db/mplayer || { exit 1; }
+fi
+
+
 
 command_ss() {
 	ANS_TIME_POSITION=${ANS_TIME_POSITION%.*}
@@ -150,7 +230,7 @@ command_ss() {
 
 	case "$1" in
 		a)
-			(( ss -= 1 ))
+			(( ss -= 2 ))
 			if (( ss < 1 )); then
 				(( ss = 1 ))
 			fi
@@ -173,7 +253,34 @@ command_ss() {
 			fi
 			;;
 	esac
-
+	
+	(( ss -= hdt ))
+	
+	if (( ss < 0 )); then
+		return
+	fi
+	
+	
+	#XXXXXX
+	if [ -z "$fid" ]; then
+		fid="$RANDOM"
+		config="$HOME/db/mplayer/$fid"
+		if [ -f "$config" ]; then
+			while true; do
+				fid="$(( $RANDOM % 9000 + 1000 ))$(( $RANDOM % 9000 + 1000 ))"
+				config="$HOME/db/mplayer/$fid"
+				if [ ! -f "$config" ]; then break; fi
+			done
+		fi
+		echo "*************** NEW FID: $fid" 1>&2
+		echo "${FILE##*/}/${FILE%/*}" > "$config"
+		newfilename=`echo "${FILE%.*}" | sed -r 's/:(@[0-9]+@|ss[0-9]+(:[0-9]+)*)//g'`":@$fid@.${FILE##*.}"
+		mv "$FILE" "$newfilename" 1>&2
+		REALFILE="$newfilename"
+	fi
+	
+	
+	
 	
 	if [[ "${FILE##*/}/${FILE%/*}" =~ :ss[0-9]+ ]]; then	
 		args=`echo $FILE | sed -r 's/.*:ss([0-9]+(\.[0-9]+)?(:[0-9]+(\.[0-9]+)?)*).*/\1/;s/:/ /g'`
@@ -181,7 +288,16 @@ command_ss() {
 		args=""
 	fi
 	
-	str=`pos $args ${sign}${ss} | sed -r 's/ /:/g'`
+	p="$prec"
+	if [ "$sign" = "-" ]; then
+		p=$((prec + 5))
+	fi
+
+	str=`pos -p $p $args ${sign}${ss}`
+
+	str=`echo "$str" | tr ' ' ':'`
+	
+	echo "*** str=$str" 1>&2
 
 	echo "*** ss ss=$ss" 1>&2
 
@@ -193,16 +309,20 @@ command_ss() {
 
 	echo "*** newfilename=[$newfilename]" 1>&2
 	
-	mv "$FILE" "$newfilename"
-
-	{
-		sed '$d' .mplayer-history
-		echo "$newfilename"
-	} > .mplayer-history.tmp
-
-	mv .mplayer-history.tmp .mplayer-history
-
-	FILE="$newfilename"
+	if [ ! "${newfilename##*/}" = "${FILE##*/}" ]; then
+		#mv "$FILE" "$newfilename" || {
+		echo "$newfilename" > "$config" || {
+			echo pausing osd_show_text \"error\" 500
+			return
+		}		
+		#{
+		#	sed '$d' .mplayer-history
+		#	echo "$newfilename"
+		#} > .mplayer-history.tmp
+		#mv .mplayer-history.tmp .mplayer-history
+		FILE="$newfilename"	
+	fi
+	
 
 	
 	{
@@ -214,6 +334,7 @@ command_ss() {
 				;;
 			*)
 				last_goto_position=$ss
+				last_x="$ss"
 				echo pausing osd_show_text \"ss_set=${ss}\" 500
 				sleep 0.2
 				echo pause
@@ -228,7 +349,7 @@ command_mv() {
 	if [ ! -d "$D" ]; then
 		mkdir "$D" || return;
 	fi
-	F="${FILE##*/}"
+	F="${REALFILE##*/}"
 	echo "F=$F" 1>&2
 	if [ -f "$D/$F" ]; then
 		if [[ $F =~ ([0-9]{2,6}\.)+(.*) ]]; then
@@ -236,7 +357,7 @@ command_mv() {
 		fi
 		F=$(( RANDOM + 10000 ))."$F"
 	fi
-	mv "$FILE" "$D/$F"
+	mv "$REALFILE" "$D/$F"
 
 	echo "$D/$F" >> .mplayer-history
 	
@@ -270,24 +391,51 @@ mkfifo .mplayer-out || exit
 
 cat .mplayer-out | while read x ; do
 	echo "mplayer: $x"
+
+	val="${x#*=}"
+	val="${val%.*}"
+	
 	case $x in
 
 	END)
 		exit
 		;;
 
-	ID_START_TIME=*)		
-		echo -e "\e[1m****** START_TIME = $x\e[0m" 1>&2	
+#	ID_START_TIME=*)		
+#		echo -e "\e[1m****** START_TIME = $x\e[0m" 1>&2	
+#				
+#		c=${x#*.}				
+#		if (( c > 0 )); then
+#			:
+#			#echo seek 0 > .command-pipe
+#			#echo seek 2 2 > .command-pipe
+#		fi
+#		;;
+
+
+	ID_LENGTH=*)
+		#x="${x#*=}"
+		#x="${x%.*}"
+		(( s = len = val, hours = s / 3600, s -= hours * 3600, minutes = s / 60, s -= minutes * 60, seconds = s ))
+		time_len=`printf "%02d:%02d:%02d" $hours $minutes $seconds`
+		
 				
-		c=${x#*.}				
-		if (( c > 0 )); then
-			:
-			#echo seek 0 > .command-pipe
-			#echo seek 2 2 > .command-pipe
-		fi
+		#{
+#			sleep 0.3
+#			echo osd_show_text \"ss ${ss} / $time_len / $name\" 3000 > .command-pipe
+		#} &
+		#echo osd_show_text \"ss ${ss} : $name\" 3000 > .command-pipe
+		;;
+
+	
+	#FILE=* | ID_FILENAME=*)
+	ID_FILENAME=*)
+		last_x=0
+		ss=0
 		;;
 	
-	FILE=* | ID_FILENAME=*)
+	FILE=*)
+		last_x=0
 		y="${x#*=}"
 		y="${y#\'}"
 		y="${y%\'}"
@@ -295,34 +443,78 @@ cat .mplayer-out | while read x ; do
 		echo -e "\e[1m******************************* $y\e[0m" 1>&2
 		
 		FILE="${FILE#file://}"
+		REALFILE="$FILE"
 		
+		
+		name=`echo "${FILE##*/}" | sed -r 's/:(a|ss)[0-9]+(:[0-9]+)*//g'`
+		
+		#name="${FILE##*/}"
+		#name="${name%%:ss*}...${FILE##*.}"
 		
 		#if [[ "${FILE##*/}/${FILE%/*}/$PWD" =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
+
+
+
+		fid=
+		config=
+		hdt=
 		
-		if [[ "${FILE##*/}/${FILE%/*}" =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
+		
+		if [[ "${FILE##*/}" =~ :@([0-9]+)@ ]]; then
+			fid="${BASH_REMATCH[1]}"
+			config=~/db/mplayer/$fid
+			if [ -f "$config" ]; then
+				FILE=`sed -r 's/^.*\///' "$config"`				
+				#echo "******* FILE=$FILE" 1>&2
+				#exit
+			else
+				fid=
+				config=
+			fi
+		fi
+				
+		codes="$FILE//${REALFILE##*/}/${REALFILE%/*}/$PWD"
+
+		
+		if [[ "$codes" =~ [\.:]hdt([0-9]+) ]]; then
+			hdt="${BASH_REMATCH[1]}"
+			echo "******* HDT: $hdt ********" 1>&2
+			#exit
+		fi
+
+		
+		if [[ "$codes" =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
 			ss="${BASH_REMATCH[1]}"
 			echo "seek ${ss} 2" > .command-pipe
-			last_goto_position="$ss"				
-			{
-				sleep 0.1
-				echo osd_show_text \"ss ${ss}\" 600 > .command-pipe
-				sleep 0.2
-				echo osd_show_text \"ss ${ss}\" 600 > .command-pipe
-			} &
+			last_goto_position="$ss"
+			echo "******************************* SEEKING TO ${ss} ***********************" 1>&2
+			
+			
+			#{
+			#	sleep 0.1
+			#	echo osd_show_text \"ss ${ss}\" 600 > .command-pipe
+			#	sleep 0.2
+			#	echo osd_show_text \"ss ${ss} : $name\" 3000 > .command-pipe
+			#} &
 		else
 			:
 			#echo "seek -10"
 		fi		
-		
-		DIR=`dirname "$FILE"`
 
-		if [ ! -z "$FILE" ]; then
+		if [[ "$codes" =~ hd|HD|720p ]]; then
+			hd=1
+			#hdt=1
+		fi
+		
+		DIR=`dirname "$REALFILE"`
+
+		if [ ! -z "$REALFILE" ]; then
 			lastfile=`tail -n 1 "$DIR/.mplayer-history"`
-			if [ "$FILE" = "$lastfile"  ]; then
+			if [ "$REALFILE" = "$lastfile"  ]; then
 				:
 			else
-				echo "*** echo $FILE >> $DIR/.mplayer-history" 1>&2
-				echo "$FILE" >> "$DIR/.mplayer-history"
+				echo "*** echo $REALFILE >> $DIR/.mplayer-history" 1>&2
+				echo "$REALFILE" >> "$DIR/.mplayer-history"
 			fi
 		fi
 		
@@ -332,7 +524,7 @@ cat .mplayer-out | while read x ; do
 			hu=0
 			sa=0
 		
-			if [[ "${FILE##*/}/${FILE%/*}/$PWD" =~ [:,]eq[\(=]?(-?[0-9]+)?([ ,:](-?[0-9]+)?([ ,:](-?[0-9]+)?([ ,:](-?[0-9]+)?)?)?)?\)? ]]; then
+			if [[ "$codes" =~ [:,]eq[\(=]?(-?[0-9]+)?([ ,:](-?[0-9]+)?([ ,:](-?[0-9]+)?([ ,:](-?[0-9]+)?)?)?)?\)? ]]; then
 				br="${BASH_REMATCH[1]:-0}" 
 				co="${BASH_REMATCH[3]:-0}"
 				hu="${BASH_REMATCH[5]:-0}"
@@ -345,17 +537,22 @@ cat .mplayer-out | while read x ; do
 			
 			echo "get_time_length"
 		
-			if [[ "${FILE##*/}/${FILE%/*}/$PWD" =~ [:]a\(?([0-9]*(\.[0-9]+)?)\)? ]]; then
+			if [[ "$codes" =~ [:]a\(?([0-9]*(\.[0-9]+)?)\)? ]]; then
 				echo "switch_ratio ${BASH_REMATCH[1]}"
 			fi
 								
-			if [[ "${FILE##*/}/${FILE%/*}/$PWD" =~ :vol([-0-9]+) ]]; then
+			if [[ "$codes" =~ :vol([-0-9]+) ]]; then
 				vol="${BASH_REMATCH[1]}"
 				echo "******** MUTE ********** vol=$vol" 1>&2
 				echo "set_property volume $vol"
 			fi			
 
 		} > .command-pipe
+		
+		sleep 0.1
+		echo osd_show_text \"ss ${ss} / $time_len / `echo "$name" | sed -r 's/:@[0-9]+@//g'`\" 1500 > .command-pipe
+		
+		
 		;;
 
 	COMMAND=*)
