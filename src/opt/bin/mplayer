@@ -148,30 +148,33 @@ command_goto() {
 	pos_args=`echo $FILE | sed -r 's/.*:ss([0-9]+(:[0-9]+)*).*/\1/;s/:/ /g'`
 	
 	
+	x=`pos -p $prec $pos_args $1 ${ss}`
 	fmt=`pos -p $prec $pos_args $1 ${ss} --pretty`
 	
-	x="$fmt"
-	x="${x#*<}"
-	x="${x%>*}"
-	y="${x%.*}"
+	#x="$fmt"
+	#x="${x#*<}"
+	#x="${x%>*}"
+	#y="${x%.*}"
 	
 	if [ "$y" = "0" ]; then return; fi
 		
 	case "$1" in
 		-b)
-			if (( x == last_x )); then				
+			if (( x == last_x )); then
+				x=`pos -p $prec $pos_args $1 ${x}`
+				
 				#(( x -= 50 ))
 				fmt=`pos -p $prec $pos_args $1 ${x} --pretty`
 				echo "zzzzzzzzzzzzzz fmt=$fmt" 1>&2
-				x0="$x"
-				x="$fmt"
-				x="${x#*<}"
-				x="${x%>*}"
-				y="${x%.*}"	
-				if [ "$y" = "0" ]; then return; fi
+				#x0="$x"
+				#x="$fmt"
+				#x="${x#*<}"
+				#x="${x%>*}"
+				#y="${x%.*}"	
+				#if [ "$y" = "0" ]; then return; fi
 				
 				
-				echo "zzzzzzzzzzzzzz x0=$x0 last_x=$last_x x=$x y=$y" 1>&2
+				echo "zzzzzzzzzzzzzz last_x=$last_x x=$x" 1>&2
 			
 				#(( ++goto_cnt ))
 				#if (( goto_cnt <= 3 )); then
@@ -200,9 +203,13 @@ command_goto() {
 	last_x=$x
 	
 	
-	#fmt=`echo $fmt | tr ' ' '_'`
-	fmt=`echo $fmt | sed -r 's/ /\\ /g'`
-	echo osd_show_text \"${fmt}\" 800
+	#fmt=`echo $fmt | sed -r 's/ /\\ /g'`
+	#fmt=`echo $fmt | sed -r 's/ /\\\\\\ /g'`
+	
+#	echo "*********** fmt: $fmt" 1>&2
+#	echo "*********** fmt: $fmt" | tr '[:blank:]' '#' 
+	
+	echo osd_show_text \"${fmt}\" 1800
 	
 	echo "zzzzzzzzzzzzzz SEEKING TO $x" 1>&2
 	echo "seek $x 2"

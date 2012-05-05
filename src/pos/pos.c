@@ -35,7 +35,7 @@ main(int argc, char *argv[]) {
 	int i, j, jmin, jmax;
 	int bSearch = 0, bDelta = 0, bPretty = 0;
 	float delta_range_width = 300;
-	int pretty_count = 10;
+	int pretty_count = 6;
 
 	if (argc <= 1)
 		usage();
@@ -54,6 +54,8 @@ main(int argc, char *argv[]) {
 			bDelta = 1; // show search result as delta
 		else if (strcmp(argv[1], "--pretty") == 0)
 			bPretty = 1; // 
+		else if (strcmp(argv[1], "--pretty2") == 0)
+			bPretty = 2; // 
 		else if (argv + 1 < last_argv) {
 			if (strcmp(argv[1], "-p") == 0)
 				prec = atof((++argv)[1]); // sets precision
@@ -111,7 +113,7 @@ main(int argc, char *argv[]) {
 
 	if (bSearch < 0) {
 		// search backward
-		for (i = ny - 1; i >= 0; --i)
+		for (i = ny - 1; i > 0; --i)
 			if (yy[i] < b)
 				break;		
 	} else {
@@ -123,12 +125,16 @@ main(int argc, char *argv[]) {
 
 	//printf("bSearch=%d, f=%g, b=%g, ny=%d, i=%d\n", bSearch, f, b, ny, i);
 
+
+	float result = bDelta ? (bSearch < 0 ? yy[i] - b : yy[i] - f) : yy[i];
+			
 	
 	// If not pretty output then just output found position.
 	if (!bPretty) {
-		printf("%g\n",  bDelta ? (bSearch < 0 ? yy[i] - b : yy[i] - f) : yy[i]);
+		printf("%g\n", result);
 		return 0;
 	}
+	
 
 
 	char out_left[100][10], out_right[100][10];
@@ -215,10 +221,15 @@ main(int argc, char *argv[]) {
 	
 	// output subset of main buffer separated by double space
 	for (j = jmin; j <= jmax; ++j)
-		printf("%s  ", out[j]);
+		printf("%s \xC2\xA0", out[j]);
 		
 	if (jmax < out_len - 1)
 		printf("...  ");
 
 	putchar('\n');
+	
+
+	if (bPretty == 2)
+		printf("%g\n", result);
+	
 }
