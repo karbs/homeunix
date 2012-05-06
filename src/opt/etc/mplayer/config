@@ -95,6 +95,10 @@ cache=4096
 lavdopts=fast=1:skiploopfilter=all
 
 
+nocorrect-pts=yes
+mc=1
+
+
 #ni=yes
 
 fs=yes

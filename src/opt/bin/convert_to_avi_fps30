@@ -18,6 +18,9 @@ mencoder=/usr/bin/mencoder
 
 encopts="-lavcopts vcodec=mpeg4:vbitrate=3000:keyint=30 -fps 29.970"
 
+encopts="$encopts -noodml -ofps 240000/9834"
+
+
 #encopts="-lavcopts vcodec=wmv2:vbitrate=3000:keyint=30"
 
 
