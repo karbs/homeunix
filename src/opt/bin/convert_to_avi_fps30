@@ -16,7 +16,7 @@ mencoder=/usr/bin/mencoder
 
 #encopts="-lavcopts vcodec=mpeg4:v4mv:trell:mbd=2:vbitrate=1000:keyint=30:threads=3"
 
-encopts="-lavcopts vcodec=mpeg4:vbitrate=3000:keyint=30 -fps 30"
+encopts="-lavcopts vcodec=mpeg4:vbitrate=3000:keyint=30 -fps 29.970"
 
 #encopts="-lavcopts vcodec=wmv2:vbitrate=3000:keyint=30"
 

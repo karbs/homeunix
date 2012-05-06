@@ -61,11 +61,6 @@ elif [ -f "$f" ]; then
 	sz_mb="$((st_size / 1000000))"
 
 	codes=":$f//$PWD:"
-
-	#if [[ "$codes" =~ HDTV2 ]]; then
-	#	add_option "-input conf=input-hd2.conf"
-	#	hd=2
-	#el
 	
 	if [[ "$codes" =~ [^a-z](hd|HD|HDTV|hdtv|720p)[^a-z] ]]; then
 		add_option "-input conf=input-hd.conf"
@@ -86,17 +81,6 @@ elif [ -f "$f" ]; then
 	fi
 fi
 
-
-
-#[ ! -z "$ss" ] && (( ss > 10 )) && add_option "-ss $ss"
-
-#if [[ $x =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
-#	ss="${BASH_REMATCH[1]}"
-#	add_option "-ss $ss"
-#fi
-
-
-	
 
 command_aspect() {
 	echo switch_ratio $1
@@ -122,59 +106,22 @@ command_aspect() {
 
 
 
-
 command_goto() {
 	ANS_TIME_POSITION=${ANS_TIME_POSITION%.*}
-	a=$ANS_TIME_POSITION
-	
-	ss=$ANS_TIME_POSITION
-	
-	if (( last_x > 0 )); then
-		ss="$last_x"
-	fi
-	
-	
+	a=$ANS_TIME_POSITION	
+	ss=$ANS_TIME_POSITION	
+	if (( last_x > 0 )); then ss="$last_x"; fi		
 	pos_args=`echo $FILE | sed -r 's/.*:ss([0-9]+(:[0-9]+)*).*/\1/;s/:/ /g'`
-	
-	
-	x=`pos -p $prec $pos_args $1 ${ss}`
+	x=`pos -p $prec $pos_args $1 ${ss}` || return
 	fmt=`pos -p $prec $pos_args $1 ${ss} --pretty`
-	
-	#x="$fmt"
-	#x="${x#*<}"
-	#x="${x%>*}"
-	#y="${x%.*}"
-	
-	if [ "$y" = "0" ]; then return; fi
-		
+				
 	case "$1" in
 		-b)
 			if (( x == last_x )); then
 				x=`pos -p $prec $pos_args $1 ${x}`
-				
-				#(( x -= 50 ))
 				fmt=`pos -p $prec $pos_args $1 ${x} --pretty`
-				echo "zzzzzzzzzzzzzz fmt=$fmt" 1>&2
-				#x0="$x"
-				#x="$fmt"
-				#x="${x#*<}"
-				#x="${x%>*}"
-				#y="${x%.*}"	
-				#if [ "$y" = "0" ]; then return; fi
-				
-				
-				echo "zzzzzzzzzzzzzz last_x=$last_x x=$x" 1>&2
-			
-				#(( ++goto_cnt ))
-				#if (( goto_cnt <= 3 )); then
-				#	last_x=$x
-				#	(( ANS_TIME_POSITION -= 4 ))
-				#	echo "zzzzzzzzzzzzzz x=$x last_x=$last_x" 1>&2
-				#	if (( x == last_x )); then
-				#	fi
-				#	command_goto "$@"
-				#	return
-				#fi
+				#echo "zzzzzzzzzzzzzz fmt=$fmt" 1>&2				
+				#echo "zzzzzzzzzzzzzz last_x=$last_x x=$x" 1>&2
 			fi
 			;;
 		-f)
@@ -187,30 +134,19 @@ command_goto() {
 			;;
 	esac
 	
-	goto_cnt=0
-	
-	last_x=$x
-	
-	
-	#fmt=`echo $fmt | sed -r 's/ /\\ /g'`
-	#fmt=`echo $fmt | sed -r 's/ /\\\\\\ /g'`
-	
-#	echo "*********** fmt: $fmt" 1>&2
-#	echo "*********** fmt: $fmt" | tr '[:blank:]' '#' 
-	
-	echo osd_show_text \"${fmt}\" 1800
-	
+	goto_cnt=0	
+	last_x=$x	
+	echo osd_show_text \"${fmt}\" 1800	
 	echo "zzzzzzzzzzzzzz SEEKING TO $x" 1>&2
-	echo "seek $x 2"
-	
+	echo "seek $x 2"	
 	ANS_TIME_POSITION="$x"
-
 	last_goto_position="$x"
 }
 
 
 command_c() {
-	echo "seek 1000 2"
+	#echo "seek 1000 2"
+	echo "seek +1000"
 }
 
 
@@ -222,9 +158,6 @@ command_shift() {
 		sleep 1
 		echo "speed_set 1" > .command-pipe
 	) &
-#	echo "pause"
-#	sleep 0.3
-#	echo "pause"
 	command_lock=
 }
 
@@ -232,9 +165,6 @@ hdt=0
 
 
 
-if [ ! -d $HOME/db/mplayer ]; then
-	mkdir -p $HOME/db/mplayer || { exit 1; }
-fi
 
 
 
@@ -329,16 +259,14 @@ command_ss() {
 	echo "*** newfilename=[$newfilename]" 1>&2
 	
 	if [ ! "${newfilename##*/}" = "${FILE##*/}" ]; then
-		#mv "$FILE" "$newfilename" || {
+		if [ ! -d "${config%/*}" ]; then
+			mkdir -p "${config%/*}"
+		fi
+		
 		echo "$newfilename" > "$config" || {
 			echo pausing osd_show_text \"error\" 500
 			return
 		}		
-		#{
-		#	sed '$d' .mplayer-history
-		#	echo "$newfilename"
-		#} > .mplayer-history.tmp
-		#mv .mplayer-history.tmp .mplayer-history
 		FILE="$newfilename"	
 	fi
 	
@@ -420,30 +348,10 @@ cat .mplayer-out | while read x ; do
 		exit
 		;;
 
-#	ID_START_TIME=*)		
-#		echo -e "\e[1m****** START_TIME = $x\e[0m" 1>&2	
-#				
-#		c=${x#*.}				
-#		if (( c > 0 )); then
-#			:
-#			#echo seek 0 > .command-pipe
-#			#echo seek 2 2 > .command-pipe
-#		fi
-#		;;
-
 
 	ID_LENGTH=*)
-		#x="${x#*=}"
-		#x="${x%.*}"
 		(( s = len = val, hours = s / 3600, s -= hours * 3600, minutes = s / 60, s -= minutes * 60, seconds = s ))
-		time_len=`printf "%02d:%02d:%02d" $hours $minutes $seconds`
-		
-				
-		#{
-#			sleep 0.3
-#			echo osd_show_text \"ss ${ss} / $time_len / $name\" 3000 > .command-pipe
-		#} &
-		#echo osd_show_text \"ss ${ss} : $name\" 3000 > .command-pipe
+		time_len=`printf "%02d:%02d:%02d" $hours $minutes $seconds`		
 		;;
 
 	
@@ -467,17 +375,9 @@ cat .mplayer-out | while read x ; do
 		
 		name=`echo "${FILE##*/}" | sed -r 's/:(a|ss)[0-9]+(:[0-9]+)*//g'`
 		
-		#name="${FILE##*/}"
-		#name="${name%%:ss*}...${FILE##*.}"
-		
-		#if [[ "${FILE##*/}/${FILE%/*}/$PWD" =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
-
-
-
 		fid=
 		config=
-		hdt=
-		
+		hdt=		
 		
 		if [[ "${FILE##*/}" =~ :@([0-9]+)@ ]]; then
 			fid="${BASH_REMATCH[1]}"
@@ -508,18 +408,7 @@ cat .mplayer-out | while read x ; do
 			ss="${BASH_REMATCH[1]}"
 			echo "seek ${ss} 2" > .command-pipe
 			last_goto_position="$ss"
-			echo "******************************* SEEKING TO ${ss} ***********************" 1>&2
-			
-			
-			#{
-			#	sleep 0.1
-			#	echo osd_show_text \"ss ${ss}\" 600 > .command-pipe
-			#	sleep 0.2
-			#	echo osd_show_text \"ss ${ss} : $name\" 3000 > .command-pipe
-			#} &
-		else
-			:
-			#echo "seek -10"
+			echo "******************************* SEEKING TO ${ss} ***********************" 1>&2						
 		fi		
 
 		if [[ "$codes" =~ hd|HD|720p ]]; then

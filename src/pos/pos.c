@@ -110,6 +110,9 @@ main(int argc, char *argv[]) {
 	printf("*** DUMP OF YY END ***\n");
 	*/
 
+	if (!ny)
+		return 1;	
+
 
 	if (bSearch < 0) {
 		// search backward
@@ -134,6 +137,7 @@ main(int argc, char *argv[]) {
 		printf("%g\n", result);
 		return 0;
 	}
+	
 	
 
 

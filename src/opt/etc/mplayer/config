@@ -68,8 +68,8 @@ input=nodefault-bindings=1
 vo=gl_nosw
 #vo=null
 
-#vo=vdpau
-#vc=ffh264vdpau,ffmpeg12vdpau,ffwmv3vdpau,ffvc1vdpau,
+vo=vdpau
+vc=ffh264vdpau,ffmpeg12vdpau,ffwmv3vdpau,ffvc1vdpau,
 
 #vo=xvmc
 #vc=ffmpeg12mc
@@ -91,6 +91,8 @@ cache=4096
 
 
 #lavdopts=threads=2
+
+lavdopts=fast=1:skiploopfilter=all
 
 
 #ni=yes
@@ -125,7 +127,7 @@ vfm=ffmpeg,dmo,libmpeg2
 #fspp=5:0:0:1
 
 
-vf=pp=lb
+#vf=pp=lb
 #vf=pp=lb/dr/ha:120:10/va:120:100
 
 
