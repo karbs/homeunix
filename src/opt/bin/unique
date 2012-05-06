@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+
+if [ ! -f /sbin/md5 ]; then
 md5(){
 	md5sum "$@" | awk '{print $1}'
 }
+fi
 
 
 #rm -rf /var/tmp/uniq
