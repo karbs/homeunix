@@ -6,12 +6,17 @@ prec=5
 which pos || { echo "pos not found."; exit 1; }
 
 
-for i in /usr/bin/mplayer /usr/local/bin/mplayer; do
-	if [ -f "$i" ]; then
-		mplayer_bin="$i"
-		break
-	fi
-done
+#mplayer_bin=/home/denis/local/bin/mplayer
+
+
+if [ -z "$mplayer_bin" ]; then
+	for i in /usr/bin/mplayer /usr/local/bin/mplayer; do
+		if [ -f "$i" ]; then
+			mplayer_bin="$i"
+			break
+		fi
+	done
+fi
 
 [ -f "$mplayer_bin" ] || { echo "mplayer not found."; exit 1; }
 
@@ -459,7 +464,7 @@ cat .mplayer-out | while read x ; do
 
 		} > .command-pipe
 		
-		sleep 0.1
+		sleep 0.2
 		echo osd_show_text \"ss ${ss} / $time_len / `echo "$name" | sed -r 's/:@[0-9]+@//g'`\" 1500 > .command-pipe
 		
 		
