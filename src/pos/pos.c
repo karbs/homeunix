@@ -34,7 +34,7 @@ main(int argc, char *argv[]) {
 	int nx = 0, ny = 0;
 	int i, j, jmin, jmax;
 	int bSearch = 0, bDelta = 0, bPretty = 0;
-	float delta_range_width = 300;
+	float delta_range_width = 5;
 	int pretty_count = 6;
 
 	if (argc <= 1)
