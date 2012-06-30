@@ -1,11 +1,25 @@
 context default
+	keyword wholeleft http://+ brightred
+	keyword wholeleft ./\{.0123456789-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789-_/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
+	keyword wholeleft /\{.0123456789-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789-_/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
+	keyword / white
+	
+	keyword linestart \{0123456789__abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[0123456789__abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]> yellow
+
 #	keyword linestart #*\n brown
 	keyword linestart \[\s\t\]#*\n brown
-	keyword whole \{0123456789\}\[0123456789\] cyan
-	keyword ( green
-	keyword ) green
-	keyword = green
-	keyword , red
+	keyword linestart \[\s\t\];*\n brown
+	keyword whole \{0123456789\}\[0123456789\] green
+	keyword ( cyan
+	keyword ) cyan
+	keyword = green	
+	keyword , cyan
+	keyword : cyan
+	keyword . cyan
+	keyword - cyan
+	keyword whole YES white
+	keyword whole NO white
+	keyword "*" white
 
 context linestart LOCK\sTABLES\s`*`\sWRITE;\n/\*!40000\sALTER\sTABLE \nUNLOCK\sTABLES white
 
