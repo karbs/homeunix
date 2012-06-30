@@ -1,6 +1,7 @@
 # $Id$
 
 
+
 {
 	pushd `dirname "${BASH_SOURCE:-$0}"`
 	#pwd
