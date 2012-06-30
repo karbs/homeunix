@@ -1,18 +1,42 @@
 #!/usr/bin/env bash
 
+echo "Finding files with executable bit from directory $PWD."
+
 find . -type f -executable > .executables || exit 1
+
+echo "Excluding files seemed to be real executables."
+
 cat .executables | sed -r 's/\/\.?[^\.\/]+(\.sh)?$/& ###/' | sed -r '/ ###$/d' > .a1 || exit 1
+
+echo "Analyzing."
+sleep 1
+
 max=(`wc -l .a1`)
 if (( ! max )); then
 	echo "Nothing to do. Exiting."
 	exit
 fi
-echo "Found $max files. Sleeping 2 sec. and processing."
-sleep 2
+echo "Found $max bad files. File paths was saved to file '.a1'. Begin processing."
+sleep 1
+
+counter=0
+cnt=0
 
 cat .a1 | while read i; do
-	echo "$i"
+	if (( ++cnt >= 100 )); then
+		(( percent = max > 1000 ? counter / (max / 100) : (100 * counter) / max ))
+		printf "Processed %5d of %d  [%2d%%] files.\n" $counter $max $percent
+		(( cnt = 0 ))
+	fi
 	chmod a-x "$i" || exit 1
+	(( ++counter ))
 done
 
 echo "ALL DONE. $max files processed successfully."
+
+
+
+
+
+
+
