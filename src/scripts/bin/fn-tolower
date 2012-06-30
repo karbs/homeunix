@@ -1,0 +1,19 @@
+#!/bin/sh
+
+ls | grep '[A-Z]' | while read i; do
+	j=`echo "$i" | sed -r 's/./\L&/g'`
+	if [ -f "$j" ]; then
+		if [ -z "$conflicts_directory_exists" ]; then
+			if [ ! -d conflicts ]; then
+				mkdir conflicts || { echo "Cannot create conflicts directory. Exiting."; exit 1; }
+			fi
+			conflicts_directory_exists=1
+		fi
+		j="conflicts/$j"
+		if [ -f "$j" ]; then
+			echo "File $i already exists in lower case and conflict already exists too. Skiping."
+			continue
+		fi
+	fi
+	mv "$i" "$j"
+done
