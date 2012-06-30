@@ -1,0 +1,24 @@
+#!/bin/sh
+
+if [ ! -z "$1" ]; then
+	cd "$1" || exit 1
+fi
+
+if [ -f .fixnames ]; then exit; fi
+
+touch .fixnames
+
+if [ ! -f .fixnames ]; then exit; fi
+
+
+ls | grep ð | while read i; do
+	j=`echo "$i" | iconv -f utf-8 -t cp850 2>/dev/null` && {
+		mv "$i" "$j" || exit 1
+	} || {
+		echo "fuck at $i" 1>&2
+		exit
+	}
+done
+
+exec find . -maxdepth 1 -type d -exec fixnames "{}" \;
+
