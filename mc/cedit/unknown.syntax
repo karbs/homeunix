@@ -1,5 +1,6 @@
 context default
 	keyword wholeleft http://+ brightred
+	keyword </
 	keyword wholeleft ./\{.0123456789-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789-_/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
 	keyword wholeleft /\{.0123456789-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[.0123456789-_/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightmagenta
 	keyword / white
