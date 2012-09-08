@@ -1,0 +1,90 @@
+#!/bin/sh
+
+usage() {
+	echo "Usage: ${0##*/} file.avi -ss 00:05:10 -endpos 10" 1>&2
+	exit 1
+}
+
+if [ "$#" = "0" ]; then
+	usage
+fi
+
+
+while [ ! "$#" = "0" ]; do
+	case "$1" in
+		-h|--help)
+			usage;;
+		-o|--output)
+			out="$2"; shift;;
+		-ss)
+			ss="$2"; shift;;
+		-e|--end|-t|--time|--endpos)
+			time="$2"; shift;;
+		*.gif) out="$1";;
+		*)
+			if [ -z "$file" -a -f "$1" ]; then
+				file="$1"
+			elif [ -z "$ss" ]; then
+				ss="$1"
+			elif [ -z "$time" ]; then
+				time="$1"
+			fi
+			;;		
+	esac
+	shift || break
+done
+
+
+if [ -z "$file" ]; then
+	usage
+fi
+
+
+if [ -z "$out" ]; then
+	bn=`basename "${file%.*}"`
+	tmp="out_tmp_$bn.gif"
+	out="out_${bn}_${ss}_${time}.gif"
+fi
+
+#########################################################################################################
+
+
+fps=30
+opts="-nosound -ao null -msglevel all=1 -quiet -noconfig all -nosub -nolirc -nojoystick -nomouseinput -noconsolecontrols"
+#vf="-vf scale=-2:400,format=rgb8,scale,crop=600:400,framestep=2"
+#vf="-vf scale=-2:400,crop=600:400"
+vf="-vf scale=-2:400,crop=600:400,format=rgb8,scale"
+#vf="-vf scale=-2:400,format=rgb24,scale,crop=600:400"
+#vf="-vf scale=-2:400,palette,scale,crop=600:400,framestep=2"
+#vf="-vf scale=-2:300,format=rgb8,scale,crop=400:300,framestep=1.5"
+#vf="-vf palette,scale=-2:300,crop=400:300,framestep=1.5"
+#vf="-vf scale=-2:600,crop=1000:800,format=rgb48ne,scale=-2:600"
+
+#end="-endpos ${time:-20}"
+end="-frames $(( 3 * time ))"
+#debug="-vo x11 -loop 0 -speed 2"
+
+
+
+echo "Saving gif..."
+/usr/bin/mplayer $opts "$file" -ss "${ss:-100}" $end $vf -vo gif89a:fps="$fps":output="$tmp" $debug || exit 1
+
+if [ -n "$debug" ]; then exit; fi
+
+exit
+
+echo "Optimizing..."
+convert "$tmp" -layers Optimize "$out" || exit 1
+
+#rm "$tmp"
+
+echo "DONE: $out"
+
+
+
+
+
+
+
+
+
