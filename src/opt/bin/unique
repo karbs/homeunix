@@ -8,6 +8,9 @@ md5(){
 fi
 
 
+pat=`pwd | sed -r 's/./?/g'`
+
+
 #rm -rf /var/tmp/uniq
 
 set -o pipefail
@@ -25,6 +28,10 @@ find -L . -d -type d -not -name 'DUPLES' \
 | while read d; do
 	cd "$startdir"
 	cd "$d"
+
+for i in ?*.???; do break; done
+if [ ! -f "$i" ]; then continue; fi
+	
 	(( ++weight ))
 	_w=`printf "%04d" $weight`
 	dirhash=`find . -maxdepth 1 -mindepth 1 -type f -name '?*.???' -not -name 'DUPLE*' -ls | grep -iE '[^\.]\.[a-z][^\.]{2}$' | { read x || exit 1; echo "$x"; cat; } | md5` || continue
@@ -39,6 +46,7 @@ find -L . -d -type d -not -name 'DUPLES' \
 		count=`ls -d ?*.??? | grep -vE '^DUPLE' | grep -iE '[^\.]\.[a-z][^\.]{2}$' | wc -l`
 		echo -n -e "Processing directory \e[31m$PWD\e[0m "
 		printf "(%d files) " "$count"
+		
 		ls -d ?*.??? | grep -vE '^DUPLE' | grep -iE '[^\.]\.[a-z][^\.]{2}$' | fastsum - | sed -r "s/^([^ ]+) +(.*)/\1 :$_pwd\\/\2/"  | tee "$list" | while read x; do
 			if (( ++n % 20 == 0 )); then echo -n "$n"; elif (( n % 2 == 0 )); then echo -n '.'; fi
 		done		
@@ -56,23 +64,38 @@ done \
 		n="${file}"
 		n="${n##*/}"
 		n="${n%%:ss*}"
-		echo "Duplicate: $n" >&2
+		#echo "Duplicate: $n === $last_n" >&2
 		
-		if [ ! -d "$dir/DUPLES" ]; then
-			mkdir "$dir/DUPLES" || { echo "Cannot create dir $dir/DUPLES. Exiting."; exit 1; }
+		last_n="$n"
+		
+#		if [ ! -d "$dir/DUPLES" ]; then
+#			mkdir "$dir/DUPLES" || { echo "Cannot create dir $dir/DUPLES. Exiting."; exit 1; }
+#		fi		
+#		newname="$dir/DUPLES/$base"		
+#		if [ -f "$newname" ]; then
+#			echo "Destination exists. Skip moving."
+#		else
+#			mv "$file" "$newname"
+#		fi
+		
+		if [ -n "$original" ]; then
+			dn=`dirname "$original"`
+			dn0="$dn"
+			bn=`basename "$original"`
+			dn="${dn#$pat?}"
+			echo -e "\nORIG: $dn/\E[1m$bn\E[0m   ($dn0)"
+			unset original
 		fi
 		
-		newname="$dir/DUPLES/$base"
-		
-		if [ -f "$newname" ]; then
-			echo "Destination exists. Skip moving."
-		else
-			mv "$file" "$newname"
-		fi
+		dn=`dirname "$file"`
+		bn=`basename "$file"`
+		dn="${dn#$pat?}"
+		echo -e "DUPL: $dn/\E[1;31m$bn\E[0m"
 				
 	else
 		last_hash="$hash"
-		last_file="$file"		
+		last_file="$file"
+		original="$file"
 	fi
 done
 

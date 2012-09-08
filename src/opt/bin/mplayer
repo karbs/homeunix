@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
-prec=5
+prec=4
+
+#use_history=1
 
 
 which pos || { echo "pos not found."; exit 1; }
 
 
-#mplayer_bin=/home/denis/local/bin/mplayer
+#mplayer_bin=/usr/local/bin/mplayer-my
+#mplayer_bin=/usr/local/bin/mplayer_my
 
 
 if [ -z "$mplayer_bin" ]; then
@@ -38,8 +41,10 @@ add_option(){ opts+=" $@"; }
 
 if [[ $@ =~ ^file://(.*) ]]; then [ -d "${BASH_REMATCH[1]}" ] && exit; fi
 
-if [ ! -f .mplayer-history ]; then
-	touch .mplayer-history
+if [ -n "$use_history" ]; then
+	if [ ! -f .mplayer-history ]; then
+		touch .mplayer-history
+	fi
 fi
 
 ss=0
@@ -68,7 +73,7 @@ elif [ -f "$f" ]; then
 	codes=":$f//$PWD:"
 	
 	if [[ "$codes" =~ [^a-z](hd|HD|HDTV|hdtv|720p)[^a-z] ]]; then
-		add_option "-input conf=input-hd.conf"
+		#add_option "-input conf=input-hd.conf"
 		hd=1
 	fi
 		
@@ -88,37 +93,60 @@ fi
 
 
 command_aspect() {
+	if [ "${REALFILE##*.}" = "dctmp" ]; then
+		return
+	fi
+
 	echo switch_ratio $1
-	newfilename=`echo "${FILE##*/}" | sed -r 's/:a[\(=]?[0-9]*(\.[0-9]+)?\)?//' | sed -r "s/\\.[^\\.]+\$/:a$1&/"`
+	F="${REALFILE##*/}"
+
+	newfilename=`echo "${F##*/}" | sed -r 's/:a[\(=]?[0-9]*(\.[0-9]+)?\)?//' | sed -r "s/\\.[^\\.]+\$/:a$1&/"`
 	
-	if [[ "$FILE" =~ \/ ]]; then
-		if [ ! -z "${FILE%/*}" ]; then
-			newfilename="${FILE%/*}/$newfilename"
+	if [[ "$F" =~ \/ ]]; then
+		if [ ! -z "${F%/*}" ]; then
+			newfilename="${F%/*}/$newfilename"
 		fi
 	fi
 	
 	echo "*** newfilename: $newfilename" 1>&2
-	mv "$FILE" "$newfilename"
+	mv "$REALFILE" "$newfilename"
 	
-	if [ -f .mplayer-history ]; then
-		{ sed '$d' .mplayer-history; echo "${newfilename##*/}"; } > .mplayer-history.tmp
-		mv .mplayer-history.tmp .mplayer-history
+	if [ -n "$use_history" ]; then
+		if [ -f .mplayer-history ]; then
+			{ sed '$d' .mplayer-history; echo "${newfilename##*/}"; } > .mplayer-history.tmp
+			mv .mplayer-history.tmp .mplayer-history
+		fi
 	fi
 	
-	FILE="$newfilename"	
+	REALFILE="$newfilename"	
 }
 
 
 
 
 command_goto() {
+	if [ "${FILE##*.}" = "dctmp" ]; then
+		return
+	fi
+
+	if [[ ! "$FILE" =~ :ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
+		return
+	fi
+	
+
 	ANS_TIME_POSITION=${ANS_TIME_POSITION%.*}
 	a=$ANS_TIME_POSITION	
-	ss=$ANS_TIME_POSITION	
-	if (( last_x > 0 )); then ss="$last_x"; fi		
+	ss=$ANS_TIME_POSITION
+	if (( last_x > 0 )); then ss="$last_x"; fi			
+		
 	pos_args=`echo $FILE | sed -r 's/.*:ss([0-9]+(:[0-9]+)*).*/\1/;s/:/ /g'`
+	
+	#echo -e "\e[1;31m*********** pos_args: [$pos_args]  \e[0m" 1>&2
+	
 	x=`pos -p $prec $pos_args $1 ${ss}` || return
 	fmt=`pos -p $prec $pos_args $1 ${ss} --pretty`
+
+	(( x += hdt ))
 				
 	case "$1" in
 		-b)
@@ -132,18 +160,23 @@ command_goto() {
 		-f)
 			last_x=0
 			if (( x <= ss + 1 )); then
-				echo "*** goto: x (=$x) < ANS_TIME_POSITION (=$ss)" 1>&2
-				echo "seek +60"
+				#echo "*** goto: x (=$x) < ANS_TIME_POSITION (=$ss)" 1>&2
+				#echo "seek +60"
 				return
 			fi
 			;;
 	esac
 	
-	goto_cnt=0	
-	last_x=$x	
+	(( x -= hdt ))
+	
+	goto_cnt=0
+	last_x=$x
+	
+	(( y = x - hdt ))
+	
 	echo osd_show_text \"${fmt}\" 1800	
-	echo "zzzzzzzzzzzzzz SEEKING TO $x" 1>&2
-	echo "seek $x 2"	
+	echo "zzzzzzzzzzzzzz SEEKING TO $y" 1>&2
+	echo "seek $y 2"
 	ANS_TIME_POSITION="$x"
 	last_goto_position="$x"
 }
@@ -174,6 +207,8 @@ hdt=0
 
 
 command_ss() {
+	if [ ${FILE##*.} = "dctmp" ]; then return; fi
+	
 	ANS_TIME_POSITION=${ANS_TIME_POSITION%.*}
 	sign=""
 
@@ -181,10 +216,12 @@ command_ss() {
 	if [ -z "$ss" ]; then
 		return
 	fi
-
+	
 	case "$1" in
 		a)
-			(( ss -= 2 ))
+			#(( ss -= 2 )) # 2 - good!
+			(( ss -= 1 )) # 1 - experiment
+			
 			if (( ss < 1 )); then
 				(( ss = 1 ))
 			fi
@@ -208,7 +245,7 @@ command_ss() {
 			;;
 	esac
 	
-	(( ss -= hdt ))
+	#(( ss -= hdt ))
 	
 	if (( ss < 0 )); then
 		return
@@ -244,7 +281,8 @@ command_ss() {
 	
 	p="$prec"
 	if [ "$sign" = "-" ]; then
-		p=$((prec + 5))
+		p=$((prec + 1))
+		#(( ss += hdt ))
 	fi
 
 	str=`pos -p $p $args ${sign}${ss}`
@@ -297,6 +335,8 @@ command_ss() {
 
 
 command_mv() {
+	if [ ${FILE##*.} = "dctmp" ]; then return; fi
+	
 	D="$1"
 	if [ ! -d "$D" ]; then
 		mkdir "$D" || return;
@@ -311,7 +351,9 @@ command_mv() {
 	fi
 	mv "$REALFILE" "$D/$F"
 
-	echo "$D/$F" >> .mplayer-history
+	if [ -n "$use_history" ]; then
+		echo "$D/$F" >> .mplayer-history
+	fi
 	
 	echo 'pt_step 1 1'
 	
@@ -402,7 +444,7 @@ cat .mplayer-out | while read x ; do
 		echo "************** CODES: $codes" 1>&2
 
 		
-		if [[ "$codes" =~ [\.:]hdt([0-9]+) ]]; then
+		if [[ "$codes" =~ [\.:]hdt(-?[0-9]+) ]]; then
 			hdt="${BASH_REMATCH[1]}"
 			echo "******* HDT: $hdt ********" 1>&2
 			#exit
@@ -411,6 +453,7 @@ cat .mplayer-out | while read x ; do
 		
 		if [[ "$codes" =~ [:]ss\(?([0-9]+(\.[0-9]+)?)\)? ]]; then
 			ss="${BASH_REMATCH[1]}"
+			(( ss -= hdt ))
 			echo "seek ${ss} 2" > .command-pipe
 			last_goto_position="$ss"
 			echo "******************************* SEEKING TO ${ss} ***********************" 1>&2						
@@ -423,28 +466,37 @@ cat .mplayer-out | while read x ; do
 		
 		DIR=`dirname "$REALFILE"`
 
-		if [ ! -z "$REALFILE" ]; then
-			lastfile=`tail -n 1 "$DIR/.mplayer-history"`
-			if [ "$REALFILE" = "$lastfile"  ]; then
-				:
-			else
-				echo "*** echo $REALFILE >> $DIR/.mplayer-history" 1>&2
-				echo "$REALFILE" >> "$DIR/.mplayer-history"
+		if [ -n "$use_history" ]; then
+			if [ ! -z "$REALFILE" ]; then
+				lastfile=`tail -n 1 "$DIR/.mplayer-history"`
+				if [ "$REALFILE" = "$lastfile"  ]; then
+					:
+				else
+					echo "*** echo $REALFILE >> $DIR/.mplayer-history" 1>&2
+					echo "$REALFILE" >> "$DIR/.mplayer-history"
+				fi
 			fi
 		fi
+		
 		
 		{
 			br=0
 			co=0
 			hu=0
 			sa=0
+			
+			
 		
 			if [[ "$codes" =~ [:,]eq[\(=]?(-?[0-9]+)?([ ,:](-?[0-9]+)?([ ,:](-?[0-9]+)?([ ,:](-?[0-9]+)?)?)?)?\)? ]]; then
 				br="${BASH_REMATCH[1]:-0}" 
 				co="${BASH_REMATCH[3]:-0}"
 				hu="${BASH_REMATCH[5]:-0}"
 				sa="${BASH_REMATCH[7]:-0}"
+				echo "************ br=$br co=$co hu=$hu sa=$sa codes: $codes" 1>&2
 			fi
+			
+			sleep 0.1
+			
 			echo "set_property brightness $br" 
 			echo "set_property contrast   $co"
 			echo "set_property hue        $hu"
@@ -484,11 +536,14 @@ cat .mplayer-out | while read x ; do
 	esac
 done
 
-FILE=`tail -n 1 .mplayer-history`
-FIRST_FILE="$FILE"
-echo -e "\nlast file played:\n\e[1m"
-tail -n 1 .mplayer-history | sed -r 's/([^\/]*\/)*([^\/]+)/\2/'
-echo -e "\e[0m"
+
+if [ -n "$use_history" ]; then
+	FILE=`tail -n 1 .mplayer-history`
+	FIRST_FILE="$FILE"
+	echo -e "\nlast file played:\n\e[1m"
+	tail -n 1 .mplayer-history | sed -r 's/([^\/]*\/)*([^\/]+)/\2/'
+	echo -e "\e[0m"
+fi
 
 
 

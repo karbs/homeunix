@@ -15,7 +15,7 @@
 	rm -f .a .b
 } > .playlist
 
-mplayer -input conf=input-short.conf "$@" -playlist .playlist
+mplayer -input conf=input-short.conf "$@" -playlist .playlist -fs
 
 
 

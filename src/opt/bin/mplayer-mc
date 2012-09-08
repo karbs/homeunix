@@ -2,6 +2,10 @@
 
 #exec mplayer -vf pp=fd "$@" $options  && sleep 1
 
+#mplayer=/usr/local/bin/mplayer
+mplayer=/usr/bin/mplayer
+
+
 file=
 
 
@@ -17,13 +21,30 @@ detect_file(){
 
 detect_file "$@"
 
+cd `dirname "$file"`
+file=`basename "$file"`
 
-if [ "${1##*.}" = "avi" ]; then
-	options="$options -input conf=input.conf"
+
+#if [ "${1##*.}" = "avi" ]; then
+#	options="$options -input conf=input.conf"
+#fi
+
+
+if [[ "${file##*/}" =~ ^(.*)\.avi\.[0-9A-Z]+\.dctmp$ ]]; then 
+	idx="idx/${BASH_REMATCH[1]}"	
+	if [ ! -f "$idx" ]; then
+		if [ ! -d idx ]; then
+			mkdir idx
+		fi	
+		tmpfile=".tmp$file"
+		dd if="$file" of="$tmpfile" bs=1k count=100000
+		$mplayer "$tmpfile" -idx -saveidx "$idx" -vo null -ao null -frames 0
+		rm "$tmpfile"
+	fi
+	exec $mplayer "$file" -noidx -loadidx "$idx"
 fi
 
-
-exec mplayer "$@" $options
+exec mplayer "$file" $options
 
 #exec vlc -f "$@" && sleep 1
 

@@ -1,3 +1,7 @@
+
+codecpath=/usr/local/lib/win32
+codecs-file=/home/denis/lib/opt/.mplayer/codecs.conf
+
 quiet=yes
 fixed-vo=yes
 osd-duration=1000
@@ -7,6 +11,9 @@ osd-duration=1000
 #ao=oss:/dev/dsp1
 
 ao=alsa:noblock:device=hw=0
+
+
+#ao=pulse
 
 #ao=alsa
 
@@ -31,6 +38,8 @@ input=nodefault-bindings=1
 
 #ao=null
 #nosound=yes
+#af-clr=yes
+
 
 #af-add=ladspa=tap_dynamics_st:tap_dynamics_st:5:20:15:5:2:6
 #af-add=ladspa=tap_dynamics_st:tap_dynamics_st:5:20:15:5:2:6
@@ -63,13 +72,21 @@ input=nodefault-bindings=1
 
 
 
-#vo=xv
 #vo=gl
 vo=gl_nosw
+#vo=gl2
 #vo=null
+vo=xv
+
+#vo=vdpau:deint=4
 
 vo=vdpau
 vc=ffh264vdpau,ffmpeg12vdpau,ffwmv3vdpau,ffvc1vdpau,
+
+
+
+#vf=yadif=1
+
 
 #vo=xvmc
 #vc=ffmpeg12mc
@@ -78,34 +95,43 @@ vc=ffh264vdpau,ffmpeg12vdpau,ffwmv3vdpau,ffvc1vdpau,
 #cache=512
 #cache=1024
 #cache=2048
-cache=4096
-#cache=16384
+#cache=4096
+#cache=8192
+cache=16384
 #cache=4096
 #cache=65536
 
 #cache=32768
-#cache-min=80
+#cache=100000
+cache-min=10
+
+#cache−seek−min=0
 
 #cache=1024
 #nocache=yes
 
 
-#lavdopts=threads=2
+lavdopts=threads=2
 
-lavdopts=fast=1:skiploopfilter=all
+#lavdopts=fast=1:skiploopfilter=all
+lavdopts=skiploopfilter=all
+#lavdopts=skipframe=nonref
+
 
 
 nocorrect-pts=yes
-mc=1
+
+mc=2
 
 
 #ni=yes
 
-fs=yes
+#fs=yes
 
 
-geometry=30%:60%
-
+geometry=30%:30%
+#vf-add=scale=800:-2:0:0:0:0.6::2:1
+#vf-add=scale=800:-2
 
 ffactor=1
 subfont-outline=1
@@ -122,7 +148,9 @@ subfont-osd-scale=1.5
 #vf=pp=ha/va,scale=1000:-2,noise=2t
 #vf=pp=dr/ha/va
 
-vfm=ffmpeg,dmo,libmpeg2
+#vfm=xvid,ffmpeg,libmpeg2
+vfm=ffmpeg,xvid,libmpeg2
+
 
 
 #ss=1
@@ -138,6 +166,8 @@ vfm=ffmpeg,dmo,libmpeg2
 
 #vf-add=pp=lb/ha,noise=2t
 
+#vf-add=pp=lb/ha
+
 
 #nobps=yes
 #ni=yes
@@ -147,7 +177,10 @@ vfm=ffmpeg,dmo,libmpeg2
 
 #vfm=ffmpeg,libmpeg2,dmo
 #geometry=+200+200
-#panscan=0.8
+
+#fs=yes
+panscan=0.7
+
 #osd-duration=2000
 #vf-add=scale=1200:-2
 #vo=gl2
@@ -162,7 +195,6 @@ vfm=ffmpeg,dmo,libmpeg2
 
 #vf=scale=800:-2
 
-#fs=yes
 #vf=pp=ha:50:10/va:50:10
 #vf=pp=dr/ha:40:10/va:20:5,noise=2ut
 #demuxer=libmpeg2,lavf

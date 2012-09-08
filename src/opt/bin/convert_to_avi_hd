@@ -2,9 +2,9 @@
 
 export LANG=C
 mencoder=/usr/bin/mencoder
-encopts="-lavcopts vcodec=mpeg4:vbitrate=7000:keyint=30"
+encopts="-lavcopts vcodec=mpeg4:vbitrate=4000:keyint=30:mbd=2:cmp=2:subcmp=2:trell=yes:v4mv=yes:aic=2:vglobal=1:aglobal=1"
 opts="-idx -forceidx"
-oac="-channels 2 -oac mp3lame -lameopts br=192 $af"
+oac="-channels 2 -oac mp3lame -lameopts br=128 $af"
 
 cmd="$mencoder -vfm ffmpeg $opts $vf $oac -ovc lavc $encopts"
 
