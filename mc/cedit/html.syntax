@@ -402,16 +402,18 @@ context ' ' brightmagenta
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context " " yellow black
 	keyword {\$*} brightred
+	keyword {*} brightcyan
 	keyword whole @\[-_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] brightred
 	keyword \\\{0123456789\}\[0123456789\] green
 	keyword \\\{\s~!@#$%^&\*_\+=-()[]{}/\\'";:,.<>_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} green
 	keyword %% green
 	keyword %\[-0123456789.\]\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} magenta
 	keyword %\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} magenta
-	keyword \{;:\} brown
 #	keyword %s brightgreen black
 	keyword &\[abcdefghijklmnopqrstuvwxyz0123456789_\]; black green
 	keyword $\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] brightred
+	keyword :\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] brightgreen
+	keyword \{;:\} brown
 	keyword \\u\{0123456789ABCDEF\}\{0123456789ABCDEF\}\{0123456789ABCDEF\}\{0123456789ABCDEF\} brightgreen
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 	keyword \\ green

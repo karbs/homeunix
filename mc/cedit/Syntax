@@ -19,7 +19,7 @@ include sh.syntax
 file (make\.conf|Makefile|.mk|*.mak) Makefile
 include makefile.syntax
 
-file ..\*\\.(l|lex)$ Lex\ssource!
+file ..\*\\.(l|lex|pgc)$ Lex\ssource!
 include c.syntax
 
 

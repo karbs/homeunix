@@ -71,6 +71,10 @@ context default
     keyword '\\'' brightgreen
     keyword '\\\\' brightgreen
     keyword '\\0' brightgreen
+    
+#	keyword EXEC\sSQL white
+	keyword \{Ee\}\{Xx\}\{Ee\}\{Cc\}\s\{Ss\}\{Qq\}\{Ll\} white
+    
     keyword '\{\s!"#$%&()\*\+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ\}' brightgreen
 
 # punctuation characters, sorted by ASCII code
@@ -136,6 +140,21 @@ context " " yellow
     keyword \\ yellow black
 
 
+context exclusive EXEC\sSQL ; white
+	keyword ( cyan
+	keyword ) cyan
+	keyword , cyan
+	keyword '*' brightgreen
+	keyword ::
+	keyword :\{ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz\}\[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz.\] brightred
+
+context exclusive exec\ssql ; white
+	keyword ( cyan
+	keyword ) cyan
+	keyword , cyan
+	keyword '*' brightgreen
+	keyword ::
+	keyword :\{ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz\}\[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz.\] brightred
 
 
 
