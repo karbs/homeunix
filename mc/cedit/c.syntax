@@ -7,7 +7,7 @@ context default
 	keyword linestart %{ brightcyan black
 	keyword linestart %} brightcyan black
 	keyword linestart %% brightcyan black
-	keyword linestart %option\s*\n brightcyan black
+	keyword linestart %\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]\s*\n brightcyan black
 	keyword linestart <<EOF>> white
 	keyword linestart \\\{nrt\} white
 

@@ -18,7 +18,10 @@ fi
 
 export LC_TIME=en_US.UTF-8
 export LC_NUMERIC=en_US.UTF-8
-export PAGER='less -ISRgX'
+
+#export PAGER='less -ISRgX'
+export PAGER='less -ISrX'
+
 export XTERM_LOCALE=ru_RU.UTF-8
 export PS1='[\u@\h \W]$ '
 export TMPDIR=/tmp
@@ -29,7 +32,9 @@ export C_INCLUDE_PATH=$HOME/include:/usr/local/include:/usr/include
 alias mc="TMPDIR=$HOME/tmp mc"	
 alias ocaml="rlwrap ocaml"
 
-alias less='less -IRXgS'
+#alias less='less -IRXgS'
+alias less='less -IrXS'
+
 alias ls='ls -GhF'
 alias df='df -h'
 alias du='du -h'

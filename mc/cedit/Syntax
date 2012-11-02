@@ -22,6 +22,8 @@ include makefile.syntax
 file ..\*\\.(l|lex|pgc)$ Lex\ssource!
 include c.syntax
 
+#file ..\*\\.(txt)$ Text\sfile
+#include txt.syntax
 
 
 
