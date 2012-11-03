@@ -1,93 +1,143 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-if [ -f log ]; then
-	rm log || exit 1
-fi
+program=mplayer
 
+#skip_update=1
+#skip_check_options=1
+#skip_configure=1
+#skip_clean=1
+
+set -o pipefail
+export LANG=en_US.UTF-8
+export LC_MESSAGES=en_US.UTF-8
+
+trace() { echo -e "\e[31;1m*** $program: $*\e[0m" 1>&2; }
+
+#filter() {
+#	exec tee -a "$OUTER_DIR/compile.log" \
+#	| sed -r '/^rm|: (warning|note|In function|At top level)[ :]|^In file included from|^\s+from/d;s/^make.*|^[^ ]+|[a-z0-9_\.]+\.c\b| -o *[^ ]*/{&}/g;s/\{[^{}]*\.o\}//g;s/^[^{]*\{?//g;s/ *\}[^{]*\{? */ /g;s/ ([a-z_0-9\.]*\/)+/ /g' \
+#	|| exit 1
+#}
+
+
+#CC() {  export LC_MESSAGES=en_US.UTF-8; exec gcc "$@" 2>&1 | filter; }
+#MAKE() { export LC_MESSAGES=en_US.UTF-8; exec make "$@" 2>&1 | filter; }
+#PUSHD() { pushd "$@" >/dev/null; }
+#POPD() { popd "$@" >/dev/null; }
+
+
+rm -f log compile.log
 
 if [ ! -d mplayer ]; then
-	echo -e "\e[1m*** Checking out mplayer\e[0m"
-	svn -q co svn://svn.mplayerhq.hu/mplayer/trunk mplayer || exit 1
+	trace 'Checking out from SVN'
+	svn -q co svn://svn.mplayerhq.hu/mplayer/trunk mplayer.tmp || exit 1
+	mv mplayer.tmp mplayer
 fi
 
-cd mplayer
+OUTER_DIR=`pwd`
 
-echo -e "\e[1m*** Updating mplayer\e[0m"
-svn up || exit 1
+cd mplayer || exit 1
 
-echo
+if [ -z "$skip_update" ]; then
+	trace 'Updating'
+	{ svn up || exit 1; } | grep -vE '^$'
 
-	
-if [ ! -d ffmpeg ]; then
-	echo -e "\e[1m*** Checking out FFMPEG\e[0m"
-	git clone --depth 1 git://source.ffmpeg.org/ffmpeg.git ffmpeg || exit 1
-else
-	echo -e "\e[1m*** Updating FFMPEG\e[0m"
-	pushd ffmpeg >/dev/null
-	git pull || exit 1
-	popd >/dev/null
+	if [ ! -d ffmpeg ]; then
+		uri=git://source.ffmpeg.org/ffmpeg.git
+		trace 'Cloning FFMPEG from' "$uri"
+		git clone --depth 1 "$uri" ffmpeg.tmp || exit 1
+		mv ffmpeg.tmp ffmpeg
+	else
+		trace 'Updating FFMPEG (git pull)'
+		pushd ffmpeg >/dev/null
+		git pull || exit 1
+		popd >/dev/null
+	fi
 fi
 
-./configure --help > ../b.options
-	
-ln -s config.log ../config.log
 
-echo
-echo -e "\e[1m*** Configuring mplayer\e[0m"
-./configure \
-	--extra-ldflags="-L/usr/local/lib -L/usr/lib64/nvidia -L/usr/lib64" \
-	--extra-libs="-laacplus -lavcodec -lavdevice -lavfilter -lavformat -lavresample -lavutil -lmjpegutils -lpostproc -lswresample -lswscale -lvo-aacenc -lx264" \
-	--language=en \
-	--enable-{xv,vdpau,xvmc,gl,sdl} \
-	--disable-{dvdnav,vcd,ftp,tv,networking,cddb,smb,dvb,v4l2,tga,pnm,mng,unrarexec,libdv} \
-	--with-vidix-drivers=nvidia \
-	--disable-{real,xanim,lib{gsm,opus,openjpeg,dca}} \
-	--disable-ffmpeg_{a,so} \
-	--disable-{dvdread,{dvdread,libdvdcss}-internal} \
-	--disable-{dvdread,libdvdcss}-internal \
-	--disable-{fbdev,caca,aa,directfb,fbdev} \
-	--disable-xss \
-	--enable-lirc \
-	--enable-fastmemcpy \
-	--enable-rpath \
-	--enable-hardcoded-tables \
-	--with-xvmclib=XvMCNVIDIA \
-	--enable-encoder={aac,ac3,ac3fixed,dvvideo,libaacplus,libfaac,libmp3lame,libvo_aacenc,libx264,libx264rgb,libxvid,mpeg4,msmpeg4v2,msmpeg4v3,pcm_s16le} \
-	--enable-demuxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
-	--enable-muxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
-	--enable-parser={aac,aac_latm,flac,h263,h264,mpeg4video,mpegaudio,mpegvideo} \
->../log 2>&1 || exit 1
-	
-echo
-echo -e "\e[1mCleaning mplayer\e[0m"
+if [ -z "$skip_check_options" ]; then
+	if [ ! -f ../b.options ]; then
+		./configure --help > ../b.options
+		trace 'Options saved in b.options. Sleeping 2 seconds ...'; sleep 2
+	else
+		./configure --help > ../b.options.new
+		diff -burN ../b.options ../b.options.new > ../b.options.diff && rm -f ../b.options.{new,diff} || {
+			mv ../b.options ../b.options.old
+			mv ../b.options.new ../b.options
+			trace 'New options saved in b.options.diff. Sleeping 2 seconds ...'; sleep 2
+			cat ../b.options.diff
+			trace 'Sleeping 2 seconds ...'; sleep 2
+		}
+	fi
+fi
+
+
+if [ -z "$skip_config_log_symlink" ]; then
+	if [ -f config.log -a ! -h ../config.log ]; then
+		ln -s config.log ../config.log
+	fi
+fi
+
+
+
+if [ -z "$skip_configure" ]; then
+	trace 'Configuring'
+	./configure \
+		--extra-ldflags="-L/usr/local/lib -L/usr/lib64/nvidia -L/usr/lib64" \
+		--extra-libs="-laacplus -lavcodec -lavdevice -lavfilter -lavformat -lavresample -lavutil -lmjpegutils -lpostproc -lswresample -lswscale -lvo-aacenc -lx264" \
+		--language=en \
+		--enable-{xv,vdpau,xvmc,gl,sdl} \
+		--disable-{dvdnav,vcd,ftp,tv,networking,cddb,smb,dvb,v4l2,tga,pnm,mng,unrarexec,libdv} \
+		--with-vidix-drivers=nvidia \
+		--disable-{real,xanim,lib{gsm,opus,openjpeg,dca}} \
+		--disable-ffmpeg_{a,so} \
+		--disable-{dvdread,{dvdread,libdvdcss}-internal} \
+		--disable-{dvdread,libdvdcss}-internal \
+		--disable-{fbdev,caca,aa,directfb,fbdev} \
+		--disable-xss \
+		--enable-lirc \
+		--enable-fastmemcpy \
+		--enable-rpath \
+		--enable-hardcoded-tables \
+		--with-xvmclib=XvMCNVIDIA \
+		--enable-encoder={aac,ac3,ac3fixed,dvvideo,libaacplus,libfaac,libmp3lame,libvo_aacenc,libx264,libx264rgb,libxvid,mpeg4,msmpeg4v2,msmpeg4v3,pcm_s16le} \
+		--enable-demuxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
+		--enable-muxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
+		--enable-parser={aac,aac_latm,flac,h263,h264,mpeg4video,mpegaudio,mpegvideo} \
+	>../log 2>&1 || exit 1
+fi
+
+trace 'Cleaning'
 make clean >/dev/null
 
-echo
-echo -e "\e[1mCompiling tablegen\e[0m"
-pushd ffmpeg/libavcodec	>/dev/null
+
+
+trace "Compiling tablegens"
+pushd ffmpeg/libavcodec
 for i in `ls *_tablegen.c`; do
 	gcc -c -o tmp.o "$i" -DCONFIG_SMALL=0 -I.. || exit 1
 	gcc -o tmp tmp.o -lm || exit 1
 	mv tmp.o "${i%.c}.o"
 	mv tmp "${i%.c}"
 done
-popd >/dev/null
+popd
 
-echo
-echo -e "\e[1mBuilding mplayer\e[0m"
-sleep 1
+trace 'Building'
+make -j5
 
-make -j5 || exit 1
 
-echo
-echo -e "\e[1mInstalling mplayer\e[0m"
-sleep 1
+if [ -z "$skip_install" ]; then
+	trace 'Installing'
+	make install || exit 1
+fi
 
-make install || exit 1
 
-echo
-echo -e "\e[1mCleaning mplayer\e[0m"
-make clean	
+if [ -z "$skip_clean" ]; then
+	trace 'Cleaning'
+	make clean >/dev/null
+	cd ..
+	rm -f log config.log compile.log
+fi
 
-echo
-echo -e "\e[1mDONE!\e[0m"
+trace 'DONE'
