@@ -42,17 +42,17 @@ if [ -z "$skip_update" ]; then
 	trace 'Updating'
 	{ svn up || exit 1; } | grep -vE '^$'
 
-	if [ ! -d ffmpeg ]; then
-		uri=git://source.ffmpeg.org/ffmpeg.git
-		trace 'Cloning FFMPEG from' "$uri"
-		git clone --depth 1 "$uri" ffmpeg.tmp || exit 1
-		mv ffmpeg.tmp ffmpeg
-	else
-		trace 'Updating FFMPEG (git pull)'
-		pushd ffmpeg >/dev/null
-		git pull || exit 1
-		popd >/dev/null
-	fi
+#	if [ ! -d ffmpeg ]; then
+#		uri=git://source.ffmpeg.org/ffmpeg.git
+#		trace 'Cloning FFMPEG from' "$uri"
+#		git clone --depth 1 "$uri" ffmpeg.tmp || exit 1
+#		mv ffmpeg.tmp ffmpeg
+#	else
+#		trace 'Updating FFMPEG (git pull)'
+#		pushd ffmpeg >/dev/null
+#		git pull || exit 1
+#		popd >/dev/null
+#	fi
 fi
 
 
@@ -75,23 +75,23 @@ fi
 
 if [ -z "$skip_config_log_symlink" ]; then
 	if [ -f config.log -a ! -h ../config.log ]; then
-		ln -s config.log ../config.log
+		ln -s mplayer/config.log ../config.log
 	fi
 fi
 
 
+#		--extra-libs="-laacplus -lavcodec -lavdevice -lavfilter -lavformat -lavresample -lavutil -lmjpegutils -lpostproc -lswresample -lswscale -lvo-aacenc -lx264" \
 
 if [ -z "$skip_configure" ]; then
 	trace 'Configuring'
 	./configure \
 		--extra-ldflags="-L/usr/local/lib -L/usr/lib64/nvidia -L/usr/lib64" \
-		--extra-libs="-laacplus -lavcodec -lavdevice -lavfilter -lavformat -lavresample -lavutil -lmjpegutils -lpostproc -lswresample -lswscale -lvo-aacenc -lx264" \
 		--language=en \
-		--enable-{xv,vdpau,xvmc,gl,sdl} \
-		--disable-{dvdnav,vcd,ftp,tv,networking,cddb,smb,dvb,v4l2,tga,pnm,mng,unrarexec,libdv} \
+		--enable-{xv,vdpau,gl,sdl} \
+		--disable-ffmpeg_so \
+		--disable-{dvdnav,vcd,ftp,tv,cddb,smb,dvb,v4l2,tga,pnm,mng,unrarexec,libdv} \
 		--with-vidix-drivers=nvidia \
 		--disable-{real,xanim,lib{gsm,opus,openjpeg,dca}} \
-		--disable-ffmpeg_{a,so} \
 		--disable-{dvdread,{dvdread,libdvdcss}-internal} \
 		--disable-{dvdread,libdvdcss}-internal \
 		--disable-{fbdev,caca,aa,directfb,fbdev} \
@@ -99,8 +99,6 @@ if [ -z "$skip_configure" ]; then
 		--enable-lirc \
 		--enable-fastmemcpy \
 		--enable-rpath \
-		--enable-hardcoded-tables \
-		--with-xvmclib=XvMCNVIDIA \
 		--enable-encoder={aac,ac3,ac3fixed,dvvideo,libaacplus,libfaac,libmp3lame,libvo_aacenc,libx264,libx264rgb,libxvid,mpeg4,msmpeg4v2,msmpeg4v3,pcm_s16le} \
 		--enable-demuxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
 		--enable-muxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
@@ -108,23 +106,26 @@ if [ -z "$skip_configure" ]; then
 	>../log 2>&1 || exit 1
 fi
 
+
+
+
 trace 'Cleaning'
 make clean >/dev/null
 
 
 
-trace "Compiling tablegens"
-pushd ffmpeg/libavcodec
-for i in `ls *_tablegen.c`; do
-	gcc -c -o tmp.o "$i" -DCONFIG_SMALL=0 -I.. || exit 1
-	gcc -o tmp tmp.o -lm || exit 1
-	mv tmp.o "${i%.c}.o"
-	mv tmp "${i%.c}"
-done
-popd
+#trace "Compiling tablegens"
+#pushd ffmpeg/libavcodec
+#for i in `ls *_tablegen.c`; do
+#	gcc -c -o tmp.o "$i" -DCONFIG_SMALL=0 -I.. || exit 1
+#	gcc -o tmp tmp.o -lm || exit 1
+#	mv tmp.o "${i%.c}.o"
+#	mv tmp "${i%.c}"
+#done
+#popd
 
 trace 'Building'
-make -j5
+make -j5 || exit 1
 
 
 if [ -z "$skip_install" ]; then
