@@ -1,7 +1,7 @@
 file ..\*\\.(diff|rej|patch)$ Diff\sOutput ^(diff|Index:|---)\s
 include diff.syntax
 
-file ..\*\\.(xul|html|js|php|tpl\.php|xhtml|module|install|class|inc)$ 000\sMY! ^.\*(php|html)
+file ..\*\\.(ejs|jade|json|xul|html|js|php|tpl\.php|xhtml|module|install|class|inc)$ 000\sMY! ^.\*(php|html|node)
 include html.syntax
 
 file ..\*\\.(extml)$ Extml\sProgram
@@ -19,7 +19,7 @@ include sh.syntax
 file (make\.conf|Makefile|.mk|*.mak) Makefile
 include makefile.syntax
 
-file ..\*\\.(l|lex|pgc)$ Lex\ssource!
+file ..\*\\.(l|lex|pgc|ck)$ Lex\ssource!
 include c.syntax
 
 #file ..\*\\.(txt)$ Text\sfile
