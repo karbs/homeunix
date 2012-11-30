@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+
+program
+	.version('0.0.1')
+	.usage('[options] <file ...>')
+	.option('-o, --outfile [file]', 'Specify output filename')
+	.parse(process.argv);
+
+
+var files = program.args;
+
+if (!files.length) {
+	console.error('files required');
+	process.exit(1);
+}
+
+var fs = require('fs');
+var beautifyJs = require('node-beautify').beautifyJs;
+
+var options = {
+	indentSize: 1,
+	indentChar: '\t',
+	preserveNewlines: true,
+	bracesOnOwnLine: false,
+	keepArrayIndentation: true,
+	spaceAfterAnonFunction: true,
+	indentLevel: 0
+};
+
+
+files.forEach(function(file){
+	console.log('Processing file [%s]', file);
+	var data = '' + fs.readFileSync(file);
+	var file_orig = file + '.orig';
+	if (!fs.existsSync(file_orig))
+		fs.writeFileSync(file_orig, data);
+	data = beautifyJs(data, options);
+	fs.writeFileSync(file, data);
+});
+
+
