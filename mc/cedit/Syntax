@@ -1,7 +1,7 @@
 file ..\*\\.(diff|rej|patch)$ Diff\sOutput ^(diff|Index:|---)\s
 include diff.syntax
 
-file ..\*\\.(ejs|jade|json|xul|html|js|php|tpl\.php|xhtml|module|install|class|inc)$ 000\sMY! ^.\*(php|html|node)
+file ..\*\\.(coffee|ejs|jade|json|xul|html|js|php|tpl\.php|xhtml|module|install|class|inc)$ 000\sMY! ^.\*(php|html|node)
 include html.syntax
 
 file ..\*\\.(extml)$ Extml\sProgram
