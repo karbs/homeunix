@@ -89,6 +89,7 @@ context default
 	
 	keyword $\{_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\] lightgray
 
+
 	keyword whole TRUE white
 	keyword whole FALSE white
 	keyword whole NULL white
@@ -107,6 +108,9 @@ context default
 	keyword whole global white
 	keyword whole or white
 	keyword whole and white
+	keyword whole not white
+	keyword whole is white
+	keyword whole then white
 	keyword whole die white
 	keyword whole static white
 	keyword whole public white
@@ -294,6 +298,12 @@ context /\* \*/ brown
 wholechars -#=&?/._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 	keyword whole http://+ yellow
 	keyword whole +@+ brightred
+
+context ### ### brown
+wholechars -#=&?/._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+	keyword whole http://+ yellow
+	keyword whole +@+ brightred
+
 
 #XXX
 context // \n brown
