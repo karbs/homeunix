@@ -133,6 +133,10 @@ make -j5 || exit 1
 if [ -z "$skip_install" ]; then
 	trace 'Installing'
 	make install || exit 1
+	d=`date +%Y%m%d_%k%M`
+	cp /usr/local/bin/mplayer /usr/local/bin/mplayer-$d
+	cp /usr/local/bin/mencoder /usr/local/bin/mencoder-$d
+	cp ../log /usr/local/bin/mplayer-$d-configure-log	
 fi
 
 
