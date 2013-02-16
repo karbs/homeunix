@@ -82,27 +82,29 @@ fi
 
 #		--extra-libs="-laacplus -lavcodec -lavdevice -lavfilter -lavformat -lavresample -lavutil -lmjpegutils -lpostproc -lswresample -lswscale -lvo-aacenc -lx264" \
 
+#		--disable-ffmpeg_so \
+#		--with-vidix-drivers=nvidia \
+#		--enable-lirc \
+#		--enable-fastmemcpy \
+#		--enable-rpath \
+#		--enable-encoder={aac,ac3,ac3fixed,dvvideo,libaacplus,libfaac,libmp3lame,libvo_aacenc,libx264,libx264rgb,libxvid,mpeg4,msmpeg4v2,msmpeg4v3,pcm_s16le} \
+#		--enable-demuxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
+#		--enable-muxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
+#		--enable-parser={aac,aac_latm,flac,h263,h264,mpeg4video,mpegaudio,mpegvideo} \
+
+
 if [ -z "$skip_configure" ]; then
 	trace 'Configuring'
 	./configure \
 		--extra-ldflags="-L/usr/local/lib -L/usr/lib64/nvidia -L/usr/lib64" \
 		--language=en \
 		--enable-{xv,vdpau,gl,sdl} \
-		--disable-ffmpeg_so \
 		--disable-{dvdnav,vcd,ftp,tv,cddb,smb,dvb,v4l2,tga,pnm,mng,unrarexec,libdv} \
-		--with-vidix-drivers=nvidia \
 		--disable-{real,xanim,lib{gsm,opus,openjpeg,dca}} \
 		--disable-{dvdread,{dvdread,libdvdcss}-internal} \
 		--disable-{dvdread,libdvdcss}-internal \
 		--disable-{fbdev,caca,aa,directfb,fbdev} \
 		--disable-xss \
-		--enable-lirc \
-		--enable-fastmemcpy \
-		--enable-rpath \
-		--enable-encoder={aac,ac3,ac3fixed,dvvideo,libaacplus,libfaac,libmp3lame,libvo_aacenc,libx264,libx264rgb,libxvid,mpeg4,msmpeg4v2,msmpeg4v3,pcm_s16le} \
-		--enable-demuxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
-		--enable-muxer={aac,ac3,asf,avi,dts,dv,flac,flv,h263,h264,m4v,matroska,mp3,mpegps,mpegts,mpegvideo,vqf,wav} \
-		--enable-parser={aac,aac_latm,flac,h263,h264,mpeg4video,mpegaudio,mpegvideo} \
 	>../log 2>&1 || exit 1
 fi
 
