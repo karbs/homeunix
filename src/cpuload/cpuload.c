@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-#define N 10000
+#define N 15000
 main() {
 	int i, j, result;
 	clock_t t0 = clock();
