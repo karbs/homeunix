@@ -70,6 +70,7 @@ command_help() {
 
 command_help blkid get volume ids
 command_help 'git clean -f -d' 'Remove untracked files and directories from git working copy'
+command_help 'startvnc, stopvnc' 'starts/stops vnc server on port 5901'
 
 
 

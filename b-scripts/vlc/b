@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+cd vlc-2.0.5 || { echo 'cannot cd to source'; exit 1; }
+
+./configure \
+	--disable-{sout,lua,httpd,vlm,vcd} \
+	--without-kde-solid \
+2>&1 | tee ../log || { echo 'ERROR'; exit 1; }
