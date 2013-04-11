@@ -51,7 +51,7 @@ alias grep='grep --color'
 alias urxvt='urxvt -fn -*-fixed-medium-r-*-*-*-120-*-*-*-60-iso10646-* +sb -geometry 100x40 -cr "#00ff00"'
 
 homeunix_create_dirs
-homeunix_mc_colors black lightgray
+#homeunix_mc_colors black lightgray
 
 #trace "END homeunixrc"
 

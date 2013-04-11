@@ -6,6 +6,8 @@ context default
 #	keyword wholeleft > brightcyan
 ####################################################################
 
+	keyword fuck white red
+
 	keyword /\*!lex2php white red
 	keyword \*/\n white red
 

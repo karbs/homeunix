@@ -8,7 +8,7 @@ XTerm.AllowTitleOps:    true
 XTerm*allowSendEvents: True
 XTerm*sessionMgt: True
 XTerm*VT100*geometry: 110x30
-XTerm*saveLines: 1000
+XTerm*saveLines: 5000
 *visualBell: False
 XTerm*VT100*underLine: on
 XTerm.VT100*dynamicColors: On
@@ -46,7 +46,13 @@ XTerm*metaSendsEscape: True
 *VT100*selectToClipboard: True
 
 
-!*VT100*faceName: -*-dzejavu sans mono-book-r-normal-*-10-*-*-*-*-*-iso10646-*; size=8
+XTerm*boldMode: True
+XTerm*alwaysBoldMode: False
+XTerm*VT100*colorBDMode: Off
+XTerm*VT100*colorBD: #ffffff
+
+
+!*VT100*faceName: -*-dejavu sans mono-book-r-normal-*-10-*-*-*-*-*-iso10646-*; size=8
 !*VT100*faceSize: 10
 ! *VT100*faceSize: 10
 !*VT100*faceName: -*-*-*-*-*-*-*-*-*-*-*-*-iso10646-*
@@ -55,5 +61,4 @@ XTerm*metaSendsEscape: True
 
 !XTerm*VT100*alwaysBoldMode: Off
 !*VT100*boldMode: Off
-!XTerm*VT100*colorBDMode: Off
 !XTerm*VT100*colorBD: #ff0000
