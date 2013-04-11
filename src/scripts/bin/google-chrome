@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# HELP: http://peter.sh/experiments/chromium-command-line-switches/
+declare -a opts
+add(){ opts+=($@); }
+
+add --disk-cache-size=10000000
+add --disable-metrics
+add --disable-metrics-reporting
+add --in-process-plugins
+add --new-http
+
+#add --enable-accelerated-{compositing-for-overflow-scroll,filters,painting,plugins}
+#add --enable-accelerated-painting
+add --enable-accelerated-plugins
+#add --enable-threaded-compositing
+
+#add --force-compositing-mode
+
+add --enable-fastback
+#add --process-per-tab
+add --password-store=default
+#add --enable-renderer-side-mixing
+add --use-gl=desktop
+add --host-resolver-parallelism=100
+
+#add --in-process-{gpu,plugins}
+
+
+add --video-threads=2
+
+
+#add --disable-bundled-ppapi-flash
+#add --enable-bundled-ppapi-flash
+add --ppapi-flash-in-process
+
+#add --disable-flash-sandbox
+#add --disable-gpu-sandbox
+#add --enable-gpu-vsync
+#add --disable-gpu-vsync
+#add --disable-internal-flash
+#add --no-sandbox 
+
+
+
+#add --disable-accelerated-{compositing,plugins} --disable-force-compositing-mode
+
+
+
+#dump_args(){ for i in "$@"; do echo "*$i*"; done; }
+
+exec /usr/bin/google-chrome "${opts[@]}" "$@"

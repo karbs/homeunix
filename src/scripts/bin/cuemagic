@@ -1,0 +1,40 @@
+#!/bin/bash 
+
+for cue in *.cue; do
+	file="${cue%.*}.flac"
+	if [ ! -f "$file" ]; then
+		file="${cue%.*}.ape"
+	fi
+	if [ ! -f "$file" ]; then
+		echo "Nor flac nor ape file found for cue $cue"
+		continue
+	fi
+	
+	echo "cue: $cue"
+	echo "file: $file"
+
+	cuebreakpoints "$cue" | shnsplit -o flac -O always "$file" || exit 1
+	cuetag.sh "$cue" split-track*.flac || exit 1
+
+	#TRACKNAME=split-track
+	#ENDNAME=".flac"
+	#PLAYLISTNAME="!playlist.m3u"
+
+	#rm $PLAYLISTNAME 2>/dev/null
+
+	for i in {01..66}; do
+		f="split-track$i.flac"
+		if [ ! -f "$f" ]; then
+			continue
+		fi
+		track=`cueprint -t '%t\n' -n $i "$cue"`
+		g="${cue%.*} - $i - $track.flac"
+		mv "$f" "$g"		
+		
+		#PERFORMER=`cueprint -t '%p_\n' -n $i "$cue" | tr [:blank:] '_' | tr ':' '_' | tr '*' '_'`
+		#TRACK=`cueprint -t '_%t\n' -n $i "$cue" | tr [:blank:] '_' | tr ':' '_' | tr '*' '_'`
+		##echo "$PERFORMER$i$TRACK$ENDNAME" >> $PLAYLISTNAME
+		##echo "$PERFORMER$i$TRACK$ENDNAME"
+		#mv "$TRACKNAME$i$ENDNAME" "$PERFORMER$i$TRACK$ENDNAME"
+	done
+done
