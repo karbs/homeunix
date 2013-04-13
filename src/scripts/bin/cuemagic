@@ -1,4 +1,6 @@
-#!/bin/bash 
+#!/usr/bin/env bash
+
+set -e
 
 for cue in *.cue; do
 	file="${cue%.*}.flac"
@@ -13,8 +15,8 @@ for cue in *.cue; do
 	echo "cue: $cue"
 	echo "file: $file"
 
-	cuebreakpoints "$cue" | shnsplit -o flac -O always "$file" || exit 1
-	cuetag.sh "$cue" split-track*.flac || exit 1
+	cuebreakpoints "$cue" | shnsplit -o flac -O always "$file"
+	cuetag.sh "$cue" split-track*.flac
 
 	for i in {01..66}; do
 		f="split-track$i.flac"
@@ -22,12 +24,12 @@ for cue in *.cue; do
 			continue
 		fi
 		name=`cueprint -t '%P - %T - %02n %t' -n $i "$cue"`
-		mv "$f" "$name.flac" || exit 1
+		mv "$f" "$name.flac"
 	done
 	
 	del_dir="_DELETE"
 	if [ ! -d "$del_dir" ]; then
-		mkdir "$del_dir" || exit 1
+		mkdir "$del_dir"
 	fi
 	
 	mv -n "$file" $del_dir	
