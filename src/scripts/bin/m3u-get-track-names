@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sed -rn 's/#EXTINF:[0-9]+,//p' | sed -r "s/&amp;/\&/g;s/&#39;/'/g;s/&#33;/!/g" | sed -r 's/&quot;/"/g' | iconv -f CP1251  | grep -E '&[^; ]+;'
