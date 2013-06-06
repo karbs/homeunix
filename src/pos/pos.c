@@ -43,6 +43,10 @@ main(int argc, char *argv[]) {
 	// Read values from arguments and (if arguments is "-") from stdin to yy.	
 	char **last_argv = argv + argc - 1;
 	for (; argv < last_argv; ++argv) {
+		if (strcmp(argv[1], "0") == 0) {
+			yy[ny++] = 0;
+			continue;
+		}	
 		x = atof(argv[1]);
 		if (x != 0) 
 			yy[ny++] = floorf(x * 10) / 10;
@@ -79,13 +83,13 @@ main(int argc, char *argv[]) {
 			if ((xx[i] > 0) && (_abs(xx[i] - _abs(x)) < prec))
 				xx[i] = -1;
 		// add one
-		if (x > 0)
+		if (x >= 0)
 			xx[nx++] = x;
 	}
 
 	// Filter only positive values to yy.
 	for (i = 0, ny = 0; i < nx; ++i)
-		if (xx[i] > 0)
+		if (xx[i] >= 0)
 			yy[ny++] = xx[i];
 
 	// Sort the result.
