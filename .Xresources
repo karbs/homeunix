@@ -1,4 +1,3 @@
-
 !xterm.vt100.font: -gnu-unifont-*-*-*-*-*-*-*-*-*-*-*-*
 
 XTerm.vt100.allowTitleOps: True
@@ -28,7 +27,7 @@ XTerm*metaSendsEscape: True
 *VT100*color4:  #002773
 *VT100*color5:  #CB44E1
 *VT100*color6:  #2ECADD
-*VT100*color7:  #E0E3D4
+*VT100*color7:  #C0C0C0
 
 *VT100*color8:  #7A7A7A
 *VT100*color9:  #EF2929
