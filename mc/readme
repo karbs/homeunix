@@ -1,0 +1,3 @@
+link skin/default.ini to ~/.local/share/mc/skins/default.ini
+link cedit/*.syntax to ~/.local/share/mc/mcedit/*.syntax
+link cedit/Syntax to ~/.config/mc/mcedit/Syntax
