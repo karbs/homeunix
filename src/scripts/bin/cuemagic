@@ -2,35 +2,76 @@
 
 set -e
 
-for cue in *.cue; do
-	file="${cue%.*}.flac"
-	if [ ! -f "$file" ]; then
-		file="${cue%.*}.ape"
-	fi
-	if [ ! -f "$file" ]; then
-		echo "Nor flac nor ape file found for cue $cue"
-		continue
-	fi
-	
-	echo "cue: $cue"
-	echo "file: $file"
+log(){ d=`date '+%Y%m%d %k:%M:%S'`; echo "*** cuemagic: $d: $*"; }
+warn(){ log "WARNING: $*" 1>&2; }
 
-	cuebreakpoints "$cue" | shnsplit -o flac -O always "$file"
-	cuetag.sh "$cue" split-track*.flac
+cutstr(){
+	max="${1:-50}"
+	read str
+	#str=`echo "$str" | tr '/' '-' | sed -r 's/ ?([-\/]) ?/\1/g;s/\s\s+/ /g'`
+	str=`echo "$str" | tr '/' '-'`
+	if (( ${#str} > max )); then
+		str=`echo "$str" | sed -r 's/^(.{,'$max'})[^0-9a-z].*/\1/i;s/\([^()]*$//'`
+	fi
+	echo "$str"
+}
 
-	for i in {01..66}; do
-		f="split-track$i.flac"
-		if [ ! -f "$f" ]; then
-			continue
-		fi
-		name=`cueprint -t '%P - %T - %02n %t' -n $i "$cue"`
-		mv "$f" "$name.flac"
+cue_check(){
+	[ `cuebreakpoints *.cue | wc -l` = '0' ] && return 1
+	cueprint "$1" 2>&1 1>/dev/null | while read err; do return 1; done
+}
+
+
+
+{
+	n=0
+	dir="$PWD"
+	log "Entering directory [$PWD]"
+		
+	for cue in *.cue; do
+		cd "$dir"
+		file="${cue%.*}.flac"
+		[ -f "$file" ] || file="${cue%.*}.ape"
+		[ -f "$file" ] || continue
+		log "Processing file [$file] with cue [$cue]"
+		cue_check "$cue" || { warn "Broken cue"; continue; }
+		out=`basename "$cue" .cue`
+		[ -d "$out" ] && { warn "Directory [$PWD/$out] exists! Skiping."; continue; }
+		tmp_out=cuemagic.`basename "$cue" .cue`
+		[ -d "$tmp_out" ] && rm -f "$tmp_out"/* || mkdir "$tmp_out"
+		cd "$tmp_out"
+		cuebreakpoints "../$cue" | shnsplit -P none -o flac -O always "../$file"
+		cuetag.sh "../$cue" split-track*.flac
+		for i in {01..66}; do
+			f="split-track$i.flac"
+			[ -f "$f" ] || continue
+			album=`cueprint -t '%T' -n $i "../$cue" | cutstr 80`
+			artist=`cueprint -t '%P' -n $i "../$cue" | cutstr 80`
+			track=`cueprint -t '%02n - %t' -n $i "../$cue" | cutstr 80`
+			name="$track  [$artist - $album]"
+			mv "$f" "$name.flac"
+		done
+		del_dir="_DELETE"
+		[ -d "$del_dir" ] || mkdir "$del_dir"
+		mv -n "../$file" "$del_dir"
+		mv "../${cue%.*}".* .
+		cd ..
+		mv "$tmp_out" "$out"
+		(( ++n ))
 	done
-	
-	del_dir="_DELETE"
-	if [ ! -d "$del_dir" ]; then
-		mkdir "$del_dir"
+
+	cd "$dir"
+
+	if (( n == 1 )); then
+		mv "$out"/* .
+		rmdir "$out"
 	fi
 	
-	mv -n "$file" $del_dir	
-done
+} 2>&1 | tee -a ~/.cuemagic-log	
+
+
+
+
+
+
+

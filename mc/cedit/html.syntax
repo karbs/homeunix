@@ -303,6 +303,7 @@ context /\*\* \*/ cyan
 
 context /\* \*/ brown
 wholechars -#=&?/._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+	keyword whole http://+:\{0123456789\}\{0123456789\}\[0123456789\] yellow
 	keyword whole http://+ yellow
 	keyword whole +@+ brightred
 
@@ -407,6 +408,7 @@ context / /\[igm\] red black
 wholechars -_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 context ' ' brightmagenta
 	keyword @@*@@ red
+	keyword #*# red
 	keyword #{*} red
 	keyword %% green
 	keyword %\[-0123456789.\]\{%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\} brightred
@@ -441,8 +443,9 @@ context " " yellow black
 	keyword \\u\{0123456789ABCDEF\}\{0123456789ABCDEF\}\{0123456789ABCDEF\}\{0123456789ABCDEF\} brightgreen
 	keyword \\x\{0123456789ABCDEF\}\{0123456789ABCDEF\} green
 	keyword \\ green
-	keyword <?*?> yellow red
-
+	keyword <?*?> yellow red	
+	keyword <\{/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]> cyan
+	keyword <\{/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\]*> cyan
 
 
 

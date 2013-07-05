@@ -144,7 +144,7 @@ if [ -z "$skip_clean" ]; then
 	trace 'Cleaning'
 	make clean >/dev/null
 	cd ..
-	rm -f log config.log compile.log
+#	rm -f log config.log compile.log
 fi
 
 trace 'DONE'
