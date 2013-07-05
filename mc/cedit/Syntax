@@ -22,6 +22,11 @@ include makefile.syntax
 file ..\*\\.(l|lex|pgc|ck)$ Lex\ssource!
 include c.syntax
 
+#file ..\*\\.(erl|hrl)$ Erlang ^(-(module|record|%%)\\(|#!.*escript)
+file (*.erl|*.hrl|rebar.config|*.app|*.app.src)$ Erlang ^(-(module|record|%%)\\(|#!.*escript)
+include erlang.syntax
+
+
 #file ..\*\\.(txt)$ Text\sfile
 #include txt.syntax
 

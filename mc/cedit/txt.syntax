@@ -1,0 +1,34 @@
+context default
+#	keyword wholeleft http://+ brightred
+		
+	keyword ~ brightgreen
+	keyword < cyan
+	keyword > cyan
+	keyword ( cyan
+	keyword ) cyan
+	keyword [ cyan
+	keyword ] cyan
+	keyword % cyan
+	keyword ### white green
+	keyword = green	
+	keyword , cyan
+	keyword ! cyan
+	keyword : cyan
+	keyword . cyan
+	keyword - cyan
+	keyword / cyan
+	keyword whole YES white
+	keyword whole NO white
+
+#	keyword "*" white
+#	keyword «*»  white
+
+
+#	wholechars -0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_абвгдеёжзийклмнопрстуфхцчшщьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЭЮЯ
+	keyword whole \{0123456789\}\[0123456789\] green
+
+# in line bellow first char is nbsp! Original: keyword wholeright  \{0123456789\}\[0123456789\] green
+	keyword wholeright  \{0123456789\}\[0123456789\] green
+
+
+
