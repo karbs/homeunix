@@ -13,7 +13,7 @@ include mysql.syntax
 file ..\*\\.(pls|PLS|plb|PLB)$ PL\/SQL\sProgram
 include sql.syntax
 
-file ..\*(profile|rc|\\.(env|sh))$ Shell\sScript  ^#!.\*sh$
+file ..\*(profile|rc|\\.(env|sh))$ My\sShell\sScript  ^#!.\*sh$
 include sh.syntax
 
 file (make\.conf|Makefile|.mk|*.mak) Makefile

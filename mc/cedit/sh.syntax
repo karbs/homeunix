@@ -32,9 +32,16 @@ wholechars abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_
 
 
 	keyword whole <<EOT yellow
-	keyword whole EOT yellow
 	keyword whole <<EOF yellow
+	keyword whole <<END yellow
+
+	keyword whole <<'EOT' yellow
+	keyword whole <<'EOF' yellow
+	keyword whole <<'END' yellow
+	
+	keyword whole EOT yellow
 	keyword whole EOF yellow
+	keyword whole END yellow
 
 
     keyword ;; brightred
@@ -155,9 +162,64 @@ wholechars abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_
 context # \n brown
 #    spellcheck
 
-context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]EOF EOF green
-context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]EOT EOT green
-context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]END END green
+context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]EOF EOF brightgreen
+	keyword `*` lightgray black
+	keyword \\\{\\$\'"} green black
+	keyword \\\{nrt"'} cyan black
+    keyword $(*) white black
+    keyword ${*} brightmagenta
+    keyword $\* brightred
+    keyword $@ brightred
+    keyword $# brightred
+    keyword $? brightred
+    keyword $- brightred
+    keyword $$ brightred
+    keyword $! brightred
+    keyword wholeright $_ brightred
+    keyword wholeright $\[0123456789\] brightred
+    keyword wholeright $+ brightmagenta
+    keyword $ brightgreen
+
+context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]EOT EOT brightgreen
+	keyword `*` lightgray black
+	keyword \\\{\\$\'"} green black
+	keyword \\\{nrt"'} cyan black
+    keyword $(*) white black
+    keyword ${*} brightmagenta
+    keyword $\* brightred
+    keyword $@ brightred
+    keyword $# brightred
+    keyword $? brightred
+    keyword $- brightred
+    keyword $$ brightred
+    keyword $! brightred
+    keyword wholeright $_ brightred
+    keyword wholeright $\[0123456789\] brightred
+    keyword wholeright $+ brightmagenta
+    keyword $ brightgreen
+
+context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]END END brightgreen
+	keyword `*` lightgray black
+	keyword \\\{\\$\'"} green black
+	keyword \\\{nrt"'} cyan black
+    keyword $(*) white black
+    keyword ${*} brightmagenta
+    keyword $\* brightred
+    keyword $@ brightred
+    keyword $# brightred
+    keyword $? brightred
+    keyword $- brightred
+    keyword $$ brightred
+    keyword $! brightred
+    keyword wholeright $_ brightred
+    keyword wholeright $\[0123456789\] brightred
+    keyword wholeright $+ brightmagenta
+    keyword $ brightgreen
+
+
+context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]'EOF' EOF green
+context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]'EOT' EOT green
+context exclusive whole <<\[\s\]\[-\]\[\s\]\[\\\]'END' END green
 
 
 #context exclusive "$( )" brightgreen
@@ -174,13 +236,6 @@ context ' ' green
 context " " brightgreen
 	keyword `*` lightgray black
 	keyword \\\{\\$\'"} green black
-	
-#    keyword \\* brightgreen
-#    keyword \\@ brightgreen
-    
-#    keyword \\\\ brightgreen
-#    keyword \\` brightgreen
-#    keyword \\" brightgreen
 	keyword \\\{nrt"'} cyan black
     keyword $(*) white black
     keyword ${*} brightmagenta
